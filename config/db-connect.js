@@ -1,11 +1,12 @@
 const mongoose = require("mongoose");
 const DB_URL = process.env.DB_URL;
+const NODE_ENV = process.env.NODE_ENV;
 const connectDB = async () => {
-  if (process.env.NODE_ENV === "production") {
-    console.log("Using production database url");
-    return;
+  if (NODE_ENV === "production") {
+    console.log(`using ${NODE_ENV} database URL`);
+  } else {
+    console.log(`using ${NODE_ENV} database URL`);
   }
-  console.log("Using development database url");
   mongoose
     .connect(DB_URL)
     .then(() => console.log("Database connected..."))
