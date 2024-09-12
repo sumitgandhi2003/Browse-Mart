@@ -12,7 +12,6 @@ const Allproductcontainer = () => {
   const [filteredProduct, SetFilteredProduct] = useState();
   const [filteredCategory, SetFilteredCategory] = useState([]);
   const [isDataFetch, setIsDataFetch] = useState(false);
-  console.log(SERVER_URL);
   const handleSubmit = (e) => {
     e.preventDefault();
     // const formElement = Array.from(e.target.elements).slice(0, -1);
