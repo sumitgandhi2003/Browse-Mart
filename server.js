@@ -108,7 +108,7 @@ const products = [
 connectDB();
 app.use(
   cors({
-    origin: "*",
+    origin: ["https://browsemart.vercel.app/", "http://localhost:3000"],
   })
 );
 app.use(bodyParser.json());
