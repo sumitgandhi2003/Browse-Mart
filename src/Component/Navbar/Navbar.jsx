@@ -10,9 +10,9 @@ const Navbar = () => {
       <Link to={"/"}>
         <div className="logo text-2xl text-white font-bold">BrowseMart</div>
       </Link>
-      <div className="input w-5/12 border border-white mobile:hidden tablet:block">
+      {/* <div className="input w-5/12 border border-white mobile:hidden tablet:block">
         Input
-      </div>
+      </div> */}
       <div
         className={`links flex w-min gap-4 only:border-b-white only:border-b-2 justify-end items-center text-white font-semibold text-lg mobile:${
           isShow ? "flex-col" : "hidden"
