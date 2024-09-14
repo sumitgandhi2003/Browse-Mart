@@ -1,15 +1,15 @@
 const Product = require("../model/productSchema");
 
 const addProduct = async (req, res) => {
+  const { name, price, description, image, category, stock } = req.body;
   try {
     const newProduct = new Product({
-      name: "Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops",
-      price: 1000,
-      description:
-        "our perfect pack for everyday use and walks in the forest. Stash your laptop (up to 15 inches) in the padded sleeve, your everyday",
-      image: "https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg",
-      category: "men's clothing",
-      stock: 1000,
+      name: name,
+      price: price,
+      description: description,
+      image: image,
+      category: category,
+      stock: stock,
     });
     await newProduct.save();
     console.log("data Saved");
