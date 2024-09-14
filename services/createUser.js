@@ -1,11 +1,12 @@
 const User = require("../model/userSchema");
 
 const createUser = async (req, res) => {
+  const { name, email, password } = req.body;
   try {
     const newUser = new User({
-      name: "Sumit Gandhi",
-      email: "sumitgandhi@gmail.com",
-      password: "password123",
+      name: name,
+      email: email,
+      password: password,
       // isseller: false,
     });
     await newUser.save();

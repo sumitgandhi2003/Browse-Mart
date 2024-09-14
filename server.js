@@ -117,7 +117,7 @@ app.get("/", function (req, res) {
 });
 
 app.post("/add-product", addProduct);
-app.get("/create-user", createUser);
+app.post("/create-user", createUser);
 
 app.get("/get-all-products", getAllProduct);
 app.post("/get-product-by-id", getProductById);
