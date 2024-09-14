@@ -12,6 +12,7 @@ const Allproductcontainer = () => {
   const [filteredProduct, SetFilteredProduct] = useState();
   const [filteredCategory, SetFilteredCategory] = useState([]);
   const [isDataFetch, setIsDataFetch] = useState(false);
+  const [error, setError] = useState({});
   const handleSubmit = (e) => {
     e.preventDefault();
     // const formElement = Array.from(e.target.elements).slice(0, -1);
@@ -25,7 +26,6 @@ const Allproductcontainer = () => {
     //     );
     //   }
     // });
-
     let filter = [];
     filteredCategory.forEach((category) => {
       const products = allProduct?.filter((item) =>
@@ -35,17 +35,21 @@ const Allproductcontainer = () => {
     });
     SetFilteredProduct(filter);
   };
+  console.log(error);
 
   const getAllProduct = () => {
-    try {
-      axios.get(`${SERVER_URL}/get-all-products`).then((response) => {
+    axios
+      .get(`${SERVER_URL}/get-all-products`)
+      .then((response) => {
+        console.log(response);
         SetAllProduct(response.data);
         SetFilteredProduct(response.data);
         setIsDataFetch(true);
+      })
+      .catch((error) => {
+        console.error(error.message);
+        setError({ error: error.message });
       });
-    } catch (error) {
-      console.log(error);
-    }
   };
   const getAllCategory = () => {
     try {
@@ -79,6 +83,19 @@ const Allproductcontainer = () => {
     getAllProduct();
     getAllCategory();
   }, []);
+  if (error.error) {
+    return (
+      <div className="h-auto">
+        <h1 className="text-center text-red-500">{error.error}</h1>;
+      </div>
+    );
+  }
+  if (isDataFetch && !filteredProduct?.length > 0)
+    return (
+      <div className="w-full h-screen flex justify-center items-center">
+        <div className="text-7xl ">Nothing to Found</div>
+      </div>
+    );
   if (!isDataFetch) return <Loader />;
 
   return (
@@ -115,7 +132,7 @@ const Allproductcontainer = () => {
           </div>
         </div>
 
-        <div className="right-section grid grid-cols-5 mobile:grid-cols-1 small-device:grid-cols-2 tablet:grid-cols-3 laptop:grid-cols-3 desktop:grid-cols-4 large-device:grid-cols-6 w-10/12 justify-around flex-wrap gap-3 mobile:w-full laptop:w-10/12">
+        <div className="right-section grid grid-cols-5 mobile:grid-cols-2 small-device:grid-cols-3 tablet:grid-cols-4 laptop:grid-cols-4 desktop:grid-cols-5 large-device:grid-cols-6 w-10/12 justify-around flex-wrap gap-3 mobile:w-full laptop:w-10/12">
           {filteredProduct &&
             filteredProduct.map((product, index) => {
               return (
@@ -124,7 +141,9 @@ const Allproductcontainer = () => {
                   className="w-full "
                   key={index}
                 >
-                  <Productcard product={product} key={index} />
+                  <div className="flex w-full justify-center">
+                    <Productcard product={product} key={index} />
+                  </div>
                 </Link>
               );
             })}

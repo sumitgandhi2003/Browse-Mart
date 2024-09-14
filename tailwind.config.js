@@ -11,7 +11,11 @@ module.exports = {
       "large-device": "1920px",
     },
 
-    extend: {},
+    extend: {
+      fontFamily: {
+        roboto: ["Roboto", "sans-serif"],
+      },
+    },
   },
   plugins: [],
 };

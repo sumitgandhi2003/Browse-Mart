@@ -1,0 +1,23 @@
+.s1 {
+}
+
+.s1:hover ~ i,
+.s1:hover {
+  color: var(--star);
+}
+.s2:hover ~ i,
+.s2:hover {
+  color: var(--star);
+}
+.s3:hover ~ i,
+.s3:hover {
+  color: var(--star);
+}
+.s4:hover ~ i,
+.s4:hover {
+  color: var(--star);
+}
+.s5:hover ~ i,
+.s5:hover {
+  color: var(--star);
+}
