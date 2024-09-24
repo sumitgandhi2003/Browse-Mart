@@ -11,7 +11,7 @@ app.use(
   })
 );
 // app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use("/api/product", productRoutes);
 app.use("/api/user", userRoutes);

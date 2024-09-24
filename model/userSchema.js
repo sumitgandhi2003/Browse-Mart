@@ -33,8 +33,7 @@ userSchema.methods.generateToken = function () {
       email: this.email,
       name: this.name,
     },
-    process.env.JWT_SECRET_KEY,
-    { expiresIn: "1h" }
+    process.env.JWT_SECRET_KEY
   );
   return token;
 };
