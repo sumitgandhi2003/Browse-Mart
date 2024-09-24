@@ -1,18 +1,10 @@
 require("dotenv").config();
-const express = require("express");
-const bodyParser = require("body-parser");
-const cors = require("cors");
-const app = express();
+const app = require("./app.js");
+
 const connectDB = require("./config/db-connect.js");
 const mongoose = require("mongoose");
 const product = require("./model/productSchema.js");
 const user = require("./model/userSchema.js");
-const addProduct = require("./services/addProduct.js");
-const createUser = require("./services/createUser.js");
-const getAllProduct = require("./services/getAllProduct.js");
-const getProductById = require("./services/getProductById.js");
-const getRelatedProduct = require("./services/getRelatedProduct.js");
-const submitReview = require("./services/submitReview.js");
 const products = [
   {
     id: 1,
@@ -106,41 +98,7 @@ const products = [
 ];
 
 connectDB();
-app.use(
-  cors({
-    origin: ["https://browsemart.vercel.app", "http://localhost:3000"],
-  })
-);
-app.use(bodyParser.json());
-app.get("/", function (req, res) {
-  res.send("Hello, baby");
-});
-
-app.post("/add-product", addProduct);
-app.post("/create-user", createUser);
-
-app.get("/get-all-products", getAllProduct);
-app.post("/get-product-by-id", getProductById);
-app.post("/get-related-product", getRelatedProduct);
-
-app.post("/submit-review", submitReview);
-app.get("/product", function (req, res) {
-  products.map((item, index) => {
-    if (index === products.length - 1) {
-      res.json(item);
-    }
-  });
-});
 
 app.listen(4000, () => {
   console.log(`server is running on port no ${4000}`);
 });
-
-// axios
-//   .get("http://localhost:4000/product")
-//   .then((response) => {
-//     SetAllProduct(response.data);
-//     SetFilteredProduct(response.data);
-//     setIsDataFetch(true);
-//   })
-//   .catch((error) => console.log(error));

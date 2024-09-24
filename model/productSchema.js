@@ -9,5 +9,14 @@ const productSchema = new mongoose.Schema({
   stock: { type: Number, required: true },
   review: [],
 });
+
+// productSchema.method.generateToken = function () {
+//   console.log(this);
+//   const token = jwt.sign(
+//     { id: this._id, email: this.email, name: this.name },
+//     process.env.JWT_SECRET_KEY
+//   );
+//   return token;
+// };
 const Product = mongoose.model("Product", productSchema);
 module.exports = Product;

@@ -1,4 +1,4 @@
-const Product = require("../model/productSchema");
+const Product = require("../../model/productSchema");
 
 const getProductById = async (req, res) => {
   const id = req.body.productId;

@@ -1,4 +1,4 @@
-const Product = require("../model/productSchema");
+const Product = require("../../model/productSchema");
 
 const addProduct = async (req, res) => {
   const { name, price, description, image, category, stock } = req.body;
@@ -15,7 +15,8 @@ const addProduct = async (req, res) => {
     console.log("data Saved");
     res.status(201).send("data Saved");
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    res.status(500).send("Error adding product. Please try again later."); // Or a more specific message based on the error
   }
 };
 module.exports = addProduct;

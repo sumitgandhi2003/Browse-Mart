@@ -1,5 +1,5 @@
-const Product = require("../model/productSchema");
-getRelatedProduct = async (req, res) => {
+const Product = require("../../model/productSchema");
+const getRelatedProduct = async (req, res) => {
   try {
     const product = await Product.find({
       category: req.body.category,
