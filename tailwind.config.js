@@ -15,6 +15,11 @@ module.exports = {
       fontFamily: {
         roboto: ["Roboto", "sans-serif"],
       },
+      clipPath: {
+        "polygon-clip": "polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)",
+        circle: "circle(50%)",
+        ellipse: "ellipse(50% 25%)",
+      },
     },
   },
   plugins: [],

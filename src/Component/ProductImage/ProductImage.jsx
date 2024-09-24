@@ -2,7 +2,6 @@ import React, { useState } from "react";
 
 const ProductImage = ({ productData }) => {
   const [imageIndex, setImageIndex] = useState(0);
-  console.log(productData);
   return (
     <div className="img-container flex gap-4 m-4 p-4 w-2/3 mobile:w-full tablet:w-1/2 mobile:m-0 max-h-[500px] mobile:flex-col-reverse mobile:items-center small-device:flex-row  tablet:flex-row">
       <div className="flex flex-col  gap-2 overflow-scroll  items-center min-h-[400px]  min-w-[70px] max-h-[450px] mobile:flex-row mobile:min-h-0  mobile:overflow-scroll mobile:w-full small-device:min-h-[400px] small-device:flex-col tablet:flex-col ">
@@ -24,10 +23,9 @@ const ProductImage = ({ productData }) => {
           </div>
         ))}
       </div>
-      <div></div>
       <img
         src={productData?.image[imageIndex]}
-        className="w-[80%] tablet:w-[70%] object-cover aspect-square rounded max-h-[450px]"
+        className="w-[80%] tablet:w-[70%] object-cover aspect-square object-top border-2 border-black/50 border-dashed p-2 rounded max-h-[450px]"
         alt={productData?.name}
       />
     </div>

@@ -35,13 +35,11 @@ const Allproductcontainer = () => {
     });
     SetFilteredProduct(filter);
   };
-  console.log(error);
 
   const getAllProduct = () => {
     axios
-      .get(`${SERVER_URL}/get-all-products`)
+      .get(`${SERVER_URL}/api/product/get-all-products`)
       .then((response) => {
-        console.log(response);
         SetAllProduct(response.data);
         SetFilteredProduct(response.data);
         setIsDataFetch(true);
@@ -93,7 +91,7 @@ const Allproductcontainer = () => {
   if (isDataFetch && !filteredProduct?.length > 0)
     return (
       <div className="w-full h-screen flex justify-center items-center">
-        <div className="text-7xl ">Nothing to Found</div>
+        <div className="text-7xl ">No Found</div>
       </div>
     );
   if (!isDataFetch) return <Loader />;

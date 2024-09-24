@@ -1,17 +1,24 @@
 import { useEffect, useRef, useState } from "react";
+import Input from "../Input/Input";
+import TextArea from "../TextArea/TextArea";
 import Button from "../Button/Button";
 import "./ReviewForm.css";
 import axios from "axios";
 import swal from "sweetalert";
 const SERVER_URL = process.env.REACT_APP_SERVER_URL.replace(";", "");
-const ReviewForm = ({ onClose, productId }) => {
+const ReviewForm = ({
+  onClose,
+  productId,
+  setIsRefreshClicked,
+  userDetail,
+}) => {
   const [reviewData, setReviewData] = useState({
     productId: productId,
-    userId: "",
+    userId: userDetail._id || "",
     rating: "5",
     heading: "",
     message: "",
-    userName: "",
+    userName: userDetail.name || "",
   });
   const [error, setError] = useState({
     isError: true,
@@ -19,15 +26,18 @@ const ReviewForm = ({ onClose, productId }) => {
     message: "",
   });
   console.log(reviewData);
+  console.log(userDetail);
 
   const formRef = useRef();
   //   const handleSelect = (e) => {
   //     setReviewData({ ...reviewData, rating: e.target.value });
   //   };
+
+  // for sending data to  server
   const submitReview = () => {
     axios({
       method: "post",
-      url: `${SERVER_URL}/submit-review`,
+      url: `${SERVER_URL}/api/product/submit-review`,
       data: reviewData,
     })
       .then((response) => {
@@ -38,13 +48,15 @@ const ReviewForm = ({ onClose, productId }) => {
           title: "Thankyou for your Review!",
           text: "Review submitted successfully",
           icon: "success",
-        });
+        }).then(() => setIsRefreshClicked((prev) => !prev));
       })
       .catch((error) => {
         console.log(error);
         alert("Failed to submit review!");
       });
   };
+
+  //handling Inputs
   const handleInput = (e) => {
     const { name, value } = e.target;
     setReviewData({ ...reviewData, [name]: value });
@@ -53,12 +65,15 @@ const ReviewForm = ({ onClose, productId }) => {
     else setError({ ...error, [name]: "", isError: false });
   };
 
+  // for handling Submit
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(e.target);
     if (error.isError) return;
     submitReview();
   };
+
+  // for handling form hidden or visible
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (formRef.current && !formRef.current.contains(event.target)) {
@@ -70,6 +85,7 @@ const ReviewForm = ({ onClose, productId }) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [onClose]);
+
   return (
     <div className="w-screen h-screen bg-gray-500  bg-opacity-50 fixed top-0 flex justify-center items-center  ">
       <form
@@ -92,29 +108,36 @@ const ReviewForm = ({ onClose, productId }) => {
             <i class="fa-regular fa-star text-5xl text-blue-500 s5"></i>
           </div>
           <div className="heading p-3 mt-3">
-            <input
-              type="text"
-              className="form-control w-full min-h-10 outline-none bg-blue-500 p-3 rounded placeholder:text-blue-100 text-white"
-              placeholder="Heading"
-              name="heading"
+            <Input
+              type={"text"}
+              className={
+                "form-control w-full min-h-10 outline-none bg-blue-500 p-3 rounded placeholder:text-blue-100 text-white"
+              }
+              placeholder={"Heading"}
+              name={"heading"}
               value={reviewData?.heading}
               onChange={handleInput}
-            ></input>
+              id={"heading"}
+            />
+
             {error.heading && (
               <div className="text-red-500 text-xs ml-2">{error.heading}</div>
             )}
           </div>
           <div className="p-3">
-            <textarea
-              id="comment"
-              name="message"
+            <TextArea
+              id={"comment"}
+              name={"message"}
               value={reviewData?.message}
               onChange={handleInput}
-              rows="4"
-              cols="50"
-              placeholder="Your Message"
-              className="resize-none w-full outline-none bg-blue-500 rounded p-3 text-white placeholder:text-blue-100"
-            ></textarea>
+              placeholder={"Your Message"}
+              className={
+                "resize-none w-full outline-none bg-blue-500 rounded p-3 text-white placeholder:text-blue-100"
+              }
+              rows={"4"}
+              cols={"50"}
+            />
+
             {error.message && (
               <div className="text-red-500 text-xs ml-2">{error.message}</div>
             )}

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import swal from "sweetalert";
 import { Link } from "react-router-dom";
 // imort all components
 import Productcard from "../Productcard/Productcard";
@@ -12,13 +13,14 @@ import ProductImage from "../ProductImage/ProductImage";
 // import { SERVER_URL } from "../../config";
 const SERVER_URL = process.env.REACT_APP_SERVER_URL.replace(";", "");
 
-const ProductPage = () => {
+const ProductPage = ({ isAuthenticated, userDetail }) => {
   const { id } = useParams();
   const [productData, setProductData] = useState({});
   const [relatedProduct, setRelatedProduct] = useState([]);
   const [isDataFetch, setIsDataFetch] = useState(false);
   const [isReviewClicked, setIsReviewClicked] = useState(false);
-  console.log(productData);
+  const [isRefreshClicked, setIsRefreshClicked] = useState(false);
+
   const handleClick = () => {
     setIsReviewClicked((isReview) => !isReview);
   };
@@ -31,7 +33,7 @@ const ProductPage = () => {
     setIsDataFetch(false);
     axios({
       method: "post",
-      url: `${SERVER_URL}/get-product-by-id`,
+      url: `${SERVER_URL}/api/product/get-product-by-id`,
       data: {
         productId: id,
         quantity: 1,
@@ -39,7 +41,7 @@ const ProductPage = () => {
     })
       .then((response) => {
         setProductData(response.data);
-        console.log("get product data useeffect triggered");
+
         setIsDataFetch(true);
       })
       .catch((error) => {
@@ -50,15 +52,14 @@ const ProductPage = () => {
   const getRelatedProduct = () => {
     axios({
       method: "post",
-      url: `${SERVER_URL}/get-related-product`,
+      url: `${SERVER_URL}/api/product/get-related-product`,
       data: {
-        category: productData?.category,
+        category: productData.category,
         productId: id,
       },
     })
       .then((response) => {
         setRelatedProduct(response.data);
-        console.log("get replated product data useeffect triggered");
       })
       .catch((error) => {
         console.error(error);
@@ -70,9 +71,10 @@ const ProductPage = () => {
   //   });
   // };
   // eslint-disable-next-line
-  useEffect(() => getProductDataById(), [id, isReviewClicked]);
+  useEffect(() => getProductDataById(), [id, isRefreshClicked]);
   // eslint-disable-next-line
-  useEffect(() => getRelatedProduct(), [productData.category, id]);
+  useEffect(() => getRelatedProduct(), [productData]);
+
   if (!isDataFetch && !isReviewClicked) return <Loader />; // Loading state while data is fetched.  Replace with your own loading component.  e.g., <Loading /> or <CircularProgress /> from material-ui.  Also, add error handling here.  e.g., axios.get().catch(error => console.error(error))
 
   return (
@@ -111,7 +113,10 @@ const ProductPage = () => {
                 className={
                   "bg-blue-500 rounded w-full text-white p-2 shadow-md hover:scale-105 transition-all active:bg-blue-100"
                 }
-                onClick={() => alert("Buy Sucessfully!")}
+                onClick={() => {
+                  if (isAuthenticated) swal("Buy Sucessfully!", "", "success");
+                  else alert("Please Login First!");
+                }}
               />
             </div>
           </div>
@@ -159,7 +164,6 @@ const ProductPage = () => {
           {productData?.review?.length > 0 && (
             <div className="flex gap-4 overflow-scroll mobile:flex-col mobile:overflow-hidden small-device:flex-row small-device:overflow-scroll ">
               {productData?.review?.map((review, index) => {
-                console.log(review);
                 return <ReviewCard review={review} key={index} />;
               })}
             </div>
@@ -169,10 +173,15 @@ const ProductPage = () => {
         {/* review popup  */}
 
         {isReviewClicked && (
-          <ReviewForm onClose={handleClick} productId={productData?.["_id"]} />
+          <ReviewForm
+            onClose={handleClick}
+            productId={productData?.["_id"]}
+            setIsRefreshClicked={setIsRefreshClicked}
+            userDetail={userDetail}
+          />
         )}
       </div>
-      // )
+      // ).
     )
   );
 };
