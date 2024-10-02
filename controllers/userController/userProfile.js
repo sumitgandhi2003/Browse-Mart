@@ -2,34 +2,21 @@ const User = require("../../model/userSchema");
 const jwt = require("jsonwebtoken");
 
 const userProfile = async (req, res, next) => {
-  const authHeader = req?.headers?.authorization;
-  const token = (authHeader && authHeader.split(" ")[1]) || "";
-
   try {
-    if (!token) {
-      return res
-        .status(401)
-        .json({ message: "Access denied. No token provided." });
-    }
-
-    const decoded = await jwt.verify(token, process.env.JWT_SECRET_KEY);
-
-    // console.log(decoded, "Hello");
-
-    if (!decoded) {
-      return res.status(401).json({ message: "Access denied. Invalid token." });
-    }
-
-    const user = await User.findById(decoded?.userId);
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found." });
-    }
-
-    return res.status(200).json({ message: "data found", user });
-  } catch (err) {
-    console.log(err?.message);
-    res.status(401).json({ message: "Token expired" });
+    const foundedUser = req.user;
+    const userDetail = {
+      id: foundedUser?._id,
+      name: foundedUser?.name,
+      email: foundedUser?.email,
+      phoneNumber: foundedUser?.phoneNumber,
+      profilePic: foundedUser?.profilePic,
+      isSeller: foundedUser?.isSeller,
+      address: foundedUser?.address,
+    };
+    return res.status(200).json({ mesaage: "data Found", userDetail });
+  } catch (error) {
+    console.log("Can't get user Detail", error);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };
 

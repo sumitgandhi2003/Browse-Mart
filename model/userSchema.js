@@ -7,12 +7,17 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   TandC: { type: Boolean },
-  isseller: { type: Boolean },
+  isSeller: { type: Boolean },
+  // cart: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
+  // wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
+  // order: [{ type: mongoose.Schema.Types.ObjectId, ref: "Order" }],
+  phoneNumber: { type: String },
+  address: { type: String },
+  profilePic: { type: String },
 });
 
 userSchema.pre("save", async function (next) {
   const user = this;
-  console.log("pre method", user);
   if (!user.isModified("password")) {
     next();
   }
