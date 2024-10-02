@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import Productcard from "../Productcard/Productcard";
 import Loader from "../Loader/Loader";
 // import { SERVER_URL } from "../../config";
+const serverErrorImage = require("../../assets/images/serverError.jpg");
 const SERVER_URL = process.env.REACT_APP_SERVER_URL.replace(";", "");
 const Allproductcontainer = () => {
   const [allProduct, SetAllProduct] = useState();
@@ -45,7 +46,7 @@ const Allproductcontainer = () => {
         setIsDataFetch(true);
       })
       .catch((error) => {
-        console.error(error.message);
+        console.error(error);
         setError({ error: error.message });
       });
   };
@@ -83,8 +84,9 @@ const Allproductcontainer = () => {
   }, []);
   if (error.error) {
     return (
-      <div className="h-auto">
-        <h1 className="text-center text-red-500">{error.error}</h1>;
+      <div className="w-full h-screen flex justify-center items-center">
+        {/* <h1 className="text-center text-red-500">{error.error}</h1>; */}
+        <img src={serverErrorImage} className="h-[500px]" alt="server error" />
       </div>
     );
   }

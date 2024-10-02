@@ -14,7 +14,7 @@ import ProductImage from "../ProductImage/ProductImage";
 const SERVER_URL = process.env.REACT_APP_SERVER_URL.replace(";", "");
 
 const ProductPage = ({ isAuthenticated, userDetail }) => {
-  const { id } = useParams();
+  const { productId } = useParams();
   const [productData, setProductData] = useState({});
   const [relatedProduct, setRelatedProduct] = useState([]);
   const [isDataFetch, setIsDataFetch] = useState(false);
@@ -35,7 +35,7 @@ const ProductPage = ({ isAuthenticated, userDetail }) => {
       method: "post",
       url: `${SERVER_URL}/api/product/get-product-by-id`,
       data: {
-        productId: id,
+        productId: productId,
         quantity: 1,
       },
     })
@@ -55,7 +55,7 @@ const ProductPage = ({ isAuthenticated, userDetail }) => {
       url: `${SERVER_URL}/api/product/get-related-product`,
       data: {
         category: productData.category,
-        productId: id,
+        productId: productId,
       },
     })
       .then((response) => {
@@ -71,7 +71,7 @@ const ProductPage = ({ isAuthenticated, userDetail }) => {
   //   });
   // };
   // eslint-disable-next-line
-  useEffect(() => getProductDataById(), [id, isRefreshClicked]);
+  useEffect(() => getProductDataById(), [productId, isRefreshClicked]);
   // eslint-disable-next-line
   useEffect(() => getRelatedProduct(), [productData]);
 

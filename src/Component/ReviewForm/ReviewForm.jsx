@@ -14,7 +14,7 @@ const ReviewForm = ({
 }) => {
   const [reviewData, setReviewData] = useState({
     productId: productId,
-    userId: userDetail._id || "",
+    userId: userDetail?.id || "",
     rating: "5",
     heading: "",
     message: "",
@@ -26,7 +26,6 @@ const ReviewForm = ({
     message: "",
   });
   console.log(reviewData);
-  console.log(userDetail);
 
   const formRef = useRef();
   //   const handleSelect = (e) => {
@@ -87,7 +86,7 @@ const ReviewForm = ({
   }, [onClose]);
 
   return (
-    <div className="w-screen h-screen bg-gray-500  bg-opacity-50 fixed top-0 flex justify-center items-center  ">
+    <div className="w-screen h-screen bg-gray-500  bg-opacity-50 fixed z-50 top-0 flex justify-center items-center  ">
       <form
         className=" w-[500px] h-[500px] relative  p-3 rounded-lg bg-white shadow-md border-2 drop-shadow-lg  border-blue-500"
         ref={formRef}
@@ -111,7 +110,7 @@ const ReviewForm = ({
             <Input
               type={"text"}
               className={
-                "form-control w-full min-h-10 outline-none bg-blue-500 p-3 rounded placeholder:text-blue-100 text-white"
+                "form-control w-full min-h-10 outline-none border-2 font-semibold border-blue-500 p-3 rounded placeholder:text-blue-400 text-blue-500"
               }
               placeholder={"Heading"}
               name={"heading"}
@@ -132,7 +131,7 @@ const ReviewForm = ({
               onChange={handleInput}
               placeholder={"Your Message"}
               className={
-                "resize-none w-full outline-none bg-blue-500 rounded p-3 text-white placeholder:text-blue-100"
+                "resize-none w-full outline-none text-blue-500 rounded p-3 border-2 border-blue-500 font-semibold  placeholder:text-blue-400"
               }
               rows={"4"}
               cols={"50"}

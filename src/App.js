@@ -17,10 +17,18 @@ import Navbar from "./Component/Navbar/Navbar";
 import Allproductcontainer from "./Component/Allproductcontainer/Allproductcontainer";
 import ProductPage from "./Component/ProductPage/ProductPage";
 const SERVER_URL = process.env.REACT_APP_SERVER_URL.replace(";", "");
-const AppLayout = ({ authToken, userDetail }) => {
+const AppLayout = ({ authToken, userDetail, setAuthToken }) => {
+  String.prototype.capitalise = function () {
+    if (this.length === 0) return "";
+    return this.charAt(0).toUpperCase() + this.slice(1);
+  };
   return (
     <div className="App">
-      <Navbar authToken={authToken} userDetail={userDetail} />
+      <Navbar
+        authToken={authToken}
+        setAuthToken={setAuthToken}
+        userDetail={userDetail}
+      />
       <Outlet />
     </div>
   );
@@ -40,7 +48,7 @@ const App = () => {
           Authorization: `Bearer ${authToken}`,
         },
       });
-      return response?.data?.user;
+      return response?.data?.userDetail;
     } catch (error) {
       console.log(error?.response?.data?.message);
       if (error?.response?.data?.message === "Token expired") {
@@ -65,7 +73,6 @@ const App = () => {
     };
     fetchData();
   }, [authToken]);
-  console.log(userDetail);
 
   const router = createBrowserRouter([
     {
@@ -74,7 +81,13 @@ const App = () => {
     },
     {
       path: "/",
-      element: <AppLayout authToken={authToken} userDetail={userDetail} />,
+      element: (
+        <AppLayout
+          authToken={authToken}
+          userDetail={userDetail}
+          setAuthToken={setAuthToken}
+        />
+      ),
       children: [
         {
           path: "/",
@@ -85,7 +98,7 @@ const App = () => {
           element: <Allproductcontainer />,
         },
         {
-          path: "/product/:id",
+          path: "/product/:productId",
           element: <ProductPage userDetail={userDetail} />,
         },
         {
