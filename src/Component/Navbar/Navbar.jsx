@@ -35,7 +35,7 @@ const Navbar = ({ authToken, setAuthToken, userDetail }) => {
                 alt="profile icon"
               />
             </div>
-            <div className=" mobile:hidden small-device:block">
+            <div className=" w-max mobile:hidden small-device:block ">
               {userDetail?.name?.capitalise() || "Profile"}
             </div>
           </div>
