@@ -88,7 +88,7 @@ const ReviewForm = ({
   return (
     <div className="w-screen h-screen bg-gray-500  bg-opacity-50 fixed z-50 top-0 flex justify-center items-center  ">
       <form
-        className=" w-[500px] h-[500px] relative  p-3 rounded-lg bg-white shadow-md border-2 drop-shadow-lg  border-blue-500"
+        className=" w-[500px] h-[500px] relative  p-3 rounded-lg bg-white shadow-2xl border-2 drop-shadow-lg  border-blue-500"
         ref={formRef}
         onSubmit={handleSubmit}
       >

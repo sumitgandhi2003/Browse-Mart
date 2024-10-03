@@ -68,9 +68,9 @@ const Profile = ({ userDetail, authToken }) => {
               className=""
             />
           </div>
-          <div className=" profile-detail w-10/12 font-roboto text-lg">
+          <div className=" profile-detail w-10/12 font-roboto text-lg  break-words">
             <div className="flex gap-2 w-full p-1 items-center">
-              <label htmlFor="username " className="w-1/3 text-gray-300">
+              <label htmlFor="name " className="w-1/3 text-gray-300">
                 Name:
               </label>
               {isEditing ? (
@@ -85,18 +85,18 @@ const Profile = ({ userDetail, authToken }) => {
                   onChange={handleChange}
                 />
               ) : (
-                <p className="name w-2/3 text-left font-semibold" id="username">
+                <p className="name w-2/3 text-left font-semibold" id="name">
                   {profileDetails?.name?.capitalise() || "N/A"}
                 </p>
               )}
             </div>
             <div className="flex gap-2 w-full p-1 items-center">
-              <label htmlFor="useremail " className="w-1/3 text-gray-300">
+              <label htmlFor="email" className="w-1/3 text-gray-300">
                 Email:
               </label>
               {isEditing ? (
                 <Input
-                  id={"username"}
+                  id={"email"}
                   name={"email"}
                   value={profileDetails?.email}
                   className={
@@ -106,18 +106,21 @@ const Profile = ({ userDetail, authToken }) => {
                   onChange={handleChange}
                 />
               ) : (
-                <p id="useremail" className=" w-2/3 text-left font-semibold ">
+                <p
+                  id="email"
+                  className="w-2/3 text-left font-semibold break-words overflow-hidden "
+                >
                   {profileDetails?.email || "N/A"}
                 </p>
               )}
             </div>
-            <div className="flex gap-2 w-full  p-1 items-center">
-              <label htmlFor="usernumber " className="w-1/3 text-gray-300">
+            <div className="flex gap-2 w-full p-1 items-center">
+              <label htmlFor="phoneNumber" className="w-1/3 text-gray-300">
                 Phone No:
               </label>
               {isEditing ? (
                 <Input
-                  id={"number"}
+                  id={"phoneNumber"}
                   name={"phoneNumber"}
                   value={profileDetails?.phoneNumber}
                   className={
@@ -127,14 +130,14 @@ const Profile = ({ userDetail, authToken }) => {
                   onChange={handleChange}
                 />
               ) : (
-                <p id="usernumber" className=" w-2/3 text-left font-semibold">
+                <p id="phoneNumber" className=" w-2/3 text-left font-semibold">
                   {profileDetails?.phoneNumber || "N/A"}
                 </p>
               )}
             </div>
 
             <div className="flex gap-2 w-full p-1 items-center">
-              <label htmlFor="useraddress " className="w-1/3 text-gray-300">
+              <label htmlFor="address" className="w-1/3 text-gray-300">
                 Address:
               </label>
               {isEditing ? (
@@ -143,13 +146,16 @@ const Profile = ({ userDetail, authToken }) => {
                   name={"address"}
                   value={profileDetails?.address}
                   className={
-                    "px-2 py-1 bg-gray-100 outline-none border-gray-300 border-2 w-2/3 text-left font-semibold rounded"
+                    "px-2 py-1 bg-gray-100 outline-none border-gray-300 border-2 w-2/3 text-left font-semibold rounded break-words overflow-hidden"
                   }
                   placeholder={"Enter Address"}
                   onChange={handleChange}
                 />
               ) : (
-                <p id="useraddress" className=" w-2/3 text-left font-semibold ">
+                <p
+                  id="address"
+                  className=" w-2/3 text-left font-semibold break-words overflow-hidden "
+                >
                   {profileDetails?.address || "N/A"}
                 </p>
               )}

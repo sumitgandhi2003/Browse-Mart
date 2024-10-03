@@ -41,7 +41,7 @@ const AppLayout = ({ authToken, userDetail, setAuthToken }) => {
 
 const App = () => {
   const [authToken, setAuthToken] = useState(localStorage.getItem("AuthToken"));
-  const [userDetail, setUserDetail] = useState({});
+  const [userDetail, setUserDetail] = useState();
 
   const getUserDetail = async () => {
     try {

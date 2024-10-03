@@ -1,26 +1,58 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import swal from "sweetalert";
-import { Link } from "react-router-dom";
-// imort all components
+import { FaShare, FaWhatsapp, FaLinkedin } from "react-icons/fa";
+import { MdEmail } from "react-icons/md";
 import Productcard from "../Productcard/Productcard";
 import Loader from "../Loader/Loader";
 import Button from "../Button/Button";
 import ReviewForm from "../ReviewForm/ReviewForm";
 import ReviewCard from "../ReviewCard/ReviewCard";
 import ProductImage from "../ProductImage/ProductImage";
+
 // import { SERVER_URL } from "../../config";
 const SERVER_URL = process.env.REACT_APP_SERVER_URL.replace(";", "");
 
 const ProductPage = ({ isAuthenticated, userDetail }) => {
+  const currentURL = window.location.href;
+  console.log(currentURL);
   const { productId } = useParams();
   const [productData, setProductData] = useState({});
   const [relatedProduct, setRelatedProduct] = useState([]);
   const [isDataFetch, setIsDataFetch] = useState(false);
   const [isReviewClicked, setIsReviewClicked] = useState(false);
   const [isRefreshClicked, setIsRefreshClicked] = useState(false);
-
+  const [isShareShow, setIsShareShow] = useState(false);
+  const message = `🚀 Exciting News!\n\nI just discovered the ${productData.name} and I can't stop raving about it!\n\nWhy You’ll Love It:\n- Top-notch quality!\n- Perfect for tech enthusiasts.\n- Limited-time offer: Don't miss out!\n\nCheck it out here: ${currentURL}\n\nLet me know what you think, and tag your friends who need this!`;
+  const socialMedia = [
+    {
+      name: "Whatsapp",
+      link: "https://wa.me/?text=",
+      icon: (
+        <FaWhatsapp className="text-3xl p-1 text-blue-400 rounded-full hover:bg-blue-400 hover:text-white" />
+      ),
+    },
+    // {
+    //   name: "Facebook",
+    //   link: "https://www.facebook.com/sharer/sharer.php?u=",
+    //   icon: <FaFacebook />,
+    // },
+    {
+      name: "LinkedIn",
+      link: "https://www.linkedin.com/messaging/compose?message=",
+      icon: (
+        <FaLinkedin className="text-3xl p-1 text-blue-400 rounded-full hover:bg-blue-400 hover:text-white" />
+      ),
+    },
+    {
+      name: "Email",
+      link: "mailto:?body=",
+      icon: (
+        <MdEmail className="text-3xl p-1 text-blue-400 rounded-full hover:bg-blue-400 hover:text-white" />
+      ),
+    },
+  ];
   const handleClick = () => {
     setIsReviewClicked((isReview) => !isReview);
   };
@@ -119,6 +151,28 @@ const ProductPage = ({ isAuthenticated, userDetail }) => {
                 }}
               />
             </div>
+
+            {/* Share Button */}
+            <div className="flex flex-col mobile:flex-row tablet:flex-col gap-2">
+              <div onClick={() => setIsShareShow((prev) => !prev)}>
+                <FaShare className="text-3xl cursor-pointer p-1 text-blue-400 rounded-full hover:bg-blue-400 hover:text-white" />
+              </div>
+              {isShareShow && (
+                <div className="flex flex-col mobile:flex-row tablet:flex-col gap-2">
+                  {socialMedia.map((media, index) => (
+                    <a
+                      href={media.link + encodeURIComponent(message)}
+                      key={index}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="social-media-icon "
+                    >
+                      {media.icon}
+                    </a>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
@@ -151,13 +205,34 @@ const ProductPage = ({ isAuthenticated, userDetail }) => {
         <div className="review-section p-4">
           <div className="flex gap-3 justify-between mb-3 items-center ">
             <h2 className="text-4xl p-2 font-roboto font-bold">Reviews</h2>
-            <Button
-              btntext={"add Review"}
-              className={
-                "rounded bg-blue-500 hover:bg-blue-700 p-2 text-white font-sans text-base w-max h-max"
-              }
-              onClick={handleClick}
-            />
+            {/* {
+              isAuthenticated && (
+                <Link to={`/product/${productId}/review`}>
+                  <Button
+                    btntext={"Write a Review"}
+                    className={
+                      "rounded bg-blue-500 hover:bg-blue-700 p-2 text-white font-roboto text-sm w-max h-max"
+                    }
+                  />
+                </Link>
+              ) : (
+                <p className="text-sm text-gray-500">
+                  Please Login to Write a Review
+                </p>
+              )
+            } */}
+            <p className="text-sm text-gray-500">
+              {productData?.review?.length} reviews
+            </p>
+            {userDetail && (
+              <Button
+                btntext={"Write a Review"}
+                className={
+                  "rounded bg-blue-500 hover:bg-blue-700 p-2 text-white font-roboto text-sm w-max h-max"
+                }
+                onClick={handleClick}
+              />
+            )}
           </div>
 
           {/* all review section */}
