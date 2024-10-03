@@ -24,7 +24,7 @@ const ProductPage = ({ isAuthenticated, userDetail }) => {
   const [isReviewClicked, setIsReviewClicked] = useState(false);
   const [isRefreshClicked, setIsRefreshClicked] = useState(false);
   const [isShareShow, setIsShareShow] = useState(false);
-  const message = `🚀 Exciting News!\n\nI just discovered the ${productData.name} and I can't stop raving about it!\n\nWhy You’ll Love It:\n- Top-notch quality!\n- Perfect for tech enthusiasts.\n- Limited-time offer: Don't miss out!\n\nCheck it out here: ${currentURL}\n\nLet me know what you think, and tag your friends who need this!`;
+  const message = `🚀 Exciting News! 🌟\n\nI just discovered the **${productData.name}** and I can't stop raving about it! 🎉\n\n✨ **Why You’ll Love It**:\n- Top-notch quality that speaks for itself!\n- Perfect for tech enthusiasts.\n- Limited-time offer: Don't miss out! 🕒\n\n👉 Check it out here: ${currentURL}\n\n💬 Let me know what you think, and tag your friends who need this in their lives!`;
   const socialMedia = [
     {
       name: "Whatsapp",
