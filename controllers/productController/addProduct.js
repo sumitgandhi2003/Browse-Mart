@@ -1,9 +1,14 @@
 const Product = require("../../model/productSchema");
 
 const addProduct = async (req, res) => {
-  const { name, price, description, image, category, stock } = req.body;
-  // console.log(req.body);
   try {
+    const { name, price, description, image, category, stock } = req.body;
+    const foundedUser = req.user;
+    if (!foundedUser?.isSeller) {
+      return res
+        .status(401)
+        .json({ messsage: "unauthorize access you don't have seller account" });
+    }
     const newProduct = new Product({
       name: name,
       price: price,
@@ -11,6 +16,7 @@ const addProduct = async (req, res) => {
       image: image,
       category: category,
       stock: stock,
+      userID: foundedUser?._id,
     });
     await newProduct.save();
     console.log("data Saved");
@@ -19,7 +25,7 @@ const addProduct = async (req, res) => {
     console.error(error);
     res.status(500).send("Error adding product. Please try again later."); // Or a more specific message based on the error
   }
-  // return res.json({ message: "product uploaded!" });
+  return res.json({ message: "product uploaded!" });
 };
 module.exports = addProduct;
 // try {

@@ -5,8 +5,8 @@ const getAllProduct = require("../controllers/productController/getAllProduct");
 const getProductById = require("../controllers/productController/getProductById");
 const getRelatedProduct = require("../controllers/productController/getRelatedProduct");
 const submitReview = require("../controllers/reviewController/submitReview");
-
-router.route("/add-product").post(addProduct);
+const userAuthentication = require("../middleware/userAuthentication");
+router.route("/add-product").post(userAuthentication, addProduct);
 router.route("/get-all-products").get(getAllProduct);
 router.route("/get-product-by-id").post(getProductById);
 router.route("/get-related-product").post(getRelatedProduct);

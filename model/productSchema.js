@@ -9,6 +9,7 @@ const productSchema = new mongoose.Schema({
   stock: { type: Number, required: false },
   inStock: { type: Boolean, required: false },
   review: [],
+  userID: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 });
 
 // productSchema.method.generateToken = function () {
