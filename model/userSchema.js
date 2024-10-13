@@ -14,6 +14,15 @@ const userSchema = new mongoose.Schema({
   phoneNumber: { type: String },
   address: { type: String },
   profilePic: { type: String },
+  cart: [
+    {
+      productId: { type: mongoose.Schema.Types.ObjectId, ref: "Product" },
+      quantity: { type: Number, default: 1 },
+      _id: false,
+    },
+  ],
+  wishlist: [],
+  order: [],
 });
 
 userSchema.pre("save", async function (next) {

@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 app.use("/api/product", productRoutes);
 app.use("/api/user", userRoutes);
 app.get("/", function (req, res) {
-  res.send("Hello, baby");
+  res.send("Hello, bro");
 });
 
 module.exports = app;
