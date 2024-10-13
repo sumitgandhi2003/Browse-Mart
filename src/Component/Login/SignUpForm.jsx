@@ -6,7 +6,7 @@ import axios from "axios";
 import swal from "sweetalert";
 import { Navigate } from "react-router-dom";
 const SignUpForm = ({ setIsSignUpShow, setAuthToken }) => {
-  const SERVER_URL = process.env.REACT_APP_SERVER_URL.replace(";", "");
+  const SERVER_URL = process.env.REACT_APP_SERVER_URL;
   const [initialUserDetail, setInitialUserDetail] = useState({
     email: "",
     name: "",
@@ -56,7 +56,7 @@ const SignUpForm = ({ setIsSignUpShow, setAuthToken }) => {
         if (response.status === 201) {
           swal(
             "Registered Successfully!",
-            "you are now resitered with us you can proceed",
+            "you are now registered with us you can proceed",
             "success"
           ).then(() => {
             localStorage.setItem("AuthToken", response?.data?.AuthToken);

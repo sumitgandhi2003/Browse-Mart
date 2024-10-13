@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { RxCross2 } from "react-icons/rx";
 import { LuLogOut } from "react-icons/lu";
+import { FaUpload } from "react-icons/fa6";
+import { FaUser } from "react-icons/fa";
 import swal from "sweetalert";
 import Profile from "./Profile";
-
+import ProductUpload from "../UploadProduct/ProductUpload";
 import { useNavigate } from "react-router-dom";
 const ProfileSlider = ({
   showProfileSlider,
@@ -13,6 +15,8 @@ const ProfileSlider = ({
   authToken,
 }) => {
   const navigate = useNavigate();
+  const [isProfileShow, setISProfileShow] = useState(true);
+
   const handleLogOut = () => {
     swal("Are you Leaving?", "Are you sure want to logout?", "warning", {
       buttons: {
@@ -46,9 +50,19 @@ const ProfileSlider = ({
           className="relative top-2 left-[50%] translate-x-[-50%]  cursor-pointer font-extrabold text-2xl bg-white text-blue-500 rounded-full p-1 "
           onClick={() => setShowProfileSlider((prev) => !prev)}
         />
-        <div>
+        <div className="w-full relative top-10 flex flex-col gap-5 items-center justify-normal">
           <div>
-            {userDetail?.isSeller ? <div>seller</div> : <div>buyer</div>}
+            <FaUser
+              className=" text-3xl rounded-full p-1 text-white hover:text-blue-500 cursor-pointer font-extrabold hover:bg-white"
+              onClick={() => setISProfileShow((prev) => !prev)}
+            />
+          </div>
+          <div>
+            {userDetail?.isSeller ? (
+              <FaUpload className=" text-3xl rounded-full p-1 text-white hover:text-blue-500 cursor-pointer font-extrabold hover:bg-white" />
+            ) : (
+              <div>buyer</div>
+            )}
           </div>
         </div>
 
@@ -57,7 +71,10 @@ const ProfileSlider = ({
           onClick={handleLogOut}
         />
       </div>
-      <Profile userDetail={userDetail} authToken={authToken} />
+      {isProfileShow && (
+        <Profile userDetail={userDetail} authToken={authToken} />
+      )}
+      {!isProfileShow && <ProductUpload />}
     </div>
   );
 };

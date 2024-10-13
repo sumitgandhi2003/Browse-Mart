@@ -1,16 +1,20 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 //import components
 import Hamburger from "../Hamburger/Hamburger";
+import { BsCart2 } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import ProfileSlider from "../Profile/ProfileSlider";
+import { themeContext } from "../../Context/themeContext";
 const maleProfileIcon = require("../../assets/images/maleprofileicon.jpg");
 const Navbar = ({ authToken, setAuthToken, userDetail }) => {
   const [isShow, SetIsShow] = useState(false);
   const [showProfileSlider, setShowProfileSlider] = useState(false);
+  const { theme, toggleTheme } = useContext(themeContext);
   // String.prototype.capitalise = function () {
   //   if (this.length === 0) return "";
   //   return this.charAt(0).toUpperCase() + this.slice(1);
   // };
+  console.log(theme, toggleTheme);
   return (
     <div className="nav-bar flex justify-between items-center w-full h-16 p-3 bg-blue-400 sticky top-0 z-50 shadow-md  shadow-black/20">
       <Link to={"/"}>
@@ -24,19 +28,28 @@ const Navbar = ({ authToken, setAuthToken, userDetail }) => {
       >
         {/* Show profile / Login Section */}
         {authToken !== null && authToken !== undefined && authToken !== "" ? (
-          <div
-            className="flex gap-2 items-center cursor-pointer"
-            onClick={() => setShowProfileSlider((prev) => !prev)}
-          >
-            <div className="w-12 h-12 rounded-full overflow-hidden">
-              <img
-                src={maleProfileIcon}
-                className="w-full"
-                alt="profile icon"
-              />
-            </div>
-            <div className=" w-max mobile:hidden small-device:block ">
-              {userDetail?.name?.capitalise() || "Profile"}
+          <div className="flex gap-3 items-center">
+            <Link to={"/cart"}>
+              <div className="flex gap-2 items-center cursor-pointer">
+                <BsCart2 className="text-white text-3xl font-bold" />
+                <span>Cart</span>
+                {/* <span>{theme}</span> */}
+              </div>
+            </Link>
+            <div
+              className="flex gap-2 items-center cursor-pointer"
+              onClick={() => setShowProfileSlider((prev) => !prev)}
+            >
+              <div className="w-12 h-12 rounded-full overflow-hidden">
+                <img
+                  src={maleProfileIcon}
+                  className="w-full"
+                  alt="profile icon"
+                />
+              </div>
+              <div className=" w-max mobile:hidden small-device:block ">
+                {userDetail?.name?.capitalise().split(" ")[0] || "Profile"}
+              </div>
             </div>
           </div>
         ) : (

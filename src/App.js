@@ -8,15 +8,16 @@ import { Navigate } from "react-router-dom";
 //import components
 // import Signup from "./Component/Signup/Signup";
 // import Footer from "./Component/Footer/Footer";
-// import Cart from "./Component/Cart/Cart";
 // import Checkout from "./Component/Checkout/Checkout";
 // import ForgotPassword from "./Component/ForgotPassword/ForgotPassword";
 // import Home from "./Component/Home/Home";
+import Cart from "./Component/Cart/Cart";
 import Login from "./Component/Login/Login";
 import Navbar from "./Component/Navbar/Navbar";
 import Allproductcontainer from "./Component/Allproductcontainer/Allproductcontainer";
 import ProductPage from "./Component/ProductPage/ProductPage";
-const SERVER_URL = process.env.REACT_APP_SERVER_URL.replace(";", "");
+
+const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 const AppLayout = ({ authToken, userDetail, setAuthToken }) => {
   String.prototype.capitalise = function () {
     if (this.length === 0) return "";
@@ -96,7 +97,12 @@ const App = () => {
       children: [
         {
           path: "/",
-          element: <Allproductcontainer />,
+          element: (
+            <Allproductcontainer
+              authToken={authToken}
+              userDetail={userDetail}
+            />
+          ),
         },
         {
           path: "/allproduct",
@@ -104,7 +110,13 @@ const App = () => {
         },
         {
           path: "/product/:productId",
-          element: <ProductPage userDetail={userDetail} />,
+          element: (
+            <ProductPage userDetail={userDetail} authToken={authToken} />
+          ),
+        },
+        {
+          path: "/cart",
+          element: <Cart userDetail={userDetail} authToken={authToken} />,
         },
         {
           path: "*",

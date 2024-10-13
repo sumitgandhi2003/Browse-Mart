@@ -4,10 +4,11 @@ import { API_URL } from "../../utility/constant";
 import { Link } from "react-router-dom";
 import Productcard from "../Productcard/Productcard";
 import Loader from "../Loader/Loader";
+const noResultImage = require("../../assets/images/noResult.png");
 // import { SERVER_URL } from "../../config";
 const serverErrorImage = require("../../assets/images/serverError.jpg");
-const SERVER_URL = process.env.REACT_APP_SERVER_URL.replace(";", "");
-const Allproductcontainer = () => {
+const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+const Allproductcontainer = ({ userDetail, authToken }) => {
   const [allProduct, SetAllProduct] = useState();
   const [allCategories, SetAllCategories] = useState();
   const [filteredProduct, SetFilteredProduct] = useState();
@@ -50,15 +51,16 @@ const Allproductcontainer = () => {
         setError({ error: error.message });
       });
   };
-  const getAllCategory = () => {
-    try {
-      axios
-        .get(API_URL + "products/categories")
-        .then((response) => SetAllCategories(response.data));
-    } catch (error) {
-      console.log(error);
-    }
-  };
+
+  // const getAllCategory = () => {
+  //   try {
+  //     axios
+  //       .get(API_URL + "products/categories")
+  //       .then((response) => SetAllCategories(response.data));
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   const handleChange = (e) => {
     if (e.target.checked) {
@@ -80,7 +82,7 @@ const Allproductcontainer = () => {
     //   })
     //   .catch((error) => console.log(error));
     getAllProduct();
-    getAllCategory();
+    // getAllCategory();
   }, []);
   if (error.error) {
     return (
@@ -93,7 +95,17 @@ const Allproductcontainer = () => {
   if (isDataFetch && !filteredProduct?.length > 0)
     return (
       <div className="w-full h-screen flex justify-center items-center">
-        <div className="text-7xl ">No Found</div>
+        <div className=" font-mono  flex flex-col gap-3 ">
+          <img src={noResultImage} className="max-w-[350px]" />
+          <div className="h-min flex flex-col gap-2 justify-center items-center">
+            <span className="w-max max-w-[250px] text-lg font-semibold">
+              No Result Found!
+            </span>
+            <span className="max-w-[250px] text-center">
+              We can't find any items matching your Search
+            </span>
+          </div>
+        </div>
       </div>
     );
   if (!isDataFetch) return <Loader />;
@@ -101,7 +113,7 @@ const Allproductcontainer = () => {
   return (
     filteredProduct && (
       <div className="product-container w-full h-full mt-4 flex gap-2 p-4">
-        <div className="left-section w-2/12 h-full border border-black bg-gray min-w-[200px] mobile:hidden laptop:block">
+        {/* <div className="left-section w-2/12 h-full border border-black bg-gray min-w-[200px] mobile:hidden laptop:block">
           <h2 className="text-center">Filter</h2>
           <div className="p-2 ">
             <form action="" onSubmit={(e) => handleSubmit(e)}>
@@ -130,9 +142,9 @@ const Allproductcontainer = () => {
               />
             </form>
           </div>
-        </div>
+        </div> */}
 
-        <div className="right-section grid grid-cols-5 mobile:grid-cols-2 small-device:grid-cols-3 tablet:grid-cols-4 laptop:grid-cols-4 desktop:grid-cols-5 large-device:grid-cols-6 w-10/12 justify-around flex-wrap gap-3 mobile:w-full laptop:w-10/12">
+        <div className="right-section grid grid-cols-5 mobile:grid-cols-2 small-device:grid-cols-3 tablet:grid-cols-4 laptop:grid-cols-4 desktop:grid-cols-6 large-device:grid-cols-6 w-10/12 justify-around flex-wrap gap-3 mobile:w-full laptop:w-full">
           {filteredProduct &&
             filteredProduct.map((product, index) => {
               return (
@@ -142,7 +154,12 @@ const Allproductcontainer = () => {
                   key={index}
                 >
                   <div className="flex w-full justify-center">
-                    <Productcard product={product} key={index} />
+                    <Productcard
+                      product={product}
+                      key={index}
+                      userDetail={userDetail}
+                      authToken={authToken}
+                    />
                   </div>
                 </Link>
               );

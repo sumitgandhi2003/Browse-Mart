@@ -2,21 +2,20 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import swal from "sweetalert";
-import { FaShare, FaWhatsapp, FaLinkedin } from "react-icons/fa";
-import { MdEmail } from "react-icons/md";
+import { FaShare } from "react-icons/fa";
 import Productcard from "../Productcard/Productcard";
 import Loader from "../Loader/Loader";
 import Button from "../Button/Button";
 import ReviewForm from "../ReviewForm/ReviewForm";
 import ReviewCard from "../ReviewCard/ReviewCard";
 import ProductImage from "../ProductImage/ProductImage";
-
+import { socialMedia } from "../../utility/constant";
+import { handleAddToCart } from "../../utility/constant";
 // import { SERVER_URL } from "../../config";
-const SERVER_URL = process.env.REACT_APP_SERVER_URL.replace(";", "");
+const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
-const ProductPage = ({ isAuthenticated, userDetail }) => {
+const ProductPage = ({ isAuthenticated, userDetail, authToken }) => {
   const currentURL = window.location.href;
-  console.log(currentURL);
   const { productId } = useParams();
   const [productData, setProductData] = useState({});
   const [relatedProduct, setRelatedProduct] = useState([]);
@@ -24,44 +23,43 @@ const ProductPage = ({ isAuthenticated, userDetail }) => {
   const [isReviewClicked, setIsReviewClicked] = useState(false);
   const [isRefreshClicked, setIsRefreshClicked] = useState(false);
   const [isShareShow, setIsShareShow] = useState(false);
+  const [productAdding, setProductAdding] = useState(false);
   const message = `🚀 Exciting News! 🌟\n\nI just discovered the **${productData.name}** and I can't stop raving about it! 🎉\n\n✨ **Why You’ll Love It**:\n- Top-notch quality that speaks for itself!\n- Perfect for tech enthusiasts.\n- Limited-time offer: Don't miss out! 🕒\n\n👉 Check it out here: ${currentURL}\n\n💬 Let me know what you think, and tag your friends who need this in their lives!`;
-  const socialMedia = [
-    {
-      name: "Whatsapp",
-      link: "https://wa.me/?text=",
-      icon: (
-        <FaWhatsapp className="text-3xl p-1 text-blue-400 rounded-full hover:bg-blue-400 hover:text-white" />
-      ),
-    },
-    // {
-    //   name: "Facebook",
-    //   link: "https://www.facebook.com/sharer/sharer.php?u=",
-    //   icon: <FaFacebook />,
-    // },
-    {
-      name: "LinkedIn",
-      link: "https://www.linkedin.com/messaging/compose?message=",
-      icon: (
-        <FaLinkedin className="text-3xl p-1 text-blue-400 rounded-full hover:bg-blue-400 hover:text-white" />
-      ),
-    },
-    {
-      name: "Email",
-      link: "mailto:?body=",
-      icon: (
-        <MdEmail className="text-3xl p-1 text-blue-400 rounded-full hover:bg-blue-400 hover:text-white" />
-      ),
-    },
-  ];
+  // const handleAddToCart = () => {
+  //   if (userDetail === "" || userDetail === undefined || userDetail === null) {
+  //     alert("Please login First!");
+  //     return;
+  //   }
+  //   axios({
+  //     method: "POST",
+  //     url: `${SERVER_URL}/api/user/add-to-cart`,
+  //     data: {
+  //       userId: userDetail.id,
+  //       productId: productId,
+  //       quantity: 1,
+  //     },
+  //     headers: {
+  //       "Content-type": "application/json; charset=UTF-8",
+  //       Authorization: `Bearer ${authToken}`,
+  //     },
+  //   })
+  //     .then((response) => {
+  //       console.log(response);
+  //       swal(
+  //         "Product Added!",
+  //         "Your product is Added to Cart you can proceed next",
+  //         "success"
+  //       );
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // };
+
   const handleClick = () => {
     setIsReviewClicked((isReview) => !isReview);
   };
   const getProductDataById = () => {
-    // axios.get(API_URL + "products/" + id).then((response) => {
-    //   setProductData(response.data);
-    //   console.log(response);
-    //   setIsDataFetch(true);
-    // }); // Replace with actual category method to fetch category dynamically
     setIsDataFetch(false);
     axios({
       method: "post",
@@ -97,11 +95,6 @@ const ProductPage = ({ isAuthenticated, userDetail }) => {
         console.error(error);
       });
   };
-  // const getRelatedProductsData = (category) => {
-  //   axios.get(API_URL + "products/category/" + category).then((response) => {
-  //     console.log(response.data);
-  //   });
-  // };
   // eslint-disable-next-line
   useEffect(() => getProductDataById(), [productId, isRefreshClicked]);
   // eslint-disable-next-line
@@ -122,7 +115,7 @@ const ProductPage = ({ isAuthenticated, userDetail }) => {
 
           {/* product description section */}
 
-          <div className="product-description w-1/2 mobile:w-full small-device:w-1/2 flex flex-col gap-3 ">
+          <div className="product-description w-1/2 mobile:w-full tablet:w-1/2 flex flex-col gap-3 ">
             <h1 className="product-name font-roboto font-bold text-2xl text-left">
               {productData?.name}
             </h1>
@@ -139,6 +132,15 @@ const ProductPage = ({ isAuthenticated, userDetail }) => {
                 className={
                   "bg-blue-200 rounded w-full font-roboto text-white p-2"
                 }
+                onClick={() =>
+                  handleAddToCart(
+                    userDetail,
+                    productId,
+                    authToken,
+                    setProductAdding
+                  )
+                }
+                loading={productAdding}
               />
               <Button
                 btntext={"Buy Now"}
@@ -154,21 +156,28 @@ const ProductPage = ({ isAuthenticated, userDetail }) => {
 
             {/* Share Button */}
             <div className="flex flex-col mobile:flex-row tablet:flex-col gap-2">
-              <div onClick={() => setIsShareShow((prev) => !prev)}>
+              <span onClick={() => setIsShareShow((prev) => !prev)}>
                 <FaShare className="text-3xl cursor-pointer p-1 text-blue-400 rounded-full hover:bg-blue-400 hover:text-white" />
-              </div>
+              </span>
               {isShareShow && (
-                <div className="flex flex-col mobile:flex-row tablet:flex-col gap-2">
+                <div className="flex flex-col mobile:flex-row tablet:flex-col gap-2 w-min  h-min">
                   {socialMedia.map((media, index) => (
-                    <a
-                      href={media.link + encodeURIComponent(message)}
-                      key={index}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="social-media-icon "
-                    >
-                      {media.icon}
-                    </a>
+                    <div className="group relative">
+                      <span
+                        className={`bg-blue-400 absolute bottom-0 left-10 mobile:-left-3 mobile:-bottom-8  tablet:left-10 tablet:bottom-0 text-white text-xs hidden grou p-1 rounded group-hover:block`}
+                      >
+                        {media.name}
+                      </span>
+                      <a
+                        href={media.link + encodeURIComponent(message)}
+                        key={index}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="social-media-icon "
+                      >
+                        {media.icon}
+                      </a>
+                    </div>
                   ))}
                 </div>
               )}
@@ -205,22 +214,6 @@ const ProductPage = ({ isAuthenticated, userDetail }) => {
         <div className="review-section p-4">
           <div className="flex gap-3 justify-between mb-3 items-center ">
             <h2 className="text-4xl p-2 font-roboto font-bold">Reviews</h2>
-            {/* {
-              isAuthenticated && (
-                <Link to={`/product/${productId}/review`}>
-                  <Button
-                    btntext={"Write a Review"}
-                    className={
-                      "rounded bg-blue-500 hover:bg-blue-700 p-2 text-white font-roboto text-sm w-max h-max"
-                    }
-                  />
-                </Link>
-              ) : (
-                <p className="text-sm text-gray-500">
-                  Please Login to Write a Review
-                </p>
-              )
-            } */}
             <p className="text-sm text-gray-500">
               {productData?.review?.length} reviews
             </p>

@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import Button from "../Button/Button";
 import axios from "axios";
 import swal from "sweetalert";
-const SERVER_URL = process.env.REACT_APP_SERVER_URL.replace(";", "");
+const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 //form direct action config
 // action={`${SERVER_URL}${isSignUpShow ? "/create-user" : ""}`}
 // method={`${isSignUpShow ? "post" : "get"}`

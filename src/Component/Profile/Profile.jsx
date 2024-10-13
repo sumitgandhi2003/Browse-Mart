@@ -4,7 +4,7 @@ import Input from "../Input/Input";
 import axios from "axios";
 import swal from "sweetalert";
 const defaultProileImage = require("../../assets/images/maleprofileicon.jpg");
-const SERVER_URL = process.env.REACT_APP_SERVER_URL.replace(";", "");
+const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 const Profile = ({ userDetail, authToken }) => {
   const [profileDetails, setProfileDetails] = useState();
   // let profileDetails = userDetail;
@@ -54,7 +54,7 @@ const Profile = ({ userDetail, authToken }) => {
   // console.log(userDetail);
   return (
     <div className="w-11/12 h-full relative flex items-center">
-      <form className="w-full h-full relative flex flex-col overflow-y-scroll items-center justify-between p-2 gap-4">
+      <form className="w-full h-full relative flex flex-col overflow-y-scroll items-center justify-between p-2 gap-6">
         {/* <div className=" w-full h-full"> */}
         <div
           className={
@@ -68,7 +68,7 @@ const Profile = ({ userDetail, authToken }) => {
               className=""
             />
           </div>
-          <div className=" profile-detail w-10/12 font-roboto text-lg  break-words">
+          <div className=" profile-detail w-10/12 font-roboto text-lg flex flex-col gap-3  break-words">
             <div className="flex gap-2 w-full p-1 items-center">
               <label htmlFor="name " className="w-1/3 text-gray-300">
                 Name:

@@ -1,7 +1,9 @@
 import Button from "../Button/Button";
-
-const Productcard = ({ product }) => {
-  const { image, name, price, category } = product;
+import React, { useState } from "react";
+import { handleAddToCart } from "../../utility/constant";
+const Productcard = ({ product, userDetail, authToken }) => {
+  const [productAdding, setProductAdding] = useState(false);
+  const { image, name, price, category, _id } = product;
   return (
     <div
       className="product-card group w-full h-full max-h-[400px] max-w-[300px]  gap-4 border-2  border-gray-00 tablet:hover:border-blue-500 tablet:hover:bg-gray-200
@@ -22,7 +24,7 @@ const Productcard = ({ product }) => {
         </div>
         {/* </Link> */}
         <div className="product-price  font-bold text-lg mobile:text-sm my-1 ">
-          ₹{(price * 83.71)?.toFixed(2)}
+          {/* ₹{(price * 83.71)?.toFixed(2)} */}₹{price}
         </div>
         <div className="w-1/2 text-ellipsis overflow-hidden whitespace-nowrap font-roboto text-base mobile:text-xs tablet:text-sm">
           {category}
@@ -34,10 +36,12 @@ const Productcard = ({ product }) => {
               " py-1 px-2 rounded z-10 font-roboto bg-blue-900 text-white outline-none hover:bg-blue-500 mobile:text-[10px] w-max tablet:text-[13px] laptop:text-sm large-device:text-base"
             }
             disabled={false}
+            loading={productAdding}
             onClick={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              alert("Add to cart clicked");
+
+              handleAddToCart(userDetail, _id, authToken, setProductAdding);
             }}
           />
         </div>

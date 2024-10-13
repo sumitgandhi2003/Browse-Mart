@@ -9,6 +9,9 @@ const Input = ({
   id,
   className,
   checked,
+  required,
+  multiple,
+  accept,
 }) => {
   return (
     <input
@@ -20,6 +23,9 @@ const Input = ({
       id={id}
       className={className}
       checked={checked}
+      multiple={multiple}
+      required={required}
+      accept={accept}
     />
   );
 };

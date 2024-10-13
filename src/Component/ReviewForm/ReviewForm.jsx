@@ -5,7 +5,7 @@ import Button from "../Button/Button";
 import "./ReviewForm.css";
 import axios from "axios";
 import swal from "sweetalert";
-const SERVER_URL = process.env.REACT_APP_SERVER_URL.replace(";", "");
+const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 const ReviewForm = ({
   onClose,
   productId,
