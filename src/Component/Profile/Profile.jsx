@@ -50,8 +50,6 @@ const Profile = ({ userDetail, authToken }) => {
       setProfileDetails(userDetail);
     }
   }, [userDetail]);
-  console.log(profileDetails);
-  // console.log(userDetail);
   return (
     <div className="w-11/12 h-full relative flex items-center">
       <form className="w-full h-full relative flex flex-col overflow-y-scroll items-center justify-between p-2 gap-6">

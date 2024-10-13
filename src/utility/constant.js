@@ -87,7 +87,7 @@ export const productCategory = [
   {
     id: 3,
     name: "category",
-    value: "home & Kitchen",
+    value: "home & kitchen",
     child: [
       "Cookware",
       "appliances",
@@ -104,7 +104,7 @@ export const productCategory = [
   },
   {
     id: 5,
-    name: "Groceries",
+    name: "category",
     value: "grocery",
     child: [
       "vegetables",
@@ -131,13 +131,13 @@ export const productCategory = [
   {
     id: 7,
     name: "category",
-    value: "hports",
+    value: "sports",
     child: ["football", "basketball", "tennis", "hockey", "golf"],
   },
   {
     id: 8,
     name: "category",
-    value: "halth & beauty",
+    value: "health & beauty",
     child: [
       "makeup",
       "skincare",

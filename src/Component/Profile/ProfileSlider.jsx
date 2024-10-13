@@ -14,6 +14,7 @@ const ProfileSlider = ({
   setAuthToken,
   authToken,
 }) => {
+  const [active, setActive] = useState("user");
   const navigate = useNavigate();
   const [isProfileShow, setISProfileShow] = useState(true);
 
@@ -54,12 +55,15 @@ const ProfileSlider = ({
           <div>
             <FaUser
               className=" text-3xl rounded-full p-1 text-white hover:text-blue-500 cursor-pointer font-extrabold hover:bg-white"
-              onClick={() => setISProfileShow((prev) => !prev)}
+              onClick={() => setActive("user")}
             />
           </div>
           <div>
             {userDetail?.isSeller ? (
-              <FaUpload className=" text-3xl rounded-full p-1 text-white hover:text-blue-500 cursor-pointer font-extrabold hover:bg-white" />
+              <FaUpload
+                className=" text-3xl rounded-full p-1 text-white hover:text-blue-500 cursor-pointer font-extrabold hover:bg-white"
+                onClick={() => setActive("upload")}
+              />
             ) : (
               <div>buyer</div>
             )}
@@ -71,10 +75,15 @@ const ProfileSlider = ({
           onClick={handleLogOut}
         />
       </div>
-      {isProfileShow && (
+      {active === "user" && (
         <Profile userDetail={userDetail} authToken={authToken} />
       )}
-      {!isProfileShow && <ProductUpload />}
+      {/* {isProfileShow && (
+        <Profile userDetail={userDetail} authToken={authToken} />
+      )} */}
+      {active === "upload" && userDetail?.isSeller && (
+        <ProductUpload authToken={authToken} />
+      )}
     </div>
   );
 };

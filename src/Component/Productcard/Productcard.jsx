@@ -1,6 +1,6 @@
 import Button from "../Button/Button";
 import React, { useState } from "react";
-import { handleAddToCart } from "../../utility/constant";
+import { handleAddToCart } from "../../utility/addToCart";
 const Productcard = ({ product, userDetail, authToken }) => {
   const [productAdding, setProductAdding] = useState(false);
   const { image, name, price, category, _id } = product;
@@ -27,7 +27,7 @@ const Productcard = ({ product, userDetail, authToken }) => {
           {/* ₹{(price * 83.71)?.toFixed(2)} */}₹{price}
         </div>
         <div className="w-1/2 text-ellipsis overflow-hidden whitespace-nowrap font-roboto text-base mobile:text-xs tablet:text-sm">
-          {category}
+          {category?.capitalise()}
         </div>
         <div className="add-to-cart-btn absolute bottom-2 right-0  mobile:bottom-1 laptop::bottom-2 ">
           <Button

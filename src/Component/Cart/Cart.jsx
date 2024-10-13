@@ -49,9 +49,9 @@ const Cart = ({ userDetail, authToken }) => {
   }
 
   return (
-    <div className="flex h-screen gap-5 p-3 bg-blue-400 relative">
+    <div className="flex h-screen gap-5 p-3 mobile:h-full mobile:flex-col tablet:flex-row tablet:h-screen bg-blue-400 relative">
       {/* Shopping cart section */}
-      <div className="w-10/12 h-min mobile:w-full tablet:w-10/12 p-6 flex flex-col gap-5 bg-white rounded-md overflow-hidden">
+      <div className="w-10/12 h-min  mobile:w-full tablet:w-10/12 p-6 flex flex-col gap-5 bg-white rounded-md overflow-hidden">
         <div className="flex justify-between items-center p-2 border-b-2">
           <span className="font-semibold font-roboto text-3xl">
             Shopping Cart
@@ -61,7 +61,7 @@ const Cart = ({ userDetail, authToken }) => {
           </span>
         </div>
         <div className="flex flex-col gap-6">
-          <div className="flex w-full gap-4 items-center p-2 border-b-2">
+          <div className="flex w-full gap-4 items-center p-2 border-b-2 mobile:hidden tablet:flex">
             <span className="w-1/2">Product Details</span>
 
             <div className="w-1/2 gap-2 flex justify-between items-center">
@@ -102,7 +102,7 @@ const Cart = ({ userDetail, authToken }) => {
       </div>
 
       {/* check Out Section */}
-      <div className="w-4/12 h-min mobile:hidden tablet:flex p-6 flex flex-col gap-5 bg-white rounded-md justify-between">
+      <div className="w-4/12 h-min mobile:flex mobile:w-full tablet:w-4/12 tablet:flex p-6 flex flex-col gap-5 bg-white rounded-md justify-between">
         <div className="flex justify-between items-center p-2 border-b-2">
           <span className="font-semibold font-roboto text-3xl">
             Order Summary

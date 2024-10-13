@@ -57,16 +57,13 @@ const CartCard = ({
   };
 
   return (
-    <div
-      className="flex gap-4 w-full max-h-[200px] items-center p-2"
-      key={product?.item?._id}
-    >
-      <div className="w-1/2 flex gap-4 items-center justify-between overflow-scroll">
-        <div className="w-1/5">
+    <div className="flex gap-4 w-full max-h-[200px] items-center p-2 mobile:flex-col small-device:flex-row">
+      <div className="w-1/2 flex gap-4 items-center justify-between overflow-scroll  mobile:w-full small-device:w-1/2">
+        <div className="w-2/5">
           <img
             src={product?.item?.image?.[0] || ""}
             alt={product?.item?.name || ""}
-            className="max-w-[100px] max-h-[100px] object-cover object-top aspect-square rounded"
+            className=" min-w-[70px] min-h-[70px] max-w-[100px] max-h-[100px] w-full object-cover object-top aspect-square rounded"
           />
         </div>
 
@@ -74,19 +71,21 @@ const CartCard = ({
           <span className="text-lg font-roboto font-semibold text-ellipsis overflow-hidden whitespace-nowrap">
             {product?.item?.name}
           </span>
-          <span className="text-sm font-roboto text-ellipsis">
+          <span className="text-sm font-roboto text-ellipsis  overflow-hidden whitespace-nowrap">
             {product?.item?.description}
           </span>
           {/* <span>{product?.item?.price}</span> */}
+          <Button
+            btntext={"remove"}
+            className={
+              "w-min p-1 bg-gray-300 rounded mobile:hidden small-device:block"
+            }
+            onClick={handleRemoveClicked}
+          />
         </div>
-        <Button
-          btntext={"remove"}
-          className={"w-1/5 p-1 bg-gray-300 rounded"}
-          onClick={handleRemoveClicked}
-        />
       </div>
-      <div className="flex gap-2 items-center w-1/2 justify-between font-medium text-sm">
-        <span className="w-1/3 flex justify-center items-center">
+      <div className="flex gap-2 items-center w-1/2 justify-between font-medium text-sm mobile:w-full small-device:w-1/2">
+        <span className="w-1/3 flex justify-center items-center mobile:hidden small-device:flex">
           <FaRupeeSign className="font-roboto font-medium text-sm" />
           {product?.item?.price}
         </span>
@@ -107,7 +106,7 @@ const CartCard = ({
             <FaPlus />
           </span>
         </div>
-        <span className="w-1/3 flex justify-center items-center">
+        <span className="w-1/3 flex justify-center items-center text-lg">
           <FaRupeeSign className="font-roboto font-medium text-sm" />
           {product?.quantity * product?.item?.price}
         </span>

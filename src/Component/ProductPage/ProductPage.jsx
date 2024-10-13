@@ -10,8 +10,9 @@ import ReviewForm from "../ReviewForm/ReviewForm";
 import ReviewCard from "../ReviewCard/ReviewCard";
 import ProductImage from "../ProductImage/ProductImage";
 import { socialMedia } from "../../utility/constant";
-import { handleAddToCart } from "../../utility/constant";
+import { handleAddToCart } from "../../utility/addToCart";
 // import { SERVER_URL } from "../../config";
+const pageNotFind = require("../../assets/images/pageNotFind.jpg");
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
 const ProductPage = ({ isAuthenticated, userDetail, authToken }) => {
@@ -24,37 +25,8 @@ const ProductPage = ({ isAuthenticated, userDetail, authToken }) => {
   const [isRefreshClicked, setIsRefreshClicked] = useState(false);
   const [isShareShow, setIsShareShow] = useState(false);
   const [productAdding, setProductAdding] = useState(false);
+  const [isError, setIsError] = useState({});
   const message = `🚀 Exciting News! 🌟\n\nI just discovered the **${productData.name}** and I can't stop raving about it! 🎉\n\n✨ **Why You’ll Love It**:\n- Top-notch quality that speaks for itself!\n- Perfect for tech enthusiasts.\n- Limited-time offer: Don't miss out! 🕒\n\n👉 Check it out here: ${currentURL}\n\n💬 Let me know what you think, and tag your friends who need this in their lives!`;
-  // const handleAddToCart = () => {
-  //   if (userDetail === "" || userDetail === undefined || userDetail === null) {
-  //     alert("Please login First!");
-  //     return;
-  //   }
-  //   axios({
-  //     method: "POST",
-  //     url: `${SERVER_URL}/api/user/add-to-cart`,
-  //     data: {
-  //       userId: userDetail.id,
-  //       productId: productId,
-  //       quantity: 1,
-  //     },
-  //     headers: {
-  //       "Content-type": "application/json; charset=UTF-8",
-  //       Authorization: `Bearer ${authToken}`,
-  //     },
-  //   })
-  //     .then((response) => {
-  //       console.log(response);
-  //       swal(
-  //         "Product Added!",
-  //         "Your product is Added to Cart you can proceed next",
-  //         "success"
-  //       );
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // };
 
   const handleClick = () => {
     setIsReviewClicked((isReview) => !isReview);
@@ -70,12 +42,22 @@ const ProductPage = ({ isAuthenticated, userDetail, authToken }) => {
       },
     })
       .then((response) => {
-        setProductData(response.data);
-
+        const { data, status } = response;
+        if (status === 200) {
+          setProductData(data?.product);
+        } else {
+          // Handle error
+        }
         setIsDataFetch(true);
       })
       .catch((error) => {
-        console.error(error);
+        const { data, status } = error?.response;
+        if (status === 404) {
+          setIsError({ error: data?.message, status: status });
+          setIsDataFetch(true);
+        }
+        // swal(`Oops! Error ${status}`, data?.message, "error");
+        // console.error(error);
       });
   };
 
@@ -101,7 +83,23 @@ const ProductPage = ({ isAuthenticated, userDetail, authToken }) => {
   useEffect(() => getRelatedProduct(), [productData]);
 
   if (!isDataFetch && !isReviewClicked) return <Loader />; // Loading state while data is fetched.  Replace with your own loading component.  e.g., <Loading /> or <CircularProgress /> from material-ui.  Also, add error handling here.  e.g., axios.get().catch(error => console.error(error))
-
+  if (isError.error) {
+    return (
+      <div className="w-full loader-container flex justify-center items-center">
+        <div className="flex flex-col gap-4 items-center">
+          <img
+            src={pageNotFind}
+            className="h-[400px] rounded-3xl"
+            alt="Page Not Found"
+          />
+          <div className="font-roboto text-ellipsis text-lg">
+            <p>Ohh....</p>
+            <p className="">{isError?.error}!</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
   return (
     productData &&
     relatedProduct && (
@@ -122,9 +120,7 @@ const ProductPage = ({ isAuthenticated, userDetail, authToken }) => {
             <p className="product-description font-roboto">
               {productData?.description}
             </p>
-            <p className="product-price text-left">
-              ₹ {(productData?.price * 83.71).toFixed(2)}
-            </p>
+            <p className="product-price text-left">₹ {productData?.price}</p>
 
             <div className="buy-buttons  flex gap-3   ">
               <Button
@@ -217,7 +213,7 @@ const ProductPage = ({ isAuthenticated, userDetail, authToken }) => {
             <p className="text-sm text-gray-500">
               {productData?.review?.length} reviews
             </p>
-            {userDetail && (
+            {userDetail && authToken && (
               <Button
                 btntext={"Write a Review"}
                 className={

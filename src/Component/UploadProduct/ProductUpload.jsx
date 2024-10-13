@@ -13,16 +13,18 @@ const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 const API_KEY = process.env.REACT_APP_CLOUDINARY_API_KEY;
 const CLOUD_NAME = process.env.REACT_APP_CLOUDINARY_CLOUD_NAME;
 const API_SECRET = process.env.REACT_APP_CLOUDINARY_API_SECRET;
-const ProductUpload = () => {
+const ProductUpload = ({ authToken }) => {
   const [productUploading, setProductUploading] = useState(false);
-  const [productDetails, setProductDetails] = useState({
+  const [initialProductDetail] = useState({
     name: "",
-    price: null,
+    price: "",
     image: [],
     category: "",
     description: "",
     stock: null,
   });
+  const [productDetails, setProductDetails] = useState(initialProductDetail);
+
   const [image, setImage] = useState([]);
   const [error, setError] = useState({
     name: "",
@@ -88,7 +90,10 @@ const ProductUpload = () => {
       method: "POST",
       url: `${SERVER_URL}/api/product/add-product`,
       data: detail,
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken}`,
+      },
     })
       .then((response) => {
         const { data, status } = response;
@@ -97,7 +102,10 @@ const ProductUpload = () => {
             "Product successfully uploaded",
             "your product is added",
             "success"
-          );
+          ).then(() => {
+            setProductDetails(initialProductDetail);
+            setImage(() => []);
+          });
           console.log("Product added successfully", data);
         }
         setProductUploading(false);
@@ -214,6 +222,7 @@ const ProductUpload = () => {
                 id="category"
                 className="p-2 bg-gray-100 border-2 rounded border-gray-300 outline-none"
                 onChange={handleChange}
+                value={productDetails?.category}
               >
                 <option value="">Select Category</option>
                 {productCategory?.map((item) => {
@@ -225,30 +234,35 @@ const ProductUpload = () => {
                 })}
               </select>
             </div>
-            {productDetails?.category &&
-              productDetails?.category !== "others" && (
-                <div className="w-1/2  flex flex-col gap-3">
-                  <label htmlFor="subCategory">Sub Category</label>
-                  <select
-                    name="subCategory"
-                    className="p-2 bg-gray-100 border-2 rounded border-gray-300 outline-none"
-                    id="subCategory"
-                  >
-                    <option value="">Select Sub Category</option>
-                    {productCategory?.map((item) => {
-                      return item.value === productDetails?.category
-                        ? item.child.map((subItem) => {
-                            return (
-                              <option key={subItem?.id} value={subItem?.value}>
-                                {subItem.capitalise()}
-                              </option>
-                            );
-                          })
-                        : "";
-                    })}
-                  </select>
-                </div>
-              )}
+            {/* {productDetails?.category && */}
+            {/* // productDetails?.category !== "others" && ( */}
+            <div className="w-1/2  flex flex-col gap-3">
+              <label htmlFor="subCategory">Sub Category</label>
+              <select
+                name="subCategory"
+                className="p-2 bg-gray-100 border-2 rounded border-gray-300 outline-none"
+                id="subCategory"
+                disabled={
+                  productDetails?.category === "others" ||
+                  !productDetails?.category
+                }
+                onChange={handleChange}
+              >
+                <option value="">Select Sub Category</option>
+                {productCategory?.map((item) => {
+                  return item.value === productDetails?.category
+                    ? item.child?.map((subItem) => {
+                        return (
+                          <option key={subItem?.id} value={subItem?.value}>
+                            {subItem.capitalise()}
+                          </option>
+                        );
+                      })
+                    : "";
+                })}
+              </select>
+            </div>
+            {/* // )} */}
             {error.category && <p>{error.category}</p>}
           </div>
           <div className="w-full flex gap-3">
