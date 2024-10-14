@@ -7,7 +7,12 @@ export const handleAddToCart = (
   authToken,
   setProductAdding
 ) => {
-  if (userDetail === "" || userDetail === undefined || userDetail === null) {
+  if (
+    userDetail === "" ||
+    userDetail === undefined ||
+    userDetail === null ||
+    authToken
+  ) {
     alert("Please login First!");
     return;
   }
