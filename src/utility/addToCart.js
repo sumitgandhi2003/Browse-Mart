@@ -11,7 +11,9 @@ export const handleAddToCart = (
     userDetail === "" ||
     userDetail === undefined ||
     userDetail === null ||
-    authToken
+    authToken === "" ||
+    authToken === undefined ||
+    authToken === null
   ) {
     alert("Please login First!");
     return;
