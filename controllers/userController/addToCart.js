@@ -13,17 +13,17 @@ const addToCart = async (req, res, next) => {
       return res.status(404).json({ message: "Product not found." });
     }
     const existingProduct = user.cart.find(
-      (item) => item?.productId.toString() === productId.toString()
+      (item) => item?.productId?.toString() === productId?.toString()
     );
     if (existingProduct) {
       existingProduct.quantity += quantity;
     } else {
       user.cart.push({ productId, quantity });
     }
-    console.log(user.cart);
     await user.save();
-    await res.json({ message: "Hello" });
+    await res?.status(200)?.json({ message: "Product Added!" });
   } catch (error) {
+    res.status(500).json({ message: "Internal Server Error" });
     console.log(error);
   }
 };
