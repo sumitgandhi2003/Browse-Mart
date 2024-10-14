@@ -26,15 +26,26 @@ export const handleAddToCart = (
     },
   })
     .then((response) => {
-      console.log(response);
-      setProductAdding((prev) => !prev);
-      swal(
-        "Product Added!",
-        "Your product is Added to Cart you can proceed next",
-        "success"
-      );
+      const { status } = response;
+      if (status === 200) {
+        setProductAdding((prev) => !prev);
+        swal(
+          "Product Added!",
+          "Your product is Added to Cart you can proceed next",
+          "success"
+        );
+      }
     })
     .catch((error) => {
+      const { status, data } = error.response;
+      if (status === 401) {
+        alert("Unauthorized Access! Please Login First");
+      } else if (status === 404) {
+        alert(`Product not found with id ${productId}`);
+      } else if (status === 500) {
+        alert("Internal Server Error");
+      }
+      setProductAdding((prev) => !prev);
       console.log(error);
     });
 };

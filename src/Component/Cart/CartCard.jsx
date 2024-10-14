@@ -71,7 +71,7 @@ const CartCard = ({
           <span className="text-lg font-roboto font-semibold text-ellipsis overflow-hidden whitespace-nowrap">
             {product?.item?.name}
           </span>
-          <span className="text-sm font-roboto text-ellipsis  overflow-hidden whitespace-nowrap">
+          <span className="text-sm font-roboto text-ellipsis line-clamp-2 ">
             {product?.item?.description}
           </span>
           {/* <span>{product?.item?.price}</span> */}

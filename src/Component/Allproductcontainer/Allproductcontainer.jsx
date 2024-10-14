@@ -4,6 +4,7 @@ import { API_URL } from "../../utility/constant";
 import { Link } from "react-router-dom";
 import Productcard from "../Productcard/Productcard";
 import Loader from "../Loader/Loader";
+import ServerError from "../ServerError/ServerError";
 const noResultImage = require("../../assets/images/noResult.png");
 // import { SERVER_URL } from "../../config";
 const serverErrorImage = require("../../assets/images/serverError.jpg");
@@ -85,12 +86,7 @@ const Allproductcontainer = ({ userDetail, authToken }) => {
     // getAllCategory();
   }, []);
   if (error.error) {
-    return (
-      <div className="w-full h-screen flex justify-center items-center">
-        {/* <h1 className="text-center text-red-500">{error.error}</h1>; */}
-        <img src={serverErrorImage} className="h-[500px]" alt="server error" />
-      </div>
-    );
+    return <ServerError />;
   }
   if (isDataFetch && !filteredProduct?.length > 0)
     return (

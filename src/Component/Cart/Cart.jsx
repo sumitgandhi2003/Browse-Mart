@@ -5,6 +5,7 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 import Button from "../Button/Button";
 import CartCard from "./CartCard";
 import EmptyCart from "./EmptyCart";
+import ServerError from "../ServerError/ServerError";
 
 const emptyCartImage = require("../../assets/images/emptyCart.png");
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
@@ -13,6 +14,7 @@ const Cart = ({ userDetail, authToken }) => {
   const [cartItem, setCartItem] = useState();
   const [isDataFetching, setIsDataFetching] = useState(false);
   const [totalAmount, setTotalAmount] = useState(0);
+  const [error, setError] = useState({});
   let amount = 0;
   if (authToken === null || authToken === undefined || authToken === "") {
     navigate("/login");
@@ -32,6 +34,12 @@ const Cart = ({ userDetail, authToken }) => {
       })
       .catch((error) => {
         console.error(error);
+        setError(() => {
+          return {
+            message: "Failed to fetch cart items",
+            status: error?.response?.status,
+          };
+        });
         setIsDataFetching(false);
       });
   };
@@ -39,13 +47,15 @@ const Cart = ({ userDetail, authToken }) => {
   useEffect(() => {
     getCartItem();
   }, [authToken]);
-  console.log(cartItem);
   if (isDataFetching) return <Loader />;
   else if (!isDataFetching && cartItem?.length === 0) return <EmptyCart />;
 
   // Check if user is authenticated
   if (!authToken) {
     return <div>Please log in to view your cart</div>;
+  }
+  if (error?.message) {
+    return <ServerError />;
   }
 
   return (

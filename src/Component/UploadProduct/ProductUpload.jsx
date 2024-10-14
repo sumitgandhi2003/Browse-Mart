@@ -106,7 +106,7 @@ const ProductUpload = ({ authToken }) => {
             setProductDetails(initialProductDetail);
             setImage(() => []);
           });
-          console.log("Product added successfully", data);
+          // console.log("Product added successfully", data);
         }
         setProductUploading(false);
         // setProductDetails({});
@@ -114,7 +114,11 @@ const ProductUpload = ({ authToken }) => {
         // setImage([]);
       })
       .catch((error) => {
+        const { data, status } = error?.response;
         setProductUploading(false);
+        if (status === 500) {
+          swal("Error uploading!", data?.message, "error");
+        }
         console.log("Error uploading product", error);
         console.log(productDetails);
       });
