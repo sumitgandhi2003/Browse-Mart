@@ -43,13 +43,18 @@ const Allproductcontainer = ({ userDetail, authToken }) => {
     axios
       .get(`${SERVER_URL}/api/product/get-all-products`)
       .then((response) => {
-        SetAllProduct(response.data);
-        SetFilteredProduct(response.data);
+        const { data, status } = response;
+        if (status === 200) {
+          SetAllProduct(data?.products);
+          SetFilteredProduct(data?.products);
+        }
+
         setIsDataFetch(true);
       })
       .catch((error) => {
-        console.error(error);
-        setError({ error: error.message });
+        const { data, status } = error?.response;
+        if (status === 500) setError({ error: data?.message });
+        console.log(data?.message);
       });
   };
 

@@ -5,24 +5,27 @@ import Button from "../Button/Button";
 import "./ReviewForm.css";
 import axios from "axios";
 import swal from "sweetalert";
+// import component
+import ReviewStar from "./ReviewStar";
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 const ReviewForm = ({
   onClose,
   productId,
   setIsRefreshClicked,
   userDetail,
+  authToken,
 }) => {
   const [reviewData, setReviewData] = useState({
     productId: productId,
-    userId: userDetail?.id || "",
-    rating: "5",
-    heading: "",
+    // userId: userDetail?.id || "",
+    rating: "",
+    title: "",
     message: "",
-    userName: userDetail.name || "",
+    // userName: userDetail.name || "",
   });
   const [error, setError] = useState({
     isError: true,
-    heading: "",
+    title: "",
     message: "",
   });
   console.log(reviewData);
@@ -38,6 +41,9 @@ const ReviewForm = ({
       method: "post",
       url: `${SERVER_URL}/api/product/submit-review`,
       data: reviewData,
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
     })
       .then((response) => {
         console.log(response);
@@ -99,28 +105,32 @@ const ReviewForm = ({
         <h2 className=" text-4xl text-center text-blue-700">Review</h2>
         <div className="mt-[2vh]">
           <div className="review Star p-3 flex w-full gap-2 flex-row-reverse justify-end items-center">
-            {/* <i class="fa-solid fa-star text-5xl text-yellow-500 "></i> */}
+            <ReviewStar
+              setStarRating={setReviewData}
+              rating={reviewData?.rating}
+            />
+            {/* <i class="fa-solid fa-star text-5xl text-yellow-500 "></i>
             <i class="fa-regular fa-star text-5xl text-blue-500 s1"></i>
             <i class="fa-regular fa-star text-5xl text-blue-500 s2"></i>
             <i class="fa-regular fa-star text-5xl text-blue-500 s3"></i>
             <i class="fa-regular fa-star text-5xl text-blue-500 s4"></i>
-            <i class="fa-regular fa-star text-5xl text-blue-500 s5"></i>
+            <i class="fa-regular fa-star text-5xl text-blue-500 s5"></i> */}
           </div>
-          <div className="heading p-3 mt-3">
+          <div className="title p-3 mt-3">
             <Input
               type={"text"}
               className={
                 "form-control w-full min-h-10 outline-none border-2 font-semibold border-blue-500 p-3 rounded placeholder:text-blue-400 text-blue-500"
               }
-              placeholder={"Heading"}
-              name={"heading"}
-              value={reviewData?.heading}
+              placeholder={"Title"}
+              name={"title"}
+              value={reviewData?.title}
               onChange={handleInput}
-              id={"heading"}
+              id={"title"}
             />
 
-            {error.heading && (
-              <div className="text-red-500 text-xs ml-2">{error.heading}</div>
+            {error.title && (
+              <div className="text-red-500 text-xs ml-2">{error.title}</div>
             )}
           </div>
           <div className="p-3">
@@ -145,12 +155,12 @@ const ReviewForm = ({
             <Button
               btntext="Submit"
               className={`relative right-0  ${
-                reviewData.heading === "" || reviewData.message === ""
+                reviewData.title === "" || reviewData.message === ""
                   ? "bg-blue-500"
                   : "bg-blue-700"
               } w-full text-white p-3 rounded hover:bg-blue-700 outline-none`}
               disabled={
-                error.heading !== "" || error.message !== "" ? true : false
+                error.title !== "" || error.message !== "" ? true : false
               }
             />
           </div>

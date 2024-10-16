@@ -242,6 +242,7 @@ const ProductPage = ({ isAuthenticated, userDetail, authToken }) => {
             productId={productData?.["_id"]}
             setIsRefreshClicked={setIsRefreshClicked}
             userDetail={userDetail}
+            authToken={authToken}
           />
         )}
       </div>
