@@ -185,17 +185,17 @@ const ProductUpload = ({ authToken }) => {
         </div>
         {image.length > 0 && <ImagePreview image={image} />}
 
-        <div className=" product-detail-container min-h-[300px] flex flex-col gap-5">
+        <div className=" product-detail-container  flex flex-col gap-5">
           <div className="w-full flex gap-3">
             <div className="w-1/2 flex flex-col gap-3">
-              <label htmlFor="name">Name</label>
+              <label htmlFor="name">Product Name</label>
               <Input
                 type={"text"}
                 id={"name"}
                 name={"name"}
                 value={productDetails?.name}
                 onChange={handleChange}
-                placeholder={"Name"}
+                placeholder={"Product Name"}
                 className="p-2 bg-gray-100 border-2 rounded border-gray-300 outline-none"
               />
               {error.name && <p>{error.name}</p>}

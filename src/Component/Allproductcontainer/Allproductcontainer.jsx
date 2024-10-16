@@ -48,13 +48,12 @@ const Allproductcontainer = ({ userDetail, authToken }) => {
           SetAllProduct(data?.products);
           SetFilteredProduct(data?.products);
         }
-
         setIsDataFetch(true);
       })
       .catch((error) => {
-        const { data, status } = error?.response;
-        if (status === 500) setError({ error: data?.message });
-        console.log(data?.message);
+        setIsDataFetch(true);
+        setError({ error: error?.responsedata?.message });
+        console.log(error?.responsedata?.message);
       });
   };
 

@@ -23,12 +23,13 @@ const ReviewForm = ({
     message: "",
     // userName: userDetail.name || "",
   });
+  const [isReviewUploading, setIsReviewUploading] = useState(false);
+  //   const [rating, setRating]
   const [error, setError] = useState({
     isError: true,
     title: "",
     message: "",
   });
-  console.log(reviewData);
 
   const formRef = useRef();
   //   const handleSelect = (e) => {
@@ -37,6 +38,7 @@ const ReviewForm = ({
 
   // for sending data to  server
   const submitReview = () => {
+    setIsReviewUploading(true);
     axios({
       method: "post",
       url: `${SERVER_URL}/api/product/submit-review`,
@@ -46,7 +48,7 @@ const ReviewForm = ({
       },
     })
       .then((response) => {
-        console.log(response);
+        setIsReviewUploading(false);
         onClose();
         // alert("Review submitted successfully!");
         swal({
@@ -56,6 +58,7 @@ const ReviewForm = ({
         }).then(() => setIsRefreshClicked((prev) => !prev));
       })
       .catch((error) => {
+        setIsReviewUploading(false);
         console.log(error);
         alert("Failed to submit review!");
       });
@@ -162,6 +165,7 @@ const ReviewForm = ({
               disabled={
                 error.title !== "" || error.message !== "" ? true : false
               }
+              loading={isReviewUploading}
             />
           </div>
         </div>
