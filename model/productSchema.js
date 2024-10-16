@@ -8,7 +8,16 @@ const productSchema = new mongoose.Schema({
   category: { type: String, required: true },
   stock: { type: Number, required: false },
   inStock: { type: Boolean, required: false },
-  review: [],
+  review: [
+    {
+      rating: { type: Number, required: true },
+      title: { type: String, required: true },
+      message: { type: String, required: true },
+      userId: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+      userName: { type: String, required: true },
+      createdAt: { type: Date, default: Date.now },
+    },
+  ],
   userID: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
 });
 

@@ -11,6 +11,6 @@ router.route("/get-all-products").get(getAllProduct);
 router.route("/get-product-by-id").post(getProductById);
 router.route("/get-related-product").post(getRelatedProduct);
 
-router.post("/submit-review", submitReview);
+router.route("/submit-review").post(userAuthentication, submitReview);
 
 module.exports = router;

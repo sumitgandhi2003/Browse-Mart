@@ -7,7 +7,11 @@ const app = express();
 
 app.use(
   cors({
-    origin: ["https://browsemart.vercel.app", "http://localhost:3000"],
+    origin: [
+      "https://browsemart.vercel.app",
+      "http://localhost:3000",
+      "192.168.1.40:3000",
+    ],
   })
 );
 // app.use(express.json());

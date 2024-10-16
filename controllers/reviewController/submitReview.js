@@ -3,8 +3,9 @@ const Product = require("../../model/productSchema");
 
 const submitReview = async (req, res, next) => {
   try {
-    const { productId, userId, userName, rating, heading, message } = req.body;
-    if (!rating || !heading || !message) {
+    const { _id, name } = await req.user;
+    const { productId, userId, userName, rating, title, message } = req.body;
+    if (!rating || !title || !message) {
       return res.status(400).json({ message: "All fields are required" });
     }
     console.log(userName, userId);
@@ -13,14 +14,14 @@ const submitReview = async (req, res, next) => {
       {
         $push: {
           review: {
-            rating: rating,
-            heading: heading,
+            rating: Number(rating),
+            title: title,
             message: message,
-            userid: userId,
-            username: userName,
-            timestamp: new Date()
-              .toLocaleDateString("en-GB")
-              .replace("///g", "-"),
+            userId: _id,
+            userName: name,
+            // timestamp: new Date()
+            //   .toLocaleDateString("en-GB")
+            //   .replace("///g", "-"),
           },
         },
       }
