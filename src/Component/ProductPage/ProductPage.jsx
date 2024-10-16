@@ -145,7 +145,7 @@ const ProductPage = ({ isAuthenticated, userDetail, authToken }) => {
                 }
                 onClick={() => {
                   if (isAuthenticated) swal("Buy Sucessfully!", "", "success");
-                  else alert("Please Login First!");
+                  else alert("This site is under maintenance some functionality is not working please try again later.");
                 }}
               />
             </div>
