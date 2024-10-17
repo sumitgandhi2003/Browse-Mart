@@ -71,7 +71,7 @@ const ProductPage = ({ isAuthenticated, userDetail, authToken }) => {
       },
     })
       .then((response) => {
-        setRelatedProduct(response.data);
+        setRelatedProduct(response?.data?.product);
       })
       .catch((error) => {
         console.error(error);
@@ -196,7 +196,7 @@ const ProductPage = ({ isAuthenticated, userDetail, authToken }) => {
               {relatedProduct.length > 0 &&
                 relatedProduct.map((product, index) => {
                   return (
-                    <Link to={`/product/${product?.["_id"]}`} key={index}>
+                    <Link to={`/product/${product?.id}`} key={index}>
                       <Productcard product={product} />
                     </Link>
                   );
@@ -210,9 +210,9 @@ const ProductPage = ({ isAuthenticated, userDetail, authToken }) => {
         <div className="review-section p-4">
           <div className="flex gap-3 justify-between mb-3 items-center ">
             <h2 className="text-4xl p-2 font-roboto font-bold">Reviews</h2>
-            <p className="text-sm text-gray-500">
+            {/* <p className="text-sm text-gray-500">
               {productData?.review?.length} reviews
-            </p>
+            </p> */}
             {userDetail && authToken && (
               <Button
                 btntext={"Write a Review"}

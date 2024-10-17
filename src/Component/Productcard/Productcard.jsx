@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { handleAddToCart } from "../../utility/addToCart";
 const Productcard = ({ product, userDetail, authToken }) => {
   const [productAdding, setProductAdding] = useState(false);
-  const { image, name, price, category, _id } = product;
+  const { image, name, price, category, id, rating } = product;
   return (
     <div
       className="product-card group w-full h-full max-h-[400px] max-w-[300px]  gap-4 border-2  border-gray-00 tablet:hover:border-blue-500 tablet:hover:bg-gray-200
@@ -11,7 +11,7 @@ const Productcard = ({ product, userDetail, authToken }) => {
     >
       {/* <Link to={"/product/" + id} className="w-full"> */}
       <img
-        src={image[0]}
+        src={image || image[0]}
         className="aspect-square object-cover w-full z-10 rounded-md object-top "
         alt={name}
       />
@@ -23,8 +23,30 @@ const Productcard = ({ product, userDetail, authToken }) => {
           {name}
         </div>
         {/* </Link> */}
-        <div className="product-price  font-bold text-lg mobile:text-sm my-1 ">
-          {/* ₹{(price * 83.71)?.toFixed(2)} */}₹{price}
+        <div className="flex gap-1 items-center justify-between my-1">
+          <div className="product-price  font-bold text-lg mobile:text-sm my-1 ">
+            {/* ₹{(price * 83.71)?.toFixed(2)} */}₹{price}
+          </div>
+          {rating && rating !== null && (
+            <div className="hidden tablet:flex">
+              {[1, 2, 3, 4, 5]?.map((index) => {
+                return (
+                  <svg
+                    key={index}
+                    className={`w-5 h-5 cursor-pointer ${
+                      index <= Math.round(rating)
+                        ? "text-yellow-500"
+                        : "text-gray-300"
+                    }`}
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.77 5.82 22 7 14.14l-5-4.87 6.91-1.01z" />
+                  </svg>
+                );
+              })}
+            </div>
+          )}
         </div>
         <div className="w-1/2 text-ellipsis overflow-hidden whitespace-nowrap font-roboto text-base mobile:text-xs tablet:text-sm">
           {category?.capitalise()}
@@ -41,7 +63,7 @@ const Productcard = ({ product, userDetail, authToken }) => {
               e.preventDefault();
               e.stopPropagation();
 
-              handleAddToCart(userDetail, _id, authToken, setProductAdding);
+              handleAddToCart(userDetail, id, authToken, setProductAdding);
             }}
           />
         </div>

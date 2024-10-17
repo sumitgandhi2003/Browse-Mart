@@ -45,6 +45,7 @@ const Allproductcontainer = ({ userDetail, authToken }) => {
       .then((response) => {
         const { data, status } = response;
         if (status === 200) {
+          console.log(data);
           SetAllProduct(data?.products);
           SetFilteredProduct(data?.products);
         }
@@ -52,8 +53,8 @@ const Allproductcontainer = ({ userDetail, authToken }) => {
       })
       .catch((error) => {
         setIsDataFetch(true);
-        setError({ error: error?.responsedata?.message });
-        console.log(error?.responsedata?.message);
+        console.log(error);
+        setError({ error: error?.message });
       });
   };
 
@@ -92,6 +93,7 @@ const Allproductcontainer = ({ userDetail, authToken }) => {
   if (error.error) {
     return <ServerError />;
   }
+
   if (isDataFetch && !filteredProduct?.length > 0)
     return (
       <div className="w-full h-screen flex justify-center items-center">
@@ -149,7 +151,7 @@ const Allproductcontainer = ({ userDetail, authToken }) => {
             filteredProduct.map((product, index) => {
               return (
                 <Link
-                  to={"/product/" + product?.["_id"]}
+                  to={"/product/" + product?.id}
                   className="w-full "
                   key={index}
                 >

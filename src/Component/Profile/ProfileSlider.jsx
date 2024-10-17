@@ -17,7 +17,7 @@ const ProfileSlider = ({
   const [active, setActive] = useState("user");
   const navigate = useNavigate();
   const [isProfileShow, setISProfileShow] = useState(true);
-
+  console.log(userDetail);
   const handleLogOut = () => {
     swal("Are you Leaving?", "Are you sure want to logout?", "warning", {
       buttons: {
@@ -59,13 +59,15 @@ const ProfileSlider = ({
             />
           </div>
           <div>
-            {userDetail?.isSeller ? (
+            {userDetail?.userType === "seller" ? (
               <FaUpload
                 className=" text-3xl rounded-full p-1 text-white hover:text-blue-500 cursor-pointer font-extrabold hover:bg-white"
                 onClick={() => setActive("upload")}
               />
+            ) : userDetail?.userType === "admin" ? (
+              <div>Admin</div>
             ) : (
-              <div>buyer</div>
+              <div>Buyer</div>
             )}
           </div>
         </div>
@@ -81,7 +83,7 @@ const ProfileSlider = ({
       {/* {isProfileShow && (
         <Profile userDetail={userDetail} authToken={authToken} />
       )} */}
-      {active === "upload" && userDetail?.isSeller && (
+      {active === "upload" && userDetail?.userType === "seller" && (
         <ProductUpload authToken={authToken} />
       )}
     </div>
