@@ -5,7 +5,24 @@ const getRelatedProduct = async (req, res) => {
       category: req.body.category,
       _id: { $ne: req.body.productId },
     }).limit(5);
-    res.json(product);
+    const modifiedProducts = product?.map((product) => {
+      let totalStarRating = 0;
+      product?.review?.map((review) => {
+        totalStarRating += review?.rating;
+      });
+      return {
+        id: product?._id,
+        name: product?.name,
+        price: product?.price,
+        description: product?.description,
+        image: product?.image?.[0],
+        category: product?.category,
+        stock: product?.stock,
+        rating: Number(totalStarRating / product?.review?.length),
+      };
+    });
+    res.json({ message: "data fetched", product: modifiedProducts });
+    // res.json({message:"data fetched"});
   } catch (error) {
     console.error(error);
   }

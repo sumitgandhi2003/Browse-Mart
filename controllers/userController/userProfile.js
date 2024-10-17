@@ -10,7 +10,7 @@ const userProfile = async (req, res, next) => {
       email: foundedUser?.email,
       phoneNumber: foundedUser?.phoneNumber,
       profilePic: foundedUser?.profilePic,
-      isSeller: foundedUser?.isSeller,
+      userType: foundedUser?.userType,
       address: foundedUser?.address,
     };
     return res.status(200).json({ mesaage: "data Found", userDetail });

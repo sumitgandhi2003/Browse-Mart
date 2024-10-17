@@ -14,7 +14,6 @@ const createUser = async (req, res) => {
       email: email.trim(),
       password: password,
       TandC: TandC,
-      isSeller: false,
     });
     await newUser.save();
 

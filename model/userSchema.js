@@ -7,7 +7,11 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   TandC: { type: Boolean },
-  isSeller: { type: Boolean },
+  userType: {
+    type: String,
+    enum: ["consumer", "seller", "admin"],
+    default: "consumer",
+  },
   // cart: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
   // wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
   // order: [{ type: mongoose.Schema.Types.ObjectId, ref: "Order" }],
