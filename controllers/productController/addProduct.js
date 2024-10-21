@@ -4,7 +4,7 @@ const addProduct = async (req, res) => {
   try {
     const { name, price, description, image, category, stock } = req.body;
     const foundedUser = req.user;
-    if (foundedUser?.sellerType !== "seller") {
+    if (foundedUser?.userType !== "seller") {
       return res
         .status(401)
         .json({ messsage: "unauthorize access you don't have seller account" });
