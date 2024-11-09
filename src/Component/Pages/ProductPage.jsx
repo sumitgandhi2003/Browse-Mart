@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
-import swal from "sweetalert";
 import { FaShare } from "react-icons/fa";
-import Productcard from "../Productcard/Productcard";
-import Loader from "../Loader/Loader";
-import Button from "../Button/Button";
-import ReviewForm from "../ReviewForm/ReviewForm";
-import ReviewCard from "../ReviewCard/ReviewCard";
-import ProductImage from "../ProductImage/ProductImage";
-import { socialMedia } from "../../utility/constant";
+import ProductCard from "../Product/ProductCard";
+import { Button, Loader } from "../UI";
+import { ReviewForm, ReviewCard } from "../Review";
+import ProductImage from "../Product/ProductImage";
+import { formatAmount, socialMedia } from "../../utility/constant";
 import { handleAddToCart } from "../../utility/addToCart";
 // import { SERVER_URL } from "../../config";
 const pageNotFind = require("../../assets/images/pageNotFind.jpg");
@@ -120,38 +117,73 @@ const ProductPage = ({ isAuthenticated, userDetail, authToken }) => {
             <p className="product-description font-roboto">
               {productData?.description}
             </p>
-            <p className="product-price text-left">₹ {productData?.price}</p>
+            <p className="product-price text-left">
+              ₹ {formatAmount(productData?.price)}
+            </p>
 
-            <div className="buy-buttons  flex gap-3   ">
-              <Button
-                btntext={"Add to Cart"}
-                className={
-                  "bg-blue-200 rounded w-full font-roboto text-white p-2"
-                }
-                onClick={() =>
-                  handleAddToCart(
-                    userDetail,
-                    productId,
-                    authToken,
-                    setProductAdding
-                  )
-                }
-                loading={productAdding}
-              />
-              <Button
-                btntext={"Buy Now"}
-                className={
-                  "bg-blue-500 rounded w-full text-white p-2 shadow-md hover:scale-105 transition-all active:bg-blue-100"
-                }
-                onClick={() => {
-                  if (isAuthenticated) swal("Buy Sucessfully!", "", "success");
-                  else alert("This site is under maintenance some functionality is not working please try again later.");
-                }}
-              />
+            <div className="buy-buttons  flex gap-3 w-full   ">
+              {userDetail && authToken ? (
+                productData?.stock > 0 ? (
+                  <div className="w-full flex gap-4">
+                    <Button
+                      btntext={"Add to Cart"}
+                      className={
+                        "bg-blue-200 rounded w-1/2 font-roboto text-white p-2"
+                      }
+                      onClick={() =>
+                        handleAddToCart(
+                          userDetail,
+                          productId,
+                          authToken,
+                          setProductAdding
+                        )
+                      }
+                      loading={productAdding}
+                    />
+                    <Link to={"/product/buy/" + productId} className="w-1/2">
+                      <Button
+                        btntext={"Buy Now"}
+                        className={
+                          "bg-blue-500 rounded w-full text-white p-2 shadow-md hover:scale-105 transition-all active:bg-blue-100"
+                        }
+                        // onClick={() => {
+                        //   if (userDetail && authToken) {
+                        //     swal("Buy Sucessfully!", "", "success");
+                        //     <Link to={"/buynow/" + productId}>Buy Now</Link>;
+                        //   } else
+                        //     alert(
+                        //       "This site is under maintenance some functionality is not working please try again later."
+                        //     );
+                        // }}
+                      />
+                    </Link>
+                  </div>
+                ) : (
+                  <p className="text-center text-red-500">Out of Stock</p>
+                )
+              ) : (
+                <Link to={"/login"} className="w-full">
+                  <Button
+                    btntext={"Login to Buy"}
+                    className={
+                      "bg-blue-500 rounded w-full text-white p-2 shadow-md hover:scale-105 transition-all active:bg-blue-100"
+                    }
+                    // onClick={() => {
+                    //   if (userDetail && authToken) {
+                    //     swal("Buy Sucessfully!", "", "success");
+                    //     <Link to={"/buynow/" + productId}>Buy Now</Link>;
+                    //   } else
+                    //     alert(
+                    //       "This site is under maintenance some functionality is not working please try again later."
+                    //     );
+                    // }}
+                  />
+                </Link>
+              )}
             </div>
 
             {/* Share Button */}
-            <div className="flex flex-col mobile:flex-row tablet:flex-col gap-2">
+            <div className="flex flex-col mobile:flex-row tablet:flex-col gap-2 ">
               <span onClick={() => setIsShareShow((prev) => !prev)}>
                 <FaShare className="text-3xl cursor-pointer p-1 text-blue-400 rounded-full hover:bg-blue-400 hover:text-white" />
               </span>
@@ -197,7 +229,7 @@ const ProductPage = ({ isAuthenticated, userDetail, authToken }) => {
                 relatedProduct.map((product, index) => {
                   return (
                     <Link to={`/product/${product?.id}`} key={index}>
-                      <Productcard product={product} />
+                      <ProductCard product={product} />
                     </Link>
                   );
                 })}

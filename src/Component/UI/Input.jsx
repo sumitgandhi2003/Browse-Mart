@@ -12,6 +12,9 @@ const Input = ({
   required,
   multiple,
   accept,
+  pattern,
+  disabled,
+  // Add any other props you need here for your specific use case. For example, a label tag for accessibility:
 }) => {
   return (
     <input
@@ -26,6 +29,8 @@ const Input = ({
       multiple={multiple}
       required={required}
       accept={accept}
+      pattern={pattern}
+      disabled={disabled}
     />
   );
 };

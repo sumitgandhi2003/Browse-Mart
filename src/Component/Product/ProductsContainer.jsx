@@ -2,14 +2,14 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { API_URL } from "../../utility/constant";
 import { Link } from "react-router-dom";
-import Productcard from "../Productcard/Productcard";
-import Loader from "../Loader/Loader";
+import Productcard from "./ProductCard";
+import Loader from "../UI/Loader/Loader";
 import ServerError from "../ServerError/ServerError";
 const noResultImage = require("../../assets/images/noResult.png");
 // import { SERVER_URL } from "../../config";
 const serverErrorImage = require("../../assets/images/serverError.jpg");
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
-const Allproductcontainer = ({ userDetail, authToken }) => {
+const ProductsContainer = ({ userDetail, authToken }) => {
   const [allProduct, SetAllProduct] = useState();
   const [allCategories, SetAllCategories] = useState();
   const [filteredProduct, SetFilteredProduct] = useState();
@@ -45,7 +45,6 @@ const Allproductcontainer = ({ userDetail, authToken }) => {
       .then((response) => {
         const { data, status } = response;
         if (status === 200) {
-          console.log(data);
           SetAllProduct(data?.products);
           SetFilteredProduct(data?.products);
         }
@@ -172,4 +171,4 @@ const Allproductcontainer = ({ userDetail, authToken }) => {
   );
 };
 
-export default Allproductcontainer;
+export default ProductsContainer;

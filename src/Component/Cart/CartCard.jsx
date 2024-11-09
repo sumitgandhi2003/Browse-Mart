@@ -3,7 +3,8 @@ import { FaPlus, FaMinus } from "react-icons/fa6";
 import { FaRupeeSign } from "react-icons/fa";
 import axios from "axios";
 import swal from "sweetalert";
-import Button from "../Button/Button";
+import Button from "../UI/Button";
+import { formatAmount } from "../../utility/constant";
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 const CartCard = ({
   product,
@@ -27,11 +28,10 @@ const CartCard = ({
     axios({
       method: "POST",
       url: `${SERVER_URL}/api/user/update-cart`,
-      data: { productId: product?.item?._id, quantity: newQuantity },
+      data: { productId: product?.item?.id, quantity: newQuantity },
       headers: { Authorization: `Bearer ${authToken}` },
     })
       .then((res) => {
-        console.log(res);
         // setIsDataFetching((prevState) => !prevState);
         getCartItem();
       })
@@ -61,7 +61,7 @@ const CartCard = ({
       <div className="w-1/2 flex gap-4 items-center justify-between overflow-scroll  mobile:w-full small-device:w-1/2">
         <div className="w-2/5">
           <img
-            src={product?.item?.image?.[0] || ""}
+            src={product?.item?.image || ""}
             alt={product?.item?.name || ""}
             className=" min-w-[70px] min-h-[70px] max-w-[100px] max-h-[100px] w-full object-cover object-top aspect-square rounded"
           />
@@ -108,7 +108,7 @@ const CartCard = ({
         </div>
         <span className="w-1/3 flex justify-center items-center text-lg">
           <FaRupeeSign className="font-roboto font-medium text-sm" />
-          {product?.quantity * product?.item?.price}
+          {formatAmount(product?.quantity * product?.item?.price)}
         </span>
       </div>
     </div>

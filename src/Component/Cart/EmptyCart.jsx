@@ -1,5 +1,5 @@
 import React from "react";
-import Button from "../Button/Button";
+import Button from "../UI/Button";
 import { Link } from "react-router-dom";
 const emptyCartImage = require("../../assets/images/emptyCart.png");
 

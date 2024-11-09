@@ -1,24 +1,25 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
-import Input from "../Input/Input";
-import Button from "../Button/Button";
+import Input from "../../UI/Input";
+import Button from "../../UI/Button";
+import axios from "axios";
 import swal from "sweetalert";
-import { useNavigate } from "react-router-dom";
-
-const LoginForm = ({ setIsSignUpShow, setAuthToken }) => {
-  const navigate = useNavigate();
+import { Navigate } from "react-router-dom";
+const SignUpForm = ({ setIsSignUpShow, setAuthToken }) => {
   const SERVER_URL = process.env.REACT_APP_SERVER_URL;
   const [initialUserDetail, setInitialUserDetail] = useState({
     email: "",
+    name: "",
     password: "",
+    TandC: false,
   });
-  const [userDetail, setUserDetail] = useState(initialUserDetail);
   const [error, setError] = useState({
     email: "",
+    name: "",
     password: "",
     isError: false,
   });
+  const [userDetail, setUserDetail] = useState(initialUserDetail);
   const [isPasswordShow, setIsPasswordShow] = useState(false);
 
   const handleInput = (e) => {
@@ -33,57 +34,66 @@ const LoginForm = ({ setIsSignUpShow, setAuthToken }) => {
       [name]: type === "checkbox" ? checked : value,
     });
   };
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (
-      (error.isError && userDetail.email === "") ||
-      userDetail.password === ""
-    ) {
-      swal("Oops!", "All field are required", "warning");
+    if (!userDetail.email || !userDetail.name || !userDetail.password) {
+      swal("Oops!", "All fields  are required!", "warning");
     } else {
-      handleLogin();
+      handleRegisteration();
       setUserDetail(initialUserDetail);
     }
+    console.log(userDetail);
+    // make API call to server here
   };
-
-  const handleLogin = () => {
+  const handleRegisteration = () => {
     axios({
       method: "POST",
-      url: `${SERVER_URL}/api/user/login`,
+      url: `${SERVER_URL}/api/user/register`,
       data: userDetail,
-      headers: { "Content-type": "application/json; charset=UTF-8" },
+      headers: { "Content-Type": "application/json; charset=UTF-8" },
     })
       .then((response) => {
-        // localStorage.setItem("token", response.data.token);
-        // localStorage.setItem("userId", response.data.userId);
-        // setIsSignUpShow(false);
-        if (response.status === 200) {
-          // swal("success", "User Login Successfully", "success");
-          localStorage.setItem("AuthToken", response?.data?.AuthToken);
-          setAuthToken(response?.data?.AuthToken);
-          navigate("/");
-        } else {
-          swal("Oops!", "Something went wrong", "error");
+        if (response.status === 201) {
+          swal(
+            "Registered Successfully!",
+            "you are now registered with us you can proceed",
+            "success"
+          ).then(() => {
+            localStorage.setItem("AuthToken", response?.data?.AuthToken);
+            setAuthToken(response?.data?.AuthToken);
+            <Navigate to={"/"} />;
+          });
         }
       })
       .catch((error) => {
+        console.log(error);
         const status = error?.response?.status;
-        const message = error?.response?.data?.message;
-        if (status === 404) {
-          swal("Oops!", message, "error");
-        } else if (status === 401) {
-          swal("Oops!", message, "error");
-        } else if (status === 400) {
-          swal("Oops!", message, "error");
+        if (status === 400) {
+          swal(
+            "Resgistration Failed!",
+            "You are already registered with us",
+            "warning"
+          );
         } else {
           swal("Oops!", "Something went wrong", "error");
         }
       });
   };
-
   return (
     <form className="p-3 flex flex-col gap-3">
+      <div className="w-full">
+        <Input
+          type={"text"}
+          name={"name"}
+          className={
+            "w-full bg-transparent outline-none placeholder:text-white p-2 text-white font-roboto  border-2 border-white rounded"
+          }
+          placeholder={"Name"}
+          value={userDetail?.name}
+          onChange={handleInput}
+          id={"name"}
+        />
+      </div>
       <div className="w-full">
         <Input
           type={"email"}
@@ -123,19 +133,50 @@ const LoginForm = ({ setIsSignUpShow, setAuthToken }) => {
           )}
         </div>
       </div>
+      <div className={` flex items-center gap-2 text-sm`}>
+        <Input
+          type={"checkbox"}
+          name={"TandC"}
+          className={"outline-none border-none"}
+          id={"tandc"}
+          // className={
+          //   "w-full bg-transparent outline-none placeholder:text-white p-2 text-white font-roboto  border-2 border-white rounded"
+          // }
+          checked={userDetail?.TandC}
+          onChange={handleInput}
+        />
+        {/* <input
+      type="checkbox"
+      name="TandC"
+      id=""
+      checked={userDetail?.TandC}
+      onChange={handleInput}
+    /> */}
+        <label htmlFor="tandc" className="text-white font-roboto">
+          by creating an account you agree{" "}
+          <a
+            href="https://drive.google.com/file/d/1PlEAh5E7Z9A4zPCMq67iYGUMYyOY39NH/"
+            target="_blank"
+            rel="noreferrer"
+            className="text-blue-600 font-roboto font-bold"
+          >
+            terms & conditions
+          </a>
+        </label>
+      </div>
 
       <div className="flex gap-2">
-        <div className="text-white font-roboto">Don't have an account</div>
-        <div
+        <div className="text-white font-roboto">Already have an account</div>
+        <span
           className="text-blue-600 font-bold font-roboto hover:cursor-pointer"
           onClick={() => setIsSignUpShow((prev) => !prev)}
         >
-          Sign-up here!
-        </div>
+          Sign-in here!
+        </span>
       </div>
       <div className="w-full relative">
         <Button
-          btntext={"Login"}
+          btntext={"Create Account"}
           className={
             " bg-white text-blue-600 font-bold py-1 px-3 w-full  font-roboto rounded"
           }
@@ -146,4 +187,4 @@ const LoginForm = ({ setIsSignUpShow, setAuthToken }) => {
   );
 };
 
-export default LoginForm;
+export default SignUpForm;

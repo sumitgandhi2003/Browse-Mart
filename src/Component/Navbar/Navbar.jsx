@@ -1,12 +1,12 @@
 import { useState, useContext } from "react";
 //import components
-import Hamburger from "../Hamburger/Hamburger";
+import Hamburger from "../UI/Hamburger";
 import { BsCart2 } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import ProfileSlider from "../Profile/ProfileSlider";
 import { themeContext } from "../../Context/themeContext";
 const maleProfileIcon = require("../../assets/images/maleprofileicon.jpg");
-const Navbar = ({ authToken, setAuthToken, userDetail }) => {
+const Navbar = ({ authToken, setAuthToken, userDetail, setUserDetail }) => {
   const [isShow, SetIsShow] = useState(false);
   const [showProfileSlider, setShowProfileSlider] = useState(false);
   const { theme, toggleTheme } = useContext(themeContext);
@@ -69,8 +69,9 @@ const Navbar = ({ authToken, setAuthToken, userDetail }) => {
           showProfileSlider={showProfileSlider}
           setShowProfileSlider={setShowProfileSlider}
           userDetail={userDetail}
-          setAuthToken={setAuthToken}
+          setUserDetail={setUserDetail}
           authToken={authToken}
+          setAuthToken={setAuthToken}
         />
       )}
 

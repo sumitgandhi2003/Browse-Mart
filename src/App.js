@@ -12,15 +12,17 @@ import { Navigate } from "react-router-dom";
 // import ForgotPassword from "./Component/ForgotPassword/ForgotPassword";
 // import Home from "./Component/Home/Home";
 import Cart from "./Component/Cart/Cart";
-import Login from "./Component/Login/Login";
+import LoginPage from "./Component/Pages/LoginPage/LoginPage";
 import Navbar from "./Component/Navbar/Navbar";
-import Allproductcontainer from "./Component/Allproductcontainer/Allproductcontainer";
-import ProductPage from "./Component/ProductPage/ProductPage";
+import ProductPage from "./Component/Pages/ProductPage";
+import BuyNow from "./Component/BuyNow/BuyNow";
+import SuccessPage from "./Component/BuyNow/SuccessPage";
+import ProductsContainer from "./Component/Product/ProductsContainer";
 
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
-const AppLayout = ({ authToken, userDetail, setAuthToken }) => {
+const AppLayout = ({ authToken, setAuthToken, userDetail, setUserDetail }) => {
   String.prototype.capitalise = function () {
-    if (this.length === 0) return "";
+    if (this.length === 0) return;
     const name = this.split(" ");
     for (let i = 0; i < name.length; i++) {
       name[i] = name[i].charAt(0).toUpperCase() + name[i].slice(1);
@@ -34,6 +36,7 @@ const AppLayout = ({ authToken, userDetail, setAuthToken }) => {
         authToken={authToken}
         setAuthToken={setAuthToken}
         userDetail={userDetail}
+        setUserDetail={setUserDetail}
       />
       <Outlet />
     </div>
@@ -63,6 +66,7 @@ const App = () => {
       }
     }
   };
+  console.log(userDetail);
   // const { data } = getUserDetail();
   // if (data && data.message === "Token expired") {
   //   swal("Expired", "Please login again", "error").then(() => {
@@ -83,30 +87,30 @@ const App = () => {
   const router = createBrowserRouter([
     {
       path: "/login",
-      element: <Login authToken={authToken} setAuthToken={setAuthToken} />,
+      element: <LoginPage authToken={authToken} setAuthToken={setAuthToken} />,
     },
     {
       path: "/",
       element: (
         <AppLayout
           authToken={authToken}
-          userDetail={userDetail}
           setAuthToken={setAuthToken}
+          userDetail={userDetail}
+          setUserDetail={setUserDetail}
         />
       ),
       children: [
         {
           path: "/",
           element: (
-            <Allproductcontainer
-              authToken={authToken}
-              userDetail={userDetail}
-            />
+            <ProductsContainer authToken={authToken} userDetail={userDetail} />
           ),
         },
         {
           path: "/allproduct",
-          element: <Allproductcontainer />,
+          element: (
+            <ProductsContainer authToken={authToken} userDetail={userDetail} />
+          ),
         },
         {
           path: "/product/:productId",
@@ -117,6 +121,18 @@ const App = () => {
         {
           path: "/cart",
           element: <Cart userDetail={userDetail} authToken={authToken} />,
+        },
+        {
+          path: "product/buy/:productId",
+          element: <BuyNow authToken={authToken} userDetail={userDetail} />,
+        },
+        {
+          path: "/checkout",
+          element: <BuyNow authToken={authToken} userDetail={userDetail} />,
+        },
+        {
+          path: "/order-success/:orderId",
+          element: <SuccessPage />,
         },
         {
           path: "*",

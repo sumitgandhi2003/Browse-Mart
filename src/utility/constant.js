@@ -184,3 +184,8 @@ export const productBrands = [
   { id: 20, name: "Burberry", value: "burberry" },
   { id: 21, name: "Others", value: "others" },
 ];
+
+export const formatAmount = (amount) => {
+  const amountString = amount.toString();
+  return amountString.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};

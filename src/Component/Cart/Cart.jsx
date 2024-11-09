@@ -1,11 +1,12 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import Loader from "../Loader/Loader";
+import Loader from "../UI/Loader/Loader";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import Button from "../Button/Button";
+import Button from "../UI/Button";
 import CartCard from "./CartCard";
 import EmptyCart from "./EmptyCart";
 import ServerError from "../ServerError/ServerError";
+import { formatAmount } from "../../utility/constant";
 
 const emptyCartImage = require("../../assets/images/emptyCart.png");
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
@@ -59,7 +60,7 @@ const Cart = ({ userDetail, authToken }) => {
   }
 
   return (
-    <div className="flex h-screen gap-5 p-3 mobile:h-full mobile:flex-col tablet:flex-row tablet:h-screen bg-blue-400 relative">
+    <div className="flex h-full gap-5 p-3 mobile:h-full mobile:flex-col tablet:flex-row tablet:h-max bg-blue-400 relative">
       {/* Shopping cart section */}
       <div className="w-10/12 h-min  mobile:w-full tablet:w-10/12 p-6 flex flex-col gap-5 bg-white rounded-md overflow-hidden">
         <div className="flex justify-between items-center p-2 border-b-2">
@@ -127,13 +128,18 @@ const Cart = ({ userDetail, authToken }) => {
             </div>
             <div className="w-full flex justify-between items-center">
               <span className="w-1/2">Total Amount:</span>{" "}
-              <span className="w-1/2"> {amount}</span>
+              <span className="w-1/2 text-lg font-bold">
+                {" "}
+                {formatAmount(amount)}
+              </span>
             </div>
           </div>
-          <Button
-            btntext={"Check Out"}
-            className={"bg-blue-500 text-white p-2 rounded-full"}
-          />
+          <Link to={"/checkout"}>
+            <Button
+              btntext={"Check Out"}
+              className={"bg-blue-500 text-white p-2 rounded-full w-full"}
+            />
+          </Link>
         </div>
       </div>
     </div>

@@ -3,7 +3,7 @@ import React from "react";
 const ReviewCard = ({ review }) => {
   const { rating, title, message, userName } = review;
   return (
-    <div className="bg-white relative p-2 border-2 border-dashed border-black/60  text-black min-w-[300px] min-h-[150px] max-h-[200px] max-w-[400px] mobile:w-1/2 mobile:min-w-[100%] small-device:w-auto small-device:min-w-[300px] small-device:max-w-[150px]  rounded">
+    <div className="bg-white relative p-2 border-2 overflow-hidden border-dashed border-black/60  text-black min-w-[300px] min-h-[150px] max-h-[200px] max-w-[400px] mobile:w-1/2 mobile:min-w-[100%] small-device:w-auto small-device:min-w-[300px] small-device:max-w-[150px]  rounded">
       {/* <div className="absolute top-2 left-2 font-semibold text-white text-[12px] rounded-full bg-gray-600">
         {rating}
       </div> */}
@@ -12,7 +12,7 @@ const ReviewCard = ({ review }) => {
           return (
             <svg
               key={index}
-              className={`w-8 h-8 cursor-pointer ${
+              className={`w-8 h-8  ${
                 index <= rating ? "text-yellow-500" : "text-gray-300"
               }`}
               fill="currentColor"
@@ -31,10 +31,10 @@ const ReviewCard = ({ review }) => {
       <div className="font-roboto  max-h-[60px] line-clamp-3 overflow-hidden text-ellipsis">
         {message}
       </div>
-      <div className="font-roboto group absolute text-ellipsis  whitespace-nowrap max-w-40 bottom-1 right-2 font-bold">
-        <div>By {userName?.capitalise() || "Sumit Gandhi"}</div>
-        <div className="group-hover:block bg-gray-600 p-1 absolute bottom-7 font-semibold text-white text-[10px] rounded  hidden ">
-          By {userName?.capitalise() || "Sumit Gandhi"}
+      <div className="font-roboto group absolute text-ellipsis whitespace-nowrap max-w-40 bottom-1 right-2 font-bold ">
+        <div className="">By {userName?.capitalise() || "User"}</div>
+        <div className="group-hover:block bg-gray-600 p-1 absolute bottom-7 font-semibold text-white text-[10px] rounded  hidden  ">
+          By {userName?.capitalise() || "User"}
         </div>
       </div>
     </div>

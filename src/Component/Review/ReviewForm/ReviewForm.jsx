@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import Input from "../Input/Input";
-import TextArea from "../TextArea/TextArea";
-import Button from "../Button/Button";
+import Input from "../../UI/Input";
+import TextArea from "../../UI/TextArea";
+import Button from "../../UI/Button";
 import "./ReviewForm.css";
 import axios from "axios";
 import swal from "sweetalert";

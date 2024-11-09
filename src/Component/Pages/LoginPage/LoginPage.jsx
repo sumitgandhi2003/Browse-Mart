@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import image from "../../assets/images/login_panel_logo.png";
+import image from "../../../assets/images/login_panel_logo.png";
 import LoginForm from "./LoginForm";
 import SignUpForm from "./SignUpForm";
 import { useNavigate } from "react-router-dom";
-import Button from "../Button/Button";
+import Button from "../../UI/Button";
 import axios from "axios";
 import swal from "sweetalert";
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
@@ -11,7 +11,7 @@ const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 // action={`${SERVER_URL}${isSignUpShow ? "/create-user" : ""}`}
 // method={`${isSignUpShow ? "post" : "get"}`
 
-const Login = ({ authToken, setAuthToken }) => {
+const LoginPage = ({ authToken, setAuthToken }) => {
   const [islogining, setIslogining] = useState(false);
   const navigate = useNavigate();
   const [isSignUpShow, setIsSignUpShow] = useState(false);
@@ -164,4 +164,4 @@ const Login = ({ authToken, setAuthToken }) => {
   );
 };
 
-export default Login;
+export default LoginPage;

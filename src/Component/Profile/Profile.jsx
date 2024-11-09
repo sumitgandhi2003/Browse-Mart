@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import Button from "../Button/Button";
-import Input from "../Input/Input";
+import Button from "../UI/Button";
+import Input from "../UI/Input";
 import axios from "axios";
 import swal from "sweetalert";
 const defaultProileImage = require("../../assets/images/maleprofileicon.jpg");
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
-const Profile = ({ userDetail, authToken }) => {
+const Profile = ({ userDetail, authToken, setUserDetail }) => {
   const [profileDetails, setProfileDetails] = useState();
   // let profileDetails = userDetail;
   const [isEditing, setIsEditing] = useState(false);
@@ -18,7 +18,13 @@ const Profile = ({ userDetail, authToken }) => {
   const handleChange = (e) => {
     const value = e.target.value;
     const name = e.target.name;
-    setProfileDetails((prev) => ({ ...prev, [name]: value }));
+    if (name === "phoneNumber") {
+      if (value?.length <= 11) {
+        setProfileDetails((prev) => ({ ...prev, [name]: value }));
+      }
+    } else {
+      setProfileDetails((prev) => ({ ...prev, [name]: value }));
+    }
   };
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -35,6 +41,7 @@ const Profile = ({ userDetail, authToken }) => {
     })
       .then((response) => {
         console.log(response);
+        setUserDetail(response?.data?.updatedUser);
         setIsUpdating((prev) => !prev);
         setIsEditing((prev) => !prev);
       })

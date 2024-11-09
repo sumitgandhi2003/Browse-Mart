@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import Input from "../Input/Input";
-import Button from "../Button/Button";
+// import Input from "../UI/Input";
+// import Button from "../UI/Button";
+import { Button, Input } from "../UI";
 import axios from "axios";
 import { FiUpload } from "react-icons/fi";
 import swal from "sweetalert";
@@ -8,11 +9,9 @@ import { useDropzone } from "react-dropzone";
 import ImagePreview from "./ImagePreview";
 import { productCategory, productBrands } from "../../utility/constant";
 // import cloudinary from "../../cloudinary.config";
-import { Cloudinary, CloudinaryConfig } from "@cloudinary/url-gen";
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 const API_KEY = process.env.REACT_APP_CLOUDINARY_API_KEY;
 const CLOUD_NAME = process.env.REACT_APP_CLOUDINARY_CLOUD_NAME;
-const API_SECRET = process.env.REACT_APP_CLOUDINARY_API_SECRET;
 const ProductUpload = ({ authToken }) => {
   const [productUploading, setProductUploading] = useState(false);
   const [initialProductDetail] = useState({
@@ -21,7 +20,7 @@ const ProductUpload = ({ authToken }) => {
     image: [],
     category: "",
     description: "",
-    stock: null,
+    stock: "",
   });
   const [productDetails, setProductDetails] = useState(initialProductDetail);
 
@@ -271,19 +270,51 @@ const ProductUpload = ({ authToken }) => {
           </div>
           <div className="w-full flex gap-3">
             <div className="w-1/2 flex flex-col gap-3">
-              <label htmlFor="price">Price</label>
+              <label htmlFor="mrpPrice">MRP Price</label>
               <Input
                 type={"number"}
-                id={"price"}
-                name={"price"}
-                value={productDetails?.price}
+                id={"mrpPrice"}
+                name={"mrpPrice"}
+                value={productDetails?.mrpPrice}
                 onChange={handleChange}
-                placeholder={"Price"}
+                placeholder={"MRP Price"}
                 className={
                   "p-2 bg-gray-100 border-2 rounded border-gray-300 outline-none"
                 }
               />
-              {error.price && <p>{error.price}</p>}
+              {error.price && <p>{error.mrpPrice}</p>}
+            </div>
+            <div className="w-1/2 flex flex-col gap-3">
+              <label htmlFor="discountedPrice">Discounted Price</label>
+              <Input
+                type={"number"}
+                id={"discountedPrice"}
+                name={"discountedPrice"}
+                value={productDetails?.discountedPrice}
+                onChange={handleChange}
+                placeholder={"Discounted Price"}
+                className={
+                  "p-2 bg-gray-100 border-2 rounded border-gray-300 outline-none"
+                }
+              />
+              {error.price && <p>{error.discountedPrice}</p>}
+            </div>
+          </div>
+          <div className="w-full flex gap-3">
+            <div className="w-1/2 flex flex-col gap-3">
+              <label htmlFor="stock">Stock</label>
+              <Input
+                type={"number"}
+                id={"stock"}
+                name={"stock"}
+                value={productDetails?.stock}
+                onChange={handleChange}
+                placeholder={"stock"}
+                className={
+                  "p-2 bg-gray-100 border-2 rounded border-gray-300 outline-none"
+                }
+              />
+              {error.quantity && <p>{error.stock}</p>}
             </div>
           </div>
 

@@ -23,7 +23,7 @@ export const handleAddToCart = (
     method: "POST",
     url: `${SERVER_URL}/api/user/add-to-cart`,
     data: {
-      userId: userDetail.id,
+      userId: userDetail?.id,
       productId: productId,
       quantity: 1,
     },

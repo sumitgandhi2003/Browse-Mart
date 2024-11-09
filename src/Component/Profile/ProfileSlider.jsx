@@ -11,13 +11,13 @@ const ProfileSlider = ({
   showProfileSlider,
   setShowProfileSlider,
   userDetail,
-  setAuthToken,
+  setUserDetail,
   authToken,
+  setAuthToken,
 }) => {
   const [active, setActive] = useState("user");
   const navigate = useNavigate();
   const [isProfileShow, setISProfileShow] = useState(true);
-  console.log(userDetail);
   const handleLogOut = () => {
     swal("Are you Leaving?", "Are you sure want to logout?", "warning", {
       buttons: {
@@ -37,6 +37,7 @@ const ProfileSlider = ({
         setAuthToken(null);
         setShowProfileSlider(false);
         navigate("/");
+        setUserDetail(null);
       }
     });
   };
@@ -78,7 +79,11 @@ const ProfileSlider = ({
         />
       </div>
       {active === "user" && (
-        <Profile userDetail={userDetail} authToken={authToken} />
+        <Profile
+          userDetail={userDetail}
+          authToken={authToken}
+          setUserDetail={setUserDetail}
+        />
       )}
       {/* {isProfileShow && (
         <Profile userDetail={userDetail} authToken={authToken} />
