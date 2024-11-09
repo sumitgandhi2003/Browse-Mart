@@ -19,7 +19,17 @@ const updateProfile = async (req, res, next) => {
     foundedUser.address = address || foundedUser?.address;
     await foundedUser?.save();
     console?.log(foundedUser);
-    res?.json({ message: "Hello" });
+    res?.json({
+      message: "Hello",
+      updatedUser: {
+        id: foundedUser?._id,
+        name: foundedUser?.name,
+        email: foundedUser?.email,
+        phoneNumber: foundedUser?.phoneNumber,
+        address: foundedUser?.address,
+        userType: foundedUser?.userType,
+      },
+    });
   } catch (error) {
     console?.log("Can't get user Detail", error);
     return res?.status(500)?.json({ message: "Internal Server Error" });

@@ -1,4 +1,6 @@
 const Product = require("../../model/productSchema");
+const Order = require("../../model/orderSchema");
+
 const getRelatedProduct = async (req, res) => {
   try {
     const product = await Product.find({

@@ -26,7 +26,21 @@ const userSchema = new mongoose.Schema({
     },
   ],
   wishlist: [],
-  order: [],
+  order: [
+    {
+      orderId: { type: mongoose.Schema.Types.ObjectId, ref: "Order" },
+      _id: false,
+    },
+  ],
+  shippingAddress: {
+    addressLine1: { type: String },
+    addressLine2: { type: String },
+    state: { type: String },
+    city: { type: String },
+    pinCode: { type: String },
+    country: { type: String },
+    _id: false,
+  },
 });
 
 userSchema.pre("save", async function (next) {

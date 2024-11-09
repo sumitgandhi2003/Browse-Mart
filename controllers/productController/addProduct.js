@@ -9,6 +9,9 @@ const addProduct = async (req, res) => {
         .status(401)
         .json({ messsage: "unauthorize access you don't have seller account" });
     }
+    if (!name || !price || !description || !image || !category || !stock) {
+      return res.status(400).json({ message: "Please fill all fields" });
+    }
     const newProduct = new Product({
       name: name,
       price: price,

@@ -10,7 +10,7 @@ app.use(
     origin: [
       "https://browsemart.vercel.app",
       "http://localhost:3000",
-      "192.168.1.40:3000",
+      "http://192.168.1.40:3000",
     ],
   })
 );

@@ -8,7 +8,6 @@ const submitReview = async (req, res, next) => {
     if (!rating || !title || !message) {
       return res.status(400).json({ message: "All fields are required" });
     }
-    console.log(userName, userId);
     const review = await Product.updateOne(
       { _id: productId },
       {
@@ -26,7 +25,6 @@ const submitReview = async (req, res, next) => {
         },
       }
     );
-    console.log(review);
     if (!review.modifiedCount) {
       return res.json({ message: "review not submitted" });
     }
