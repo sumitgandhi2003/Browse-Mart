@@ -184,143 +184,159 @@ const ProductUpload = ({ authToken }) => {
         </div>
         {image.length > 0 && <ImagePreview image={image} />}
 
-        <div className=" product-detail-container  flex flex-col gap-5">
-          <div className="w-full flex gap-3">
-            <div className="w-1/2 flex flex-col gap-3">
-              <label htmlFor="name">Product Name</label>
-              <Input
-                type={"text"}
-                id={"name"}
-                name={"name"}
-                value={productDetails?.name}
-                onChange={handleChange}
-                placeholder={"Product Name"}
-                className="p-2 bg-gray-100 border-2 rounded border-gray-300 outline-none"
-              />
-              {error.name && <p>{error.name}</p>}
-            </div>
-            <div className="w-1/2 flex flex-col gap-3">
-              <label htmlFor="stock">Brand</label>
-              <select
-                name="brand"
-                id="brand"
-                className="p-2 bg-gray-100 border-2 rounded border-gray-300 outline-none"
-              >
-                <option value="">Select Brand</option>
-                {productBrands?.map((item) => {
-                  return (
-                    <option key={item?.id} value={item?.value}>
-                      {item.value.capitalise()}
-                    </option>
-                  );
-                })}
-              </select>
-            </div>
+        <div className=" product-detail-container  grid items-stretch grid-cols-2 gap-5">
+          {/* <div className="w-full flex gap-3"> */}
+          <div className=" flex flex-col gap-3">
+            <label htmlFor="name">
+              Product Name <span className="required">*</span>
+            </label>
+            <Input
+              type={"text"}
+              id={"name"}
+              name={"name"}
+              value={productDetails?.name}
+              onChange={handleChange}
+              placeholder={"Product Name"}
+              className="p-2 bg-gray-100 border-2 rounded border-gray-300 outline-none"
+            />
+            {error.name && <p>{error.name}</p>}
           </div>
-          <div className="w-full flex gap-3">
-            <div className="w-1/2 flex flex-col gap-3 ">
-              <label htmlFor="category">Category</label>
-              <select
-                name="category"
-                id="category"
-                className="p-2 bg-gray-100 border-2 rounded border-gray-300 outline-none"
-                onChange={handleChange}
-                value={productDetails?.category}
-              >
-                <option value="">Select Category</option>
-                {productCategory?.map((item) => {
-                  return (
-                    <option key={item?.id} value={item?.value}>
-                      {item.value.capitalise()}
-                    </option>
-                  );
-                })}
-              </select>
-            </div>
-            {/* {productDetails?.category && */}
-            {/* // productDetails?.category !== "others" && ( */}
-            <div className="w-1/2  flex flex-col gap-3">
-              <label htmlFor="subCategory">Sub Category</label>
-              <select
-                name="subCategory"
-                className="p-2 bg-gray-100 border-2 rounded border-gray-300 outline-none"
-                id="subCategory"
-                disabled={
-                  productDetails?.category === "others" ||
-                  !productDetails?.category
-                }
-                onChange={handleChange}
-              >
-                <option value="">Select Sub Category</option>
-                {productCategory?.map((item) => {
-                  return item.value === productDetails?.category
-                    ? item.child?.map((subItem) => {
-                        return (
-                          <option key={subItem?.id} value={subItem?.value}>
-                            {subItem.capitalise()}
-                          </option>
-                        );
-                      })
-                    : "";
-                })}
-              </select>
-            </div>
-            {/* // )} */}
+          <div className=" flex flex-col gap-3">
+            <label htmlFor="stock">
+              Brand <span className="required">*</span>
+            </label>
+            <select
+              name="brand"
+              id="brand"
+              className="p-2 bg-gray-100 border-2 rounded border-gray-300 outline-none"
+            >
+              <option value="">Select Brand</option>
+              {productBrands?.map((item) => {
+                return (
+                  <option key={item?.id} value={item?.value}>
+                    {item.value.capitalise()}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+          {/* </div> */}
+          {/* <div className="w-full flex gap-3"> */}
+          <div className=" flex flex-col gap-3 ">
+            <label htmlFor="category">
+              Category <span className="required">*</span>
+            </label>
+            <select
+              name="category"
+              id="category"
+              className="p-2 bg-gray-100 border-2 rounded border-gray-300 outline-none"
+              onChange={handleChange}
+              value={productDetails?.category}
+            >
+              <option value="">Select Category</option>
+              {productCategory?.map((item) => {
+                return (
+                  <option key={item?.id} value={item?.value}>
+                    {item.value.capitalise()}
+                  </option>
+                );
+              })}
+            </select>
             {error.category && <p>{error.category}</p>}
           </div>
-          <div className="w-full flex gap-3">
-            <div className="w-1/2 flex flex-col gap-3">
-              <label htmlFor="mrpPrice">MRP Price</label>
-              <Input
-                type={"number"}
-                id={"mrpPrice"}
-                name={"mrpPrice"}
-                value={productDetails?.mrpPrice}
-                onChange={handleChange}
-                placeholder={"MRP Price"}
-                className={
-                  "p-2 bg-gray-100 border-2 rounded border-gray-300 outline-none"
-                }
-              />
-              {error.price && <p>{error.mrpPrice}</p>}
-            </div>
-            <div className="w-1/2 flex flex-col gap-3">
-              <label htmlFor="discountedPrice">Discounted Price</label>
-              <Input
-                type={"number"}
-                id={"discountedPrice"}
-                name={"discountedPrice"}
-                value={productDetails?.discountedPrice}
-                onChange={handleChange}
-                placeholder={"Discounted Price"}
-                className={
-                  "p-2 bg-gray-100 border-2 rounded border-gray-300 outline-none"
-                }
-              />
-              {error.price && <p>{error.discountedPrice}</p>}
-            </div>
+          {/* {productDetails?.category && */}
+          {/* // productDetails?.category !== "others" && ( */}
+          <div className="  flex flex-col gap-3">
+            <label htmlFor="subCategory">
+              Sub Category <span className="required">*</span>
+            </label>
+            <select
+              name="subCategory"
+              className="p-2 bg-gray-100 border-2 rounded border-gray-300 outline-none"
+              id="subCategory"
+              disabled={
+                productDetails?.category === "others" ||
+                !productDetails?.category
+              }
+              onChange={handleChange}
+            >
+              <option value="">Select Sub Category</option>
+              {productCategory?.map((item) => {
+                return item.value === productDetails?.category
+                  ? item.child?.map((subItem) => {
+                      return (
+                        <option key={subItem?.id} value={subItem?.value}>
+                          {subItem.capitalise()}
+                        </option>
+                      );
+                    })
+                  : "";
+              })}
+            </select>
           </div>
-          <div className="w-full flex gap-3">
-            <div className="w-1/2 flex flex-col gap-3">
-              <label htmlFor="stock">Stock</label>
-              <Input
-                type={"number"}
-                id={"stock"}
-                name={"stock"}
-                value={productDetails?.stock}
-                onChange={handleChange}
-                placeholder={"stock"}
-                className={
-                  "p-2 bg-gray-100 border-2 rounded border-gray-300 outline-none"
-                }
-              />
-              {error.quantity && <p>{error.stock}</p>}
-            </div>
+          {/* // )} */}
+          {/* </div> */}
+          {/* <div className="w-full flex gap-3"> */}
+          <div className=" flex flex-col gap-3">
+            <label htmlFor="mrpPrice">
+              MRP Price <span className="required">*</span>
+            </label>
+            <Input
+              type={"number"}
+              id={"mrpPrice"}
+              name={"mrpPrice"}
+              value={productDetails?.mrpPrice}
+              onChange={handleChange}
+              placeholder={"MRP Price"}
+              className={
+                "p-2 bg-gray-100 border-2 rounded border-gray-300 outline-none"
+              }
+            />
+            {error.price && <p>{error.mrpPrice}</p>}
           </div>
+          <div className=" flex flex-col gap-3">
+            <label htmlFor="discountedPrice">
+              Discounted Price <span className="required">*</span>
+            </label>
+            <Input
+              type={"number"}
+              id={"discountedPrice"}
+              name={"discountedPrice"}
+              value={productDetails?.discountedPrice}
+              onChange={handleChange}
+              placeholder={"Discounted Price"}
+              className={
+                "p-2 bg-gray-100 border-2 rounded border-gray-300 outline-none"
+              }
+            />
+            {error.price && <p>{error.discountedPrice}</p>}
+          </div>
+          {/* </div> */}
+          {/* <div className="w-full flex gap-3"> */}
+          <div className=" flex flex-col gap-3">
+            <label htmlFor="stock">
+              Stock <span className="required">*</span>
+            </label>
+            <Input
+              type={"number"}
+              id={"stock"}
+              name={"stock"}
+              value={productDetails?.stock}
+              onChange={handleChange}
+              placeholder={"stock"}
+              className={
+                "p-2 bg-gray-100 border-2 rounded border-gray-300 outline-none"
+              }
+            />
+            {error.quantity && <p>{error.stock}</p>}
+          </div>
+          {/* </div> */}
 
-          <div className="w-full flex flex-col gap-3">
+          <div className="w-full col-span-2 flex flex-col gap-3">
             <div className="w-full flex flex-col gap-3">
-              <label htmlFor="description">Description</label>
+              <label htmlFor="description">
+                Description <span className="required">*</span>
+              </label>
               <textarea
                 name="description"
                 id={"description"}
