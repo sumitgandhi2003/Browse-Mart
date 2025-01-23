@@ -277,12 +277,7 @@ export const productBrands = [
 
 export const formatAmount = (amount) => {
   const amountString = amount?.toString();
-<<<<<<< HEAD
-  return amountString.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  return amountString.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-=======
   return amountString?.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
->>>>>>> 47d406282bac125c2e6e60a654d8b571032172fa
 };
 
 // Generating Dynamic future Years
