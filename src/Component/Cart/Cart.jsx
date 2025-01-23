@@ -58,9 +58,10 @@ const Cart = ({ userDetail, authToken }) => {
   if (error?.message) {
     return <ServerError />;
   }
+  console.log(cartItem);
 
   return (
-    <div className="flex h-full gap-5 p-3 mobile:h-full mobile:flex-col tablet:flex-row tablet:h-max bg-blue-400 relative">
+    <div className="flex gap-5 p-3  min-h-screen mobile:h-full mobile:flex-col tablet:flex-row bg-blue-400 relative">
       {/* Shopping cart section */}
       <div className="w-10/12 h-min  mobile:w-full tablet:w-10/12 p-6 flex flex-col gap-5 bg-white rounded-md overflow-hidden">
         <div className="flex justify-between items-center p-2 border-b-2">
@@ -89,7 +90,9 @@ const Cart = ({ userDetail, authToken }) => {
           </div>
           {cartItem &&
             cartItem?.map((product, index) => {
-              amount += product?.quantity * product?.item?.price;
+              amount +=
+                product?.quantity *
+                (product?.item?.price || product?.item?.sellingPrice);
               // console.log(product?.quantity * product?.item?.price);
               // setTotalAmount(product?.quantity * product?.item?.price);
               // else

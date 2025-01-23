@@ -4,11 +4,15 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { ThemeProvider } from "./Context/themeContext";
+import { CartProvider } from "./Context/cartContext";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   // <RouterProvider router={router}>
+
   <ThemeProvider>
-    <App />
+    <CartProvider>
+      <App />
+    </CartProvider>
   </ThemeProvider>
   // </RouterProvider>
 );

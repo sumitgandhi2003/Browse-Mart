@@ -3,8 +3,97 @@ import { MdEmail } from "react-icons/md";
 import axios from "axios";
 import swal from "sweetalert";
 export const API_URL = "https://fakestoreapi.com/";
-
+const LOCATION_SERVER_URL = process.env.REACT_APP_LOCATION_FETCHING_SERVER_URL;
+const LOCATION_API = process.env.REACT_APP_LOCATION_FETCHING_API_KEY;
 export const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+
+export const months = [
+  {
+    id: 1,
+    name: "January",
+    value: "01",
+    number: 1,
+    alphabetics: "Jan",
+  },
+  {
+    id: 2,
+    name: "February",
+    value: "02",
+    number: 2,
+    alphabetics: "Feb",
+  },
+  {
+    id: 3,
+    name: "March",
+    value: "03",
+    number: 3,
+    alphabetics: "Mar",
+  },
+  {
+    id: 4,
+    name: "April",
+    value: "04",
+    number: 4,
+    alphabetics: "Apr",
+  },
+  {
+    id: 5,
+    name: "May",
+    value: "05",
+    number: 5,
+    alphabetics: "May",
+  },
+  {
+    id: 6,
+    name: "June",
+    value: "06",
+    number: 6,
+    alphabetics: "Jun",
+  },
+  {
+    id: 7,
+    name: "July",
+    value: "07",
+    number: 7,
+    alphabetics: "Jul",
+  },
+  {
+    id: 8,
+    name: "August",
+    value: "08",
+    number: 8,
+    alphabetics: "Aug",
+  },
+  {
+    id: 9,
+    name: "September",
+    value: "09",
+    number: 9,
+    alphabetics: "Sep",
+  },
+  {
+    id: 10,
+    name: "October",
+    value: "10",
+    number: 10,
+    alphabetics: "Oct",
+  },
+  {
+    id: 11,
+    name: "November",
+    value: "11",
+    number: 11,
+    alphabetics: "Nov",
+  },
+  {
+    id: 12,
+    name: "December",
+    value: "12",
+    number: 12,
+    alphabetics: "Dec",
+  },
+];
+
 export const handleAddToCart = (
   userDetail,
   productId,
@@ -182,10 +271,50 @@ export const productBrands = [
   { id: 18, name: "Dior", value: "dior" },
   { id: 19, name: "Prada", value: "prada" },
   { id: 20, name: "Burberry", value: "burberry" },
-  { id: 21, name: "Others", value: "others" },
+  { id: 21, name: "Boat", value: "boat" },
+  { id: 22, name: "Others", value: "others" },
 ];
 
 export const formatAmount = (amount) => {
-  const amountString = amount.toString();
+  const amountString = amount?.toString();
   return amountString.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return amountString.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
+
+// Generating Dynamic future Years
+export const generateFutureYearsForExpiryDate = () => {
+  const currentYear = new Date().getFullYear();
+  const futureYears = [];
+  for (let i = currentYear; i <= currentYear + 20; i++) {
+    futureYears.push(i.toString());
+  }
+  return futureYears;
+};
+
+export const getAllCountry = async () => {
+  try {
+    const response = await axios({
+      method: "GET",
+      url: `${LOCATION_SERVER_URL}/countries`,
+      headers: {
+        "X-CSCAPI-KEY": LOCATION_API,
+      },
+    });
+
+    if (response.status === 200) {
+      const countryNames = response.data?.map((data) => ({
+        id: data?.id,
+        name: data?.name,
+        emoji: data?.emoji,
+        phoneCode: data?.phonecode,
+        iso2: data?.iso2,
+        iso3: data?.iso3,
+      }));
+
+      return countryNames; // Directly return the processed data
+    }
+  } catch (error) {
+    console.error("Error fetching countries:", error);
+    return []; // Return an empty array or handle error appropriately
+  }
 };

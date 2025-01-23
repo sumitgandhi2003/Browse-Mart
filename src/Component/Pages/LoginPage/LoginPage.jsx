@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import image from "../../../assets/images/login_panel_logo.png";
 import LoginForm from "./LoginForm";
 import SignUpForm from "./SignUpForm";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Button from "../../UI/Button";
 import axios from "axios";
 import swal from "sweetalert";
@@ -12,6 +12,7 @@ const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 // method={`${isSignUpShow ? "post" : "get"}`
 
 const LoginPage = ({ authToken, setAuthToken }) => {
+  const location = useLocation();
   const [islogining, setIslogining] = useState(false);
   const navigate = useNavigate();
   const [isSignUpShow, setIsSignUpShow] = useState(false);
@@ -19,6 +20,9 @@ const LoginPage = ({ authToken, setAuthToken }) => {
     email: "guest@gmail.com",
     password: "guestuser",
   };
+  const redirectFrom = new URLSearchParams(location?.search)?.get(
+    "redirect-from"
+  );
 
   const handleGuestLogin = () => {
     setIslogining((prev) => !prev);
@@ -37,7 +41,7 @@ const LoginPage = ({ authToken, setAuthToken }) => {
           localStorage.setItem("AuthToken", response?.data?.AuthToken);
           setAuthToken(response?.data?.AuthToken);
           setIslogining((prev) => !prev);
-          navigate("/");
+          navigate(redirectFrom ? `${redirectFrom}` : "/");
         } else {
           swal("Oops!", "Something went wrong", "error");
         }

@@ -1,0 +1,47 @@
+.required {
+  color: red;
+  font-weight: bolder;
+}
+.btn-glow {
+  background-color: #4caf50;
+  color: white;
+  box-shadow: 0 0 10px rgba(72, 239, 128, 0.7);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-glow:hover {
+  box-shadow: 0 0 15px rgba(72, 239, 128, 1);
+  color: green;
+  background-color: white;
+}
+.go-to-cart-btn {
+  border: none;
+  color: rgb(37 99 235);
+  --tw-bg-opacity: 1;
+  background-color: rgb(219 234 254 / var(--tw-bg-opacity));
+}
+.go-to-cart-btn:hover {
+  background-color: rgb(59 130 246/1) !important;
+  color: rgb(255 255 255/1) !important;
+}
+.go-to-cart-btn:focus {
+  border: none;
+  box-shadow: none;
+}
+.confirm-btn {
+  border: none;
+  color: rgb(37 99 235);
+  --tw-bg-opacity: 1;
+  background-color: rgb(219 234 254 / var(--tw-bg-opacity));
+}
+.confirm-btn:hover {
+  background-color: rgb(59 130 246/1) !important;
+  color: rgb(255 255 255/1) !important;
+}
+.confirm-btn:focus {
+  border: none;
+  box-shadow: none;
+}

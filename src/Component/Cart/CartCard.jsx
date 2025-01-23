@@ -5,6 +5,7 @@ import axios from "axios";
 import swal from "sweetalert";
 import Button from "../UI/Button";
 import { formatAmount } from "../../utility/constant";
+import { useCart } from "../../Context/cartContext";
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 const CartCard = ({
   product,
@@ -14,6 +15,7 @@ const CartCard = ({
   getCartItem,
 }) => {
   const [quantity, setQuantity] = useState(product?.quantity || 1);
+  const { setCartCount } = useCart();
   // const handleIncrement = () => {
   //   setQuantity((prevQuantity) => prevQuantity + 1);
   // };
@@ -33,6 +35,7 @@ const CartCard = ({
     })
       .then((res) => {
         // setIsDataFetching((prevState) => !prevState);
+        setCartCount(res?.data?.cartCount);
         getCartItem();
       })
       .catch((error) => {
@@ -55,7 +58,7 @@ const CartCard = ({
   const handleRemoveClicked = () => {
     updateCart();
   };
-
+  console.log(product?.item?.sellingPrice);
   return (
     <div className="flex gap-4 w-full max-h-[200px] items-center p-2 mobile:flex-col small-device:flex-row">
       <div className="w-1/2 flex gap-4 items-center justify-between overflow-scroll  mobile:w-full small-device:w-1/2">
@@ -87,7 +90,7 @@ const CartCard = ({
       <div className="flex gap-2 items-center w-1/2 justify-between font-medium text-sm mobile:w-full small-device:w-1/2">
         <span className="w-1/3 flex justify-center items-center mobile:hidden small-device:flex">
           <FaRupeeSign className="font-roboto font-medium text-sm" />
-          {product?.item?.price}
+          {product?.item?.price || product?.item?.sellingPrice}
         </span>
         <div className="w-1/3 flex justify-center items-center gap-3">
           <span
@@ -108,7 +111,10 @@ const CartCard = ({
         </div>
         <span className="w-1/3 flex justify-center items-center text-lg">
           <FaRupeeSign className="font-roboto font-medium text-sm" />
-          {formatAmount(product?.quantity * product?.item?.price)}
+          {formatAmount(
+            product?.quantity * product?.item?.price ||
+              product?.item?.sellingPrice
+          )}
         </span>
       </div>
     </div>

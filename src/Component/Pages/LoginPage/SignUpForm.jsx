@@ -42,7 +42,6 @@ const SignUpForm = ({ setIsSignUpShow, setAuthToken }) => {
       handleRegisteration();
       setUserDetail(initialUserDetail);
     }
-    console.log(userDetail);
     // make API call to server here
   };
   const handleRegisteration = () => {

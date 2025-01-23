@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FaShare } from "react-icons/fa";
 import ProductCard from "../Product/ProductCard";
@@ -8,6 +8,7 @@ import { ReviewForm, ReviewCard } from "../Review";
 import ProductImage from "../Product/ProductImage";
 import { formatAmount, socialMedia } from "../../utility/constant";
 import { handleAddToCart } from "../../utility/addToCart";
+import { useCart } from "../../Context/cartContext";
 // import { SERVER_URL } from "../../config";
 const pageNotFind = require("../../assets/images/pageNotFind.jpg");
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
@@ -23,8 +24,11 @@ const ProductPage = ({ isAuthenticated, userDetail, authToken }) => {
   const [isShareShow, setIsShareShow] = useState(false);
   const [productAdding, setProductAdding] = useState(false);
   const [isError, setIsError] = useState({});
+  const [isExpened, setIsExpened] = useState(false);
+  const location = useLocation();
+  const { setCartCount } = useCart();
   const message = `🚀 Exciting News! 🌟\n\nI just discovered the **${productData.name}** and I can't stop raving about it! 🎉\n\n✨ **Why You’ll Love It**:\n- Top-notch quality that speaks for itself!\n- Perfect for tech enthusiasts.\n- Limited-time offer: Don't miss out! 🕒\n\n👉 Check it out here: ${currentURL}\n\n💬 Let me know what you think, and tag your friends who need this in their lives!`;
-
+  const navigate = useNavigate();
   const handleClick = () => {
     setIsReviewClicked((isReview) => !isReview);
   };
@@ -115,10 +119,20 @@ const ProductPage = ({ isAuthenticated, userDetail, authToken }) => {
               {productData?.name}
             </h1>
             <p className="product-description font-roboto">
-              {productData?.description}
+              {isExpened
+                ? productData?.description
+                : productData?.description?.toString()?.substring(0, 250)}
+              {productData?.description?.length > 250 && (
+                <span
+                  className=" text-blue-500 underline text-sm font-semibold cursor-pointer"
+                  onClick={() => setIsExpened(!isExpened)}
+                >
+                  {isExpened ? " Read Less" : " Read More"}
+                </span>
+              )}
             </p>
             <p className="product-price text-left">
-              ₹ {formatAmount(productData?.price)}
+              ₹ {formatAmount(productData?.price || productData?.sellingPrice)}
             </p>
 
             <div className="buy-buttons  flex gap-3 w-full   ">
@@ -135,7 +149,9 @@ const ProductPage = ({ isAuthenticated, userDetail, authToken }) => {
                           userDetail,
                           productId,
                           authToken,
-                          setProductAdding
+                          setProductAdding,
+                          navigate,
+                          setCartCount
                         )
                       }
                       loading={productAdding}
@@ -162,7 +178,12 @@ const ProductPage = ({ isAuthenticated, userDetail, authToken }) => {
                   <p className="text-center text-red-500">Out of Stock</p>
                 )
               ) : (
-                <Link to={"/login"} className="w-full">
+                <Link
+                  to={`/login?redirect-from=${encodeURIComponent(
+                    location?.pathname
+                  )}`}
+                  className="w-full"
+                >
                   <Button
                     btntext={"Login to Buy"}
                     className={
@@ -229,7 +250,11 @@ const ProductPage = ({ isAuthenticated, userDetail, authToken }) => {
                 relatedProduct.map((product, index) => {
                   return (
                     <Link to={`/product/${product?.id}`} key={index}>
-                      <ProductCard product={product} />
+                      <ProductCard
+                        product={product}
+                        authToken={authToken}
+                        userDetail={userDetail}
+                      />
                     </Link>
                   );
                 })}

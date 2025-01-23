@@ -28,7 +28,7 @@ const ProfileSlider = ({
         confirm: {
           text: "Logout",
           visible: true,
-          className: " bg-blue-500",
+          className: "confirm-btn",
         },
       },
     }).then((willLogOut) => {

@@ -5,11 +5,13 @@ import { BsCart2 } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import ProfileSlider from "../Profile/ProfileSlider";
 import { themeContext } from "../../Context/themeContext";
+import { useCart } from "../../Context/cartContext";
 const maleProfileIcon = require("../../assets/images/maleprofileicon.jpg");
 const Navbar = ({ authToken, setAuthToken, userDetail, setUserDetail }) => {
   const [isShow, SetIsShow] = useState(false);
   const [showProfileSlider, setShowProfileSlider] = useState(false);
   const { theme, toggleTheme } = useContext(themeContext);
+  const { cartCount } = useCart();
   // String.prototype.capitalise = function () {
   //   if (this.length === 0) return "";
   //   return this.charAt(0).toUpperCase() + this.slice(1);
@@ -34,8 +36,16 @@ const Navbar = ({ authToken, setAuthToken, userDetail, setUserDetail }) => {
         {authToken !== null && authToken !== undefined && authToken !== "" ? (
           <div className="flex gap-3 items-center">
             <Link to={"/cart"}>
-              <div className="flex gap-2 items-center cursor-pointer">
+              <div className="flex gap-2 items-center cursor-pointer relative">
                 <BsCart2 className="text-white text-3xl font-bold" />
+                <p
+                  className={`bg-white w-6 h-6 p-1 text-blue-500 font-roboto rounded-full flex justify-center items-center absolute -top-3 left-3 ${
+                    cartCount === 0 ? "hidden" : ""
+                  }`}
+                >
+                  {/* 50 */}
+                  {cartCount}
+                </p>
                 <span>Cart</span>
                 {/* <span>{theme}</span> */}
               </div>

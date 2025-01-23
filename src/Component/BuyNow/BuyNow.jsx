@@ -9,34 +9,30 @@ import { FaRupeeSign } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { formatAmount } from "../../utility/constant";
 import Button from "../UI/Button";
+import "./style.css";
+import {
+  getAllCountry,
+  generateFutureYearsForExpiryDate,
+  months,
+} from "../../utility/constant";
 
 // import { FaRupeeSign } from "react-icons/fa";
+const LOCATION_SERVER_URL = process.env.REACT_APP_LOCATION_FETCHING_SERVER_URL;
+const LOCATION_API = process.env.REACT_APP_LOCATION_FETCHING_API_KEY;
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
 const BuyNow = ({ authToken, userDetail }) => {
   const navigate = useNavigate();
-  const months = [
-    "01",
-    "02",
-    "03",
-    "04",
-    "05",
-    "06",
-    "07",
-    "08",
-    "09",
-    "10",
-    "11",
-    "12",
-  ];
   const { productId } = useParams();
   const [isorderSubmitting, setIsOrderSubmitting] = useState(false);
   const [productArr, setProductArr] = useState([]);
   const [isDataFetch, setIsDataFetch] = useState(false);
+  const [countryList, setCountryList] = useState([]);
   const [paymentData, setPaymentData] = useState({
     methodName: "",
     methodDetail: {},
   });
+
   const [shippingAddress, setShippingAddress] = useState({});
   const [isError, setIsError] = useState({});
   if (authToken === null || authToken === undefined || authToken === "") {
@@ -158,7 +154,7 @@ const BuyNow = ({ authToken, userDetail }) => {
     setIsOrderSubmitting((prev) => !prev);
     axios({
       method: "POST",
-      url: `${SERVER_URL}/api/user/order/submit-order`,
+      url: `${SERVER_URL}/api/order/submit-order`,
       headers: { Authorization: `Bearer ${authToken}` },
       data: {
         cartProduct: productArr,
@@ -169,6 +165,7 @@ const BuyNow = ({ authToken, userDetail }) => {
     })
       .then((response) => {
         const { data, status } = response;
+        console.log(data);
         setIsOrderSubmitting((prev) => !prev);
         if (status === 201) {
           // swal(
@@ -176,10 +173,21 @@ const BuyNow = ({ authToken, userDetail }) => {
           //   "your order has been placed successfully",
           //   "success"
           // );
-          navigate(`/order-success/${response?.data?.orderId}`);
+          // navigate(
+          //   `/order-success?orderId=${
+          //     data?.orderIds.length === 1 ? `${data?.orderIds}` : ""
+          //   }`
+          // );
+          console.log(data?.orderIds);
+          navigate("/order-success", { state: data?.orderIds });
         }
       })
       .catch((error) => {
+        const { data, status } = error?.response;
+        setIsOrderSubmitting((prev) => !prev);
+        if (status === 404) {
+          swal("Oops!", data?.message, "error");
+        }
         console.error(error);
       });
   };
@@ -288,18 +296,8 @@ const BuyNow = ({ authToken, userDetail }) => {
       });
     }
   };
-  // Generating Dynamic future Years
-  const generateFutureYearsForExpiryDate = () => {
-    const currentYear = new Date().getFullYear();
-    const futureYears = [];
-    let yearOption = "";
-    for (let i = currentYear; i <= currentYear + 20; i++) {
-      futureYears.push(i.toString());
-      yearOption += `<option value="${i}">${i}</option>`;
-    }
-    return [futureYears, yearOption];
-  };
-  const [expiryYears, expiryYearOptions] = generateFutureYearsForExpiryDate();
+
+  // const expiryYears = generateFutureYearsForExpiryDate();
 
   // Fetching Order Product Details
   useEffect(() => {
@@ -314,12 +312,12 @@ const BuyNow = ({ authToken, userDetail }) => {
       {/* <CartCard product={productData} />
       
       */}
-      <div className="p-5 w-[80%] m-auto mobile:w-full tablet:w-[90%] laptop:w-[80%]">
+      <div className=" w-[80%] m-auto p-2 mobile:w-full tablet:w-[90%] laptop:w-[80%]">
         <div className="m-5">
           <span className="text-2xl font-bold font-roboto m-4">Checkout</span>
         </div>
 
-        <div className="w-full h-full flex justify-between gap-8 mobile:flex-col mobile:gap-8 tablet:flex-row">
+        <div className="w-full p-2 h-full flex justify-between gap-8 mobile:flex-col mobile:gap-8 tablet:flex-row">
           <div className="w-8/12 p-3 rounded border-2 border-gray-100 min-h-[150px] flex flex-col gap-3 h-max mobile:w-full tablet:w-7/12 desktop:8/12">
             {/* customer detail section */}
             <div className="border-gray-200 border-b-2 w-full p-3 flex flex-col gap-3">
@@ -330,7 +328,7 @@ const BuyNow = ({ authToken, userDetail }) => {
               <div className="grid grid-cols-2 gap-4 w-full  mobile:text-sm  tablet:text-base">
                 <div className="flex flex-col gap-2  ">
                   <label htmlFor="name">
-                    Name <span>*</span>
+                    Name <span className="required">*</span>
                   </label>
                   <Input
                     type={"text"}
@@ -346,7 +344,7 @@ const BuyNow = ({ authToken, userDetail }) => {
                 </div>
                 <div className="flex flex-col gap-2">
                   <label htmlFor="phoneNumber">
-                    Phone <span>*</span>
+                    Phone <span className="required">*</span>
                   </label>
                   <Input
                     type={"number"}
@@ -369,29 +367,30 @@ const BuyNow = ({ authToken, userDetail }) => {
                 <span className="font-semibold font-roboto text-lg">
                   Shipping Address
                 </span>
-                {userDetail?.shippingAddress && (
-                  <Button
-                    btntext={"Use Default Address"}
-                    className={
-                      "bg-blue-100 text-blue-500 px-3 py-1 rounded-full text-sm font-medium "
-                    }
-                    onClick={() =>
-                      setShippingAddress(() => userDetail?.shippingAddress)
-                    }
-                  />
-                )}
+                {userDetail?.shippingAddress &&
+                  Object.keys(userDetail?.shippingAddress).length > 0 && (
+                    <Button
+                      btntext={"Use Default Address"}
+                      className={
+                        "bg-blue-100 text-blue-500 px-3 py-1 rounded-full text-sm font-medium "
+                      }
+                      onClick={() =>
+                        setShippingAddress(() => userDetail?.shippingAddress)
+                      }
+                    />
+                  )}
               </div>
               <div className="w-full grid  gap-4 mobile:text-sm mobile:grid-cols-2 small-device:grid-cols-3 tablet:text-base tablet:grid-cols-2 laptop:grid-cols-3">
                 <div className="flex flex-col gap-2 ">
                   <label htmlFor="addressLine1">
-                    Address Line 1 <span>*</span>
+                    Address Line 1 <span className="required">*</span>
                   </label>
                   <Input
                     type={"text"}
                     id={"addressLine1"}
                     name={"addressLine1"}
                     className={
-                      "p-2 bg-gray-100 border-2 rounded border-gray-300 outline-none"
+                      "p-2 bg-gray-100 border-2 rounded border-gray-300 outline-gray-400 outline-2"
                     }
                     placeholder={"Address Line 1"}
                     onChange={handleShippingAddressChange}
@@ -406,7 +405,7 @@ const BuyNow = ({ authToken, userDetail }) => {
                     id={"addressLine2"}
                     name={"addressLine2"}
                     className={
-                      "p-2 bg-gray-100 border-2 rounded border-gray-300 outline-none"
+                      "p-2 bg-gray-100 border-2 rounded border-gray-300 outline-gray-400 outline-2"
                     }
                     placeholder={"Address Line 2"}
                     onChange={handleShippingAddressChange}
@@ -414,31 +413,64 @@ const BuyNow = ({ authToken, userDetail }) => {
                   />
                 </div>
 
-                <div className="flex flex-col gap-2">
-                  <label htmlFor="country">Coutry *</label>
+                <div className="flex flex-col gap-2 relative group">
+                  <label htmlFor="country">
+                    Country <span className="required">*</span>
+                  </label>
+                  {/* <div className="w-full rounded border-2 group-focus:border-gray-400 "> */}
                   <Input
                     type={"text"}
                     id={"country"}
                     name={"country"}
                     className={
-                      "p-2 bg-gray-100 border-2 rounded border-gray-300 outline-none"
+                      "p-2 bg-gray-100 w-full border-2 rounded border-gray-300 outline-gray-400 outline-2 "
                     }
+                    // onFocus={async () => {
+                    //   if (!countryList.length) {
+                    //     const countries = await getAllCountry(); // Await the result
+                    //     setCountryList(countries);
+                    //     console.log(countries); // Set the resolved data
+                    //   }
+                    //   // console.log(countryList);
+                    // }}
                     placeholder={"Country"}
                     onChange={handleShippingAddressChange}
                     value={shippingAddress?.country?.capitalise()}
                   />
+                  {/* {countryList.length > 0 && (
+                    <div className="absolute w-full hidden max-h-50  divide-y-2 bg-white rounded border-2 p-2 border-gray-400 top-20 group-focus-within:grid grid-rows-4">
+                      {countryList.map((country, index) => {
+                        if (index <= 4) {
+                          return (
+                            <p
+                              onClick={(e) => {
+                                e.preventDefault();
+                                console.log(e.target);
+                              }}
+                              key={country.id}
+                              value={country.name}
+                            >
+                              {country.name}
+                            </p>
+                          );
+                        }
+                      })}
+                    </div>
+                  )} */}
+
+                  {/* </div> */}
                 </div>
 
                 <div className="flex flex-col gap-2">
                   <label htmlFor="state">
-                    State <span>*</span>
+                    State <span className="required">*</span>
                   </label>
                   <Input
                     type={"text"}
                     id={"state"}
                     name={"state"}
                     className={
-                      "p-2 bg-gray-100 border-2 rounded border-gray-300 outline-none"
+                      "p-2 bg-gray-100 border-2 rounded border-gray-300 outline-gray-400 outline-2"
                     }
                     placeholder={"State"}
                     onChange={handleShippingAddressChange}
@@ -447,14 +479,14 @@ const BuyNow = ({ authToken, userDetail }) => {
                 </div>
                 <div className="flex flex-col gap-2">
                   <label htmlFor="city">
-                    City <span>*</span>
+                    City <span className="required">*</span>
                   </label>
                   <Input
                     type={"text"}
                     id={"city"}
                     name={"city"}
                     className={
-                      "p-2 bg-gray-100 border-2 rounded border-gray-300 outline-none"
+                      "p-2 bg-gray-100 border-2 rounded border-gray-300 outline-gray-400 outline-2"
                     }
                     placeholder={"City"}
                     onChange={handleShippingAddressChange}
@@ -464,14 +496,14 @@ const BuyNow = ({ authToken, userDetail }) => {
 
                 <div className="flex flex-col gap-2">
                   <label htmlFor="pinCode">
-                    Pincode <span>*</span>
+                    Pincode <span className="required">*</span>
                   </label>
                   <Input
                     type={"text"}
                     id={"pinCode"}
                     name={"pinCode"}
                     className={
-                      "p-2 bg-gray-100 border-2 rounded border-gray-300 outline-none no"
+                      "p-2 bg-gray-100 border-2 rounded border-gray-300 outline-gray-400 outline-2"
                     }
                     placeholder={"PinCode"}
                     onChange={handleShippingAddressChange}
@@ -485,7 +517,7 @@ const BuyNow = ({ authToken, userDetail }) => {
                     name={"isDefaultShippingAddress"}
                     onChange={handleShippingAddressChange}
                     checked={shippingAddress?.isDefaultShippingAddress}
-                    className={"border-gray-300"}
+                    className={"border-gray-300 outline-gray-400 outline-2"}
                   />
                   <label htmlFor="isDefaultShippingAddress">
                     Make this address as default shipping address
@@ -496,14 +528,14 @@ const BuyNow = ({ authToken, userDetail }) => {
 
             {/* Payment method section */}
 
-            <div className="border-gray-200 border-b-2 w-full p-3 flex flex-col gap-3">
+            <div className=" w-full p-3 flex flex-col gap-3">
               <div className="font-roboto font-semibold text-lg">
                 Payment Method
               </div>
 
               <div className=" mobile:text-sm tablet:text-base ">
                 <div
-                  className="grid grid-cols-3  justify-center gap-4 w-max   rounded mobile:w-full mobile:gap-2 tablet:w-full "
+                  className="grid mobile:grid-cols-2 small-device:grid-cols-3 tablet:grid-cols-2 laptop:grid-cols-2 desktop:grid-cols-3  gap-4 w-max  box-border  rounded mobile:w-full mobile:gap-2 tablet:w-full "
                   onChange={handlePaymentMethodChange}
                 >
                   {/* <div
@@ -513,8 +545,10 @@ const BuyNow = ({ authToken, userDetail }) => {
                         : "bg-none"
                     }`}
                   > */}
+                  {/* Debit card Section  */}
+
                   <div
-                    className={`debitcreditcard flex justify-center items-center  gap-3 border-gray-200 border-2 rounded p-2 ${
+                    className={`debitcreditcard min-w-[60px]  mobile:col-span-1  flex justify-center items-center  gap-3 border-gray-200 border-2 rounded  ${
                       paymentData?.methodName === "debitcard"
                         ? "bg-blue-200 border-transparent"
                         : "bg-none"
@@ -530,14 +564,15 @@ const BuyNow = ({ authToken, userDetail }) => {
                     <label
                       htmlFor="debitcard"
                       className={
-                        "w-full h-full cursor-pointer flex items-center  "
+                        "w-full h-full p-2 cursor-pointer flex items-center justify-center  "
                       }
                     >
                       Debit / Credit Card
                     </label>
                   </div>
+                  {/* UPI Section  */}
                   <div
-                    className={`upi flex gap-3 justify-center items-center border-gray-200 border-2 rounded p-2 ${
+                    className={`upi flex min-w-[70px] mobile:col-span-1 gap-3 justify-center items-center border-gray-200 border-2 rounded ${
                       paymentData?.methodName === "upi"
                         ? "bg-blue-200 border-transparent"
                         : "bg-none"
@@ -553,15 +588,15 @@ const BuyNow = ({ authToken, userDetail }) => {
                     <label
                       htmlFor="upi"
                       className={
-                        " w-full h-full flex items-center  cursor-pointer"
+                        " w-full h-full p-2 flex items-center justify-center  cursor-pointer"
                       }
                     >
                       UPI
                     </label>
                   </div>
-
+                  {/* COD Section */}
                   <div
-                    className={` cod first-line:flex gap-3 justify-center items-center   border-gray-200 border-2 rounded p-2 ${
+                    className={` cod flex gap-3 min-w-[60px] mobile:col-span-2 small-device:col-span-1  tablet:col-span-2 laptop:col-span-2 desktop:col-span-1  justify-center items-center   border-gray-200 border-2 rounded  ${
                       paymentData?.methodName === "cod"
                         ? "bg-blue-200 border-transparent"
                         : "bg-none"
@@ -577,7 +612,7 @@ const BuyNow = ({ authToken, userDetail }) => {
                     <label
                       htmlFor="cod"
                       className={
-                        "w-full h-full flex items-center  cursor-pointer"
+                        "w-full h-full p-2 flex items-center justify-center  cursor-pointer"
                       }
                     >
                       Cash On Delivery
@@ -591,7 +626,7 @@ const BuyNow = ({ authToken, userDetail }) => {
                       {/* <div className="flex  gap-4 w-full"> */}
                       <div className="flex flex-col gap-2 min-w-[100px] small-device:col-span-2 tablet:col-span-1 laptop:col-span-2">
                         <label htmlFor="cardNumber">
-                          Card Number <span>*</span>
+                          Card Number <span className="required">*</span>
                         </label>
                         <Input
                           type="text"
@@ -599,7 +634,7 @@ const BuyNow = ({ authToken, userDetail }) => {
                           name="cardNumber"
                           placeholder={"Card Number"}
                           className={
-                            "p-2 bg-gray-100 border-2 rounded border-gray-300 outline-none w-full"
+                            "p-2 bg-gray-100 border-2 rounded border-gray-300  w-full outline-gray-400 outline-2"
                           }
                           onChange={handlePaymentDetailChange}
                           value={paymentData?.methodDetail?.cardNumber}
@@ -608,7 +643,7 @@ const BuyNow = ({ authToken, userDetail }) => {
 
                       <div className="flex flex-col gap-2 ">
                         <label htmlFor="cardHolderName">
-                          Name <span>*</span>
+                          Name <span className="required">*</span>
                         </label>
                         <Input
                           type="text"
@@ -616,7 +651,7 @@ const BuyNow = ({ authToken, userDetail }) => {
                           name="cardHolderName"
                           placeholder={"Card Holder Name"}
                           className={
-                            "p-2 bg-gray-100 border-2 rounded border-gray-300 outline-none"
+                            "p-2 bg-gray-100 border-2 rounded border-gray-300 outline-gray-400 outline-2"
                           }
                           onChange={handlePaymentDetailChange}
                           value={paymentData?.methodDetail?.cardHolderName}
@@ -626,22 +661,22 @@ const BuyNow = ({ authToken, userDetail }) => {
                       {/* <div className="flex  gap-4 w-full"> */}
                       <div className="flex flex-col gap-2 ">
                         <label htmlFor="expirydate">
-                          Expiry Date <span>*</span>
+                          Expiry Date <span className="required">*</span>
                         </label>
                         <div className="flex gap-2 border-2 border-gray-200 rounded p-2 w-full">
                           <div className="w-1/2">
                             <select
                               name="expiryMonth"
                               id=""
-                              className="outline-none bg-gray-200 p-1 rounded w-full"
+                              className=" bg-gray-200 p-1 rounded w-full outline-gray-400 outline-2"
                               onChange={handlePaymentDetailChange}
                               value={paymentData?.methodDetail?.expirymonth}
                             >
                               <option value="">Month</option>
                               {months.map((month, i) => {
                                 return (
-                                  <option key={i} value={month}>
-                                    {month}
+                                  <option key={i} value={month?.value}>
+                                    {month?.alphabetics}
                                   </option>
                                 );
                               })}
@@ -651,18 +686,20 @@ const BuyNow = ({ authToken, userDetail }) => {
                             <select
                               name="expiryYear"
                               id=""
-                              className="outline-none bg-gray-200 p-1 rounded scroll w-full"
+                              className=" bg-gray-200 p-1 rounded scroll w-full outline-gray-400 outline-2"
                               onChange={handlePaymentDetailChange}
                               value={paymentData?.methodDetail?.expiryear}
                             >
                               <option value="">Year</option>
-                              {expiryYears.map((year, i) => {
-                                return (
-                                  <option key={i} value={year}>
-                                    {year}
-                                  </option>
-                                );
-                              })}
+                              {generateFutureYearsForExpiryDate()?.map(
+                                (year, i) => {
+                                  return (
+                                    <option key={i} value={year}>
+                                      {year}
+                                    </option>
+                                  );
+                                }
+                              )}
                             </select>
                           </div>
                         </div>
@@ -670,7 +707,7 @@ const BuyNow = ({ authToken, userDetail }) => {
 
                       <div className="flex flex-col gap-2 ">
                         <label htmlFor="cvv">
-                          CVV <span>*</span>
+                          CVV <span className="required">*</span>
                         </label>
                         <Input
                           type="password"
@@ -678,7 +715,7 @@ const BuyNow = ({ authToken, userDetail }) => {
                           name="cvv"
                           placeholder={"CVV"}
                           className={
-                            "p-2 bg-gray-100 border-2 rounded border-gray-300 outline-none"
+                            "p-2 bg-gray-100 border-2 rounded border-gray-300 outline-gray-400 outline-2"
                           }
                           onChange={handlePaymentDetailChange}
                           value={paymentData?.methodDetail?.cvv}
@@ -692,7 +729,7 @@ const BuyNow = ({ authToken, userDetail }) => {
                     <div className="flex gap-4 p-3 ">
                       <div className="flex flex-col gap-2">
                         <label htmlFor="upi">
-                          UPI ID <span>*</span>
+                          UPI ID <span className="required">*</span>
                         </label>
                         <Input
                           type="text"
@@ -700,7 +737,7 @@ const BuyNow = ({ authToken, userDetail }) => {
                           name="upiId"
                           placeholder={"UPI ID"}
                           className={
-                            "p-2 bg-gray-100 border-2 rounded border-gray-300 outline-none"
+                            "p-2 bg-gray-100 border-2 rounded border-gray-300 outline-gray-400 outline-2"
                           }
                           onChange={handlePaymentDetailChange}
                           value={paymentData?.methodDetail?.upiid}
@@ -720,7 +757,7 @@ const BuyNow = ({ authToken, userDetail }) => {
               </span>
             </div>
 
-            <div className="flex flex-col gap-3 max-h-[350px] overflow-scroll">
+            <div className="flex flex-col gap-3 max-h-[350px] overflow-scroll ">
               {productArr?.map((product, index) => {
                 return (
                   <div key={index} className="flex gap-4 p-2 w-full">
@@ -738,7 +775,8 @@ const BuyNow = ({ authToken, userDetail }) => {
                         Qty: {product.quantity}
                         <span className="text-gray-400">
                           {" "}
-                          x {product?.item?.price}
+                          x{" "}
+                          {product?.item?.price || product?.item?.sellingPrice}
                         </span>
                       </div>
                       <span className="flex w-full items-center ">
@@ -746,7 +784,10 @@ const BuyNow = ({ authToken, userDetail }) => {
                         <span>
                           <FaRupeeSign className="text-xs" />
                         </span>
-                        {formatAmount(product?.item?.price * product.quantity)}
+                        {formatAmount(
+                          (product?.item?.price ||
+                            product?.item?.sellingPrice) * product.quantity
+                        )}
                       </span>
                     </div>
                     {/* </div> */}
@@ -765,7 +806,12 @@ const BuyNow = ({ authToken, userDetail }) => {
                   <span className="text-lg font-semibold font-roboto">
                     {formatAmount(
                       productArr?.reduce((total, product) => {
-                        return total + product.item.price * product.quantity;
+                        return (
+                          total +
+                          (product?.item?.price ||
+                            product?.item?.sellingPrice) *
+                            product.quantity
+                        );
                       }, 0)
                     )}
                   </span>

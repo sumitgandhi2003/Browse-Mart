@@ -19,8 +19,12 @@ const ProductUpload = ({ authToken }) => {
     price: "",
     image: [],
     category: "",
+    subCategory: "",
     description: "",
     stock: "",
+    brand: "",
+    mrpPrice: "",
+    sellingPrice: "",
   });
   const [productDetails, setProductDetails] = useState(initialProductDetail);
 
@@ -30,8 +34,12 @@ const ProductUpload = ({ authToken }) => {
     price: "",
     image: "",
     category: "",
+    subCategory: "",
     description: "",
     stock: "",
+    brand: "",
+    mrpPrice: "",
+    sellingPrice: "",
   });
 
   const onDrop = (accepted) => {
@@ -117,6 +125,8 @@ const ProductUpload = ({ authToken }) => {
         setProductUploading(false);
         if (status === 500) {
           swal("Error uploading!", data?.message, "error");
+        } else if (status === 400) {
+          swal("Error uploading!", data?.message);
         }
         console.log("Error uploading product", error);
         console.log(productDetails);
@@ -124,8 +134,11 @@ const ProductUpload = ({ authToken }) => {
   };
 
   const handleSubmit = async (e) => {
-    setProductUploading((prev) => !prev);
     e.preventDefault();
+    // console.log(productDetails);
+    // uploadProduct(productDetails);
+    // return;
+    setProductUploading((prev) => !prev);
     const updatedProductDetail = await saveImageToCloudinary();
     console.log(updatedProductDetail);
     if (updatedProductDetail) {
@@ -139,6 +152,7 @@ const ProductUpload = ({ authToken }) => {
         action=""
         className="h-full flex flex-col gap-3 overflow-y-scroll"
         onSubmit={handleSubmit}
+        method="POST"
       >
         <div
           {...getRootProps()}
@@ -182,10 +196,12 @@ const ProductUpload = ({ authToken }) => {
             </div>
           )}
         </div>
+        {/* Image Preview Section */}
         {image.length > 0 && <ImagePreview image={image} />}
 
         <div className=" product-detail-container  grid items-stretch grid-cols-2 gap-5">
           {/* <div className="w-full flex gap-3"> */}
+          {/* Product  Name Section */}
           <div className=" flex flex-col gap-3">
             <label htmlFor="name">
               Product Name <span className="required">*</span>
@@ -197,10 +213,12 @@ const ProductUpload = ({ authToken }) => {
               value={productDetails?.name}
               onChange={handleChange}
               placeholder={"Product Name"}
-              className="p-2 bg-gray-100 border-2 rounded border-gray-300 outline-none"
+              className="p-2 outline-gray-400 outline-2 bg-gray-100 border-2 rounded border-gray-300"
             />
             {error.name && <p>{error.name}</p>}
           </div>
+
+          {/* Brand Section */}
           <div className=" flex flex-col gap-3">
             <label htmlFor="stock">
               Brand <span className="required">*</span>
@@ -208,7 +226,9 @@ const ProductUpload = ({ authToken }) => {
             <select
               name="brand"
               id="brand"
-              className="p-2 bg-gray-100 border-2 rounded border-gray-300 outline-none"
+              className="p-2 bg-gray-100 border-2 rounded border-gray-300 outline-gray-400 outline-2"
+              onChange={handleChange}
+              value={productDetails?.brand}
             >
               <option value="">Select Brand</option>
               {productBrands?.map((item) => {
@@ -220,8 +240,7 @@ const ProductUpload = ({ authToken }) => {
               })}
             </select>
           </div>
-          {/* </div> */}
-          {/* <div className="w-full flex gap-3"> */}
+          {/* Category Section */}
           <div className=" flex flex-col gap-3 ">
             <label htmlFor="category">
               Category <span className="required">*</span>
@@ -229,7 +248,7 @@ const ProductUpload = ({ authToken }) => {
             <select
               name="category"
               id="category"
-              className="p-2 bg-gray-100 border-2 rounded border-gray-300 outline-none"
+              className="p-2 bg-gray-100 border-2 rounded border-gray-300 outline-gray-400 outline-2"
               onChange={handleChange}
               value={productDetails?.category}
             >
@@ -244,21 +263,22 @@ const ProductUpload = ({ authToken }) => {
             </select>
             {error.category && <p>{error.category}</p>}
           </div>
-          {/* {productDetails?.category && */}
-          {/* // productDetails?.category !== "others" && ( */}
+
+          {/* Sub Category Section */}
           <div className="  flex flex-col gap-3">
             <label htmlFor="subCategory">
               Sub Category <span className="required">*</span>
             </label>
             <select
               name="subCategory"
-              className="p-2 bg-gray-100 border-2 rounded border-gray-300 outline-none"
+              className="p-2 bg-gray-100 border-2 rounded border-gray-300 outline-gray-400 outline-2"
               id="subCategory"
               disabled={
                 productDetails?.category === "others" ||
                 !productDetails?.category
               }
               onChange={handleChange}
+              value={productDetails?.subCategory}
             >
               <option value="">Select Sub Category</option>
               {productCategory?.map((item) => {
@@ -277,6 +297,8 @@ const ProductUpload = ({ authToken }) => {
           {/* // )} */}
           {/* </div> */}
           {/* <div className="w-full flex gap-3"> */}
+
+          {/* MRP Section */}
           <div className=" flex flex-col gap-3">
             <label htmlFor="mrpPrice">
               MRP Price <span className="required">*</span>
@@ -289,27 +311,29 @@ const ProductUpload = ({ authToken }) => {
               onChange={handleChange}
               placeholder={"MRP Price"}
               className={
-                "p-2 bg-gray-100 border-2 rounded border-gray-300 outline-none"
+                "p-2 bg-gray-100 border-2 rounded border-gray-300 outline-gray-400 outline-2"
               }
             />
             {error.price && <p>{error.mrpPrice}</p>}
           </div>
+
+          {/* Discounted Price Section */}
           <div className=" flex flex-col gap-3">
             <label htmlFor="discountedPrice">
-              Discounted Price <span className="required">*</span>
+              Selling Price <span className="required">*</span>
             </label>
             <Input
               type={"number"}
-              id={"discountedPrice"}
-              name={"discountedPrice"}
-              value={productDetails?.discountedPrice}
+              id={"sellingPrice"}
+              name={"sellingPrice"}
+              value={productDetails?.sellingPrice}
               onChange={handleChange}
-              placeholder={"Discounted Price"}
+              placeholder={"Selling Price"}
               className={
-                "p-2 bg-gray-100 border-2 rounded border-gray-300 outline-none"
+                "p-2 bg-gray-100 border-2 rounded border-gray-300 outline-gray-400 outline-2"
               }
             />
-            {error.price && <p>{error.discountedPrice}</p>}
+            {error.price && <p>{error.sellingPrice}</p>}
           </div>
           {/* </div> */}
           {/* <div className="w-full flex gap-3"> */}
@@ -325,7 +349,7 @@ const ProductUpload = ({ authToken }) => {
               onChange={handleChange}
               placeholder={"stock"}
               className={
-                "p-2 bg-gray-100 border-2 rounded border-gray-300 outline-none"
+                "p-2 bg-gray-100 border-2 rounded border-gray-300 outline-gray-400 outline-2"
               }
             />
             {error.quantity && <p>{error.stock}</p>}
@@ -343,7 +367,7 @@ const ProductUpload = ({ authToken }) => {
                 value={productDetails?.description}
                 onChange={handleChange}
                 placeholder="Description"
-                className="resize-none w-full min-h-[150px] p-2 bg-gray-100 border-2 rounded border-gray-300 outline-none"
+                className="resize-none w-full min-h-[150px] p-2 bg-gray-100 border-2 rounded border-gray-300 outline-gray-400 outline-2"
               ></textarea>
               {error.description && <p>{error.description}</p>}
             </div>

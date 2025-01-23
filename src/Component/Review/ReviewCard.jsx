@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 
 const ReviewCard = ({ review }) => {
   const { rating, title, message, userName } = review;
+  const [isExpened, setIsExpened] = useState(false);
   return (
-    <div className="bg-white relative p-2 border-2 overflow-hidden border-dashed border-black/60  text-black min-w-[300px] min-h-[150px] max-h-[200px] max-w-[400px] mobile:w-1/2 mobile:min-w-[100%] small-device:w-auto small-device:min-w-[300px] small-device:max-w-[150px]  rounded">
+    <div className="bg-white h-min relative p-2 border-2 overflow-hidden border-dashed border-black/60  text-black min-w-[300px] min-h-[150px] max-h-[200px] max-w-[400px] mobile:w-1/2 mobile:min-w-[100%] small-device:w-auto small-device:min-w-[300px] small-device:max-w-[150px]  rounded">
       {/* <div className="absolute top-2 left-2 font-semibold text-white text-[12px] rounded-full bg-gray-600">
         {rating}
       </div> */}
@@ -28,11 +29,24 @@ const ReviewCard = ({ review }) => {
         {title}
       </div>
       {/* <div>{rating}</div> */}
-      <div className="font-roboto  max-h-[60px] line-clamp-3 overflow-hidden text-ellipsis">
-        {message}
+      <div className="font-roboto w-full max-h-[100px] overflow-scroll  bg-white break-words">
+        <span className="w-full">
+          {isExpened ? message : message?.toString()?.substring(0, 60)}
+        </span>
+        {message?.length > 60 && (
+          <span
+            className=" text-blue-500 underline text-sm font-semibold cursor-pointer"
+            onClick={() => setIsExpened(!isExpened)}
+          >
+            {isExpened ? " Read Less" : " Read More"}
+          </span>
+        )}
+        {/* {message} */}
       </div>
-      <div className="font-roboto group absolute text-ellipsis whitespace-nowrap max-w-40 bottom-1 right-2 font-bold ">
-        <div className="">By {userName?.capitalise() || "User"}</div>
+      <div className="font-roboto text-base group absolute bg-white rounded p-1  bottom-1 right-2 font-bold ">
+        <div className="text-ellipsis overflow-hidden whitespace-nowrap max-w-40">
+          By {userName?.capitalise() || "User"}
+        </div>
         <div className="group-hover:block bg-gray-600 p-1 absolute bottom-7 font-semibold text-white text-[10px] rounded  hidden  ">
           By {userName?.capitalise() || "User"}
         </div>

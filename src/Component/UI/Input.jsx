@@ -14,6 +14,7 @@ const Input = ({
   accept,
   pattern,
   disabled,
+  onFocus,
   // Add any other props you need here for your specific use case. For example, a label tag for accessibility:
 }) => {
   return (
@@ -31,6 +32,7 @@ const Input = ({
       accept={accept}
       pattern={pattern}
       disabled={disabled}
+      onFocus={onFocus}
     />
   );
 };
