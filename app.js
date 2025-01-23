@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 const productRoutes = require("./routes/productRoutes");
 const userRoutes = require("./routes/userRoutes");
+const orderRoutes = require("./routes/orderRoutes");
 const app = express();
 
 app.use(
@@ -19,6 +20,7 @@ app.use(
 app.use(bodyParser.json());
 app.use("/api/product", productRoutes);
 app.use("/api/user", userRoutes);
+app.use("/api/order", orderRoutes);
 app.get("/", function (req, res) {
   res.send("Hello, bro");
 });

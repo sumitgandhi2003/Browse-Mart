@@ -6,7 +6,7 @@ const orderSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
-  userId: {
+  customerId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,
@@ -32,6 +32,8 @@ const orderSchema = new mongoose.Schema({
   },
   totalAmount: { type: Number, required: true },
   shippingAddress: {
+    customerName: { type: String },
+    customerPhoneNumber: { type: String },
     addressLine1: { type: String },
     addressLine2: { type: String },
     state: { type: String },

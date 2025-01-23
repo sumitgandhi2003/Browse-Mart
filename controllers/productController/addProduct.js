@@ -2,24 +2,47 @@ const Product = require("../../model/productSchema");
 
 const addProduct = async (req, res) => {
   try {
-    const { name, price, description, image, category, stock } = req.body;
+    const {
+      name,
+      sellingPrice,
+      mrpPrice,
+      description,
+      image,
+      category,
+      stock,
+      brand,
+      subCategory,
+    } = req.body;
     const foundedUser = req.user;
     if (foundedUser?.userType !== "seller") {
       return res
         .status(401)
         .json({ messsage: "unauthorize access you don't have seller account" });
     }
-    if (!name || !price || !description || !image || !category || !stock) {
+    if (
+      !name ||
+      !mrpPrice ||
+      !sellingPrice ||
+      !description ||
+      !image ||
+      !category ||
+      !stock ||
+      !brand
+    ) {
       return res.status(400).json({ message: "Please fill all fields" });
     }
+
     const newProduct = new Product({
       name: name,
-      price: price,
+      mrpPrice: mrpPrice,
       description: description,
       image: image,
       category: category,
       stock: stock,
       userID: foundedUser?._id,
+      brand: brand,
+      subCategory: subCategory,
+      sellingPrice,
     });
     await newProduct.save();
     console.log("data Saved");

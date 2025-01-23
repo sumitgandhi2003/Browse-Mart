@@ -14,6 +14,8 @@ const getCartItems = async (req, res, next) => {
         image: [product?.image?.[0]],
         category: product?.category,
         stock: product?.stock,
+        userId: product?.userID,
+        sellingPrice: product?.sellingPrice || null,
       };
       // console.log(filteredProduct);
       cartProduct?.push({
@@ -28,9 +30,11 @@ const getCartItems = async (req, res, next) => {
     //   //   console.log(product);
     // });
     // console.log(cartItem);
-    res
-      ?.status(200)
-      ?.json({ cartProduct, message: "Data Fetch Successfully!" });
+    res?.status(200)?.json({
+      cartProduct,
+      message: "Data Fetch Successfully!",
+      cartCount: cartProduct.length,
+    });
   } catch (error) {
     //   console.log(req.user);
     console.log(error);

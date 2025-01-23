@@ -18,6 +18,8 @@ const updateCart = async (req, res, next) => {
   }
   await foundedUser?.save();
 
-  res?.status(200)?.json({ message: "data updated" });
+  res
+    ?.status(200)
+    ?.json({ message: "data updated", cartCount: foundedUser?.cart?.length });
 };
 module.exports = updateCart;

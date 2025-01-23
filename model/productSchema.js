@@ -2,12 +2,17 @@ const mongoose = require("mongoose");
 
 const productSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  price: { type: Number, required: true },
+  price: { type: Number, required: false },
+  mrpPrice: { type: Number, required: false, default: null },
+  sellingPrice: { type: Number, required: false, default: null },
   description: { type: String, required: true },
   image: [],
   category: { type: String, required: true },
+  subCategory: { type: String, required: false },
+  brand: { type: String, required: false },
   stock: { type: Number, required: false },
   inStock: { type: Boolean, required: false },
+  isHide: { type: Boolean, required: false, default: false },
   review: [
     {
       rating: { type: Number, required: true },
@@ -19,6 +24,15 @@ const productSchema = new mongoose.Schema({
     },
   ],
   userID: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  // productId: {
+  //   type: mongoose.Schema.Types.ObjectId,
+  //   required: true,
+  //   unique: true,
+  //   index: true,
+  //   auto: true,
+  //   default: mongoose.Types.ObjectId(),
+  // },
+  // _id: false,
 });
 
 // productSchema.method.generateToken = function () {

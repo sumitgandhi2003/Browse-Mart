@@ -5,22 +5,26 @@ const getAllProduct = async (req, res) => {
     const products = await Product.find();
     if (products.length === 0)
       return res?.status(200).json({ message: "Product not found" });
-    const modifiedProducts = products?.map((product) => {
-      let totalStarRating = 0;
-      product?.review?.map((review) => {
-        totalStarRating += review?.rating;
+    const modifiedProducts = products
+      ?.filter((product) => !product?.isHide)
+      ?.map((product) => {
+        let totalStarRating = 0;
+        product?.review?.map((review) => {
+          totalStarRating += review?.rating;
+        });
+        return {
+          id: product?._id,
+          name: product?.name,
+          price: product?.price,
+          description: product?.description,
+          image: product?.image?.[0],
+          category: product?.category,
+          stock: product?.stock,
+          rating: Number(totalStarRating / product?.review?.length),
+          mrpPrice: product?.mrpPrice,
+          sellingPrice: product?.sellingPrice,
+        };
       });
-      return {
-        id: product?._id,
-        name: product?.name,
-        price: product?.price,
-        description: product?.description,
-        image: product?.image?.[0],
-        category: product?.category,
-        stock: product?.stock,
-        rating: Number(totalStarRating / product?.review?.length),
-      };
-    });
     return res
       ?.status(200)
       .json({ message: "data fetched", products: modifiedProducts });

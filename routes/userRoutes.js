@@ -9,7 +9,6 @@ const updateProfile = require("../controllers/userController/updateProfile");
 const addToCart = require("../controllers/userController/addToCart");
 const getCartItems = require("../controllers/userController/getCartItems");
 const updateCart = require("../controllers/userController/updateCart");
-const submitOrder = require("../controllers/userController/submitOrder");
 // User routes
 router.route("/register").post(createUser);
 router.route("/login").post(userLogin);
@@ -19,6 +18,5 @@ router.route("/update-profile").post(userAuthentication, updateProfile);
 router.route("/add-to-cart").post(userAuthentication, addToCart);
 router.route("/get-cart-items").post(userAuthentication, getCartItems);
 router.route("/update-cart").post(userAuthentication, updateCart);
-router.route("/order/submit-order").post(userAuthentication, submitOrder);
 
 module.exports = router;

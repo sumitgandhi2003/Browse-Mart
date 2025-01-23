@@ -13,6 +13,7 @@ const userProfile = async (req, res, next) => {
       userType: foundedUser?.userType,
       address: foundedUser?.address,
       shippingAddress: foundedUser?.shippingAddress,
+      cartCount: foundedUser?.cart?.length || 0,
     };
     return res.status(200).json({ mesaage: "data Found", userDetail });
   } catch (error) {
