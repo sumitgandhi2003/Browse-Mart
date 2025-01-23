@@ -186,6 +186,6 @@ export const productBrands = [
 ];
 
 export const formatAmount = (amount) => {
-  const amountString = amount.toString();
-  return amountString.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  const amountString = amount?.toString();
+  return amountString?.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
