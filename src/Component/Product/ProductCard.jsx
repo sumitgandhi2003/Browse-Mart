@@ -17,10 +17,10 @@ const ProductCard = ({ product, userDetail, authToken }) => {
       className="product-card group w-full h-full max-h-[400px] max-w-[300px]  gap-4 border-2  border-gray-00 tablet:hover:border-blue-500 tablet:hover:bg-gray-200
  rounded-md p-2 shadow-md relative laptop:hover:scale-105 transition-all duration-300 ease-in-out "
     >
-      <span className="bg-white absolute h-10 w-10 p-2 flex items-center justify-center rounded-full  right-4 top-4">
+      {/* <span className="bg-white absolute h-10 w-10 p-2 flex items-center justify-center rounded-full  right-4 top-4">
         <FaRegHeart className=" text-lg w-full h-full text-gray-400 cursor-pointer hover:text-red-500" />
       </span>
-      <FaHeart />
+      <FaHeart /> */}
 
       {/* <Link to={"/product/" + id} className="w-full"> */}
       <img
