@@ -1,26 +1,33 @@
 import Button from "../UI/Button";
 import React, { useState } from "react";
-import { handleAddToCart } from "../../utility/addToCart";
 import { formatAmount } from "../../utility/constant";
-import { useNavigate } from "react-router-dom";
-import { useCart } from "../../Context/cartContext";
 import { FaRegHeart } from "react-icons/fa";
 import { FaHeart } from "react-icons/fa";
+import AddToCartButton from "../../utility/AddToCartButton";
 const ProductCard = ({ product, userDetail, authToken }) => {
-  const [productAdding, setProductAdding] = useState(false);
-  const { setCartCount } = useCart();
+  const [isSaved, setIsSaved] = useState(false);
   const { image, name, price, category, id, rating, stock, sellingPrice } =
     product;
-  const navigate = useNavigate();
+
   return (
     <div
       className="product-card group w-full h-full max-h-[400px] max-w-[300px]  gap-4 border-2  border-gray-00 tablet:hover:border-blue-500 tablet:hover:bg-gray-200
  rounded-md p-2 shadow-md relative laptop:hover:scale-105 transition-all duration-300 ease-in-out "
     >
-      {/* <span className="bg-white absolute h-10 w-10 p-2 flex items-center justify-center rounded-full  right-4 top-4">
-        <FaRegHeart className=" text-lg w-full h-full text-gray-400 cursor-pointer hover:text-red-500" />
+      <span
+        className="bg-white absolute h-8 w-8 p-1.5 flex items-center justify-center rounded-full  right-4 top-4"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          setIsSaved((prev) => !prev);
+        }}
+      >
+        {isSaved ? (
+          <FaHeart className={`text-red-500 w-full h-full `} />
+        ) : (
+          <FaRegHeart className="text-red-500 w-full h-full" />
+        )}
       </span>
-      <FaHeart /> */}
 
       {/* <Link to={"/product/" + id} className="w-full"> */}
       <img
@@ -63,30 +70,38 @@ const ProductCard = ({ product, userDetail, authToken }) => {
           )}
         </div>
         <div className="w-1/2 text-ellipsis overflow-hidden whitespace-nowrap font-roboto text-base mobile:text-xs tablet:text-sm">
-          {category?.capitalise()}
+          {category?.toCapitalise()}
         </div>
         <div className="add-to-cart-btn absolute bottom-2 right-0  mobile:bottom-1 laptop::bottom-2 ">
           {stock > 0 ? (
-            <Button
-              btntext={"Add to Cart"}
-              className={
-                " py-1 px-2 min-w-16 bg-blue-100 text-blue-600 rounded flex justify-center items-center z-10 font-roboto  outline-none hover:bg-blue-500 hover:text-white mobile:text-xs  tablet:text-[13px] laptop:text-sm laptop:w-max large-device:text-base"
-              }
-              disabled={false}
-              loading={productAdding}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
+            // <Button
+            //   btntext={"Add to Cart"}
+            //   className={
+            //     " py-1 px-2 min-w-16 bg-blue-100 text-blue-600 rounded flex justify-center items-center z-10 font-roboto  outline-none hover:bg-blue-500 hover:text-white mobile:text-xs  tablet:text-[13px] laptop:text-sm laptop:w-max large-device:text-base"
+            //   }
+            //   disabled={false}
+            //   loading={productAdding}
+            //   onClick={(e) => {
+            //     e.preventDefault();
+            //     e.stopPropagation();
 
-                handleAddToCart(
-                  userDetail,
-                  id,
-                  authToken,
-                  setProductAdding,
-                  navigate,
-                  setCartCount
-                );
-              }}
+            //     handleAddToCart(
+            //       userDetail,
+            //       id,
+            //       authToken,
+            //       setProductAdding,
+            //       navigate,
+            //       setCartCount
+            //     );
+            //   }}
+            // />
+            <AddToCartButton
+              authToken={authToken}
+              userDetail={userDetail}
+              productId={id}
+              className={
+                "py-1 px-2 min-w-16 bg-blue-100 text-blue-600 rounded flex justify-center items-center z-10 font-roboto  outline-none hover:bg-blue-500 hover:text-white mobile:text-xs  tablet:text-[13px] laptop:text-sm laptop:w-max large-device:text-base"
+              }
             />
           ) : (
             <Button

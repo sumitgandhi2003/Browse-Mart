@@ -4,10 +4,13 @@ import React, { useState } from "react";
 import { Button, Input } from "../UI";
 import axios from "axios";
 import { FiUpload } from "react-icons/fi";
-import swal from "sweetalert";
 import { useDropzone } from "react-dropzone";
 import ImagePreview from "./ImagePreview";
-import { productCategory, productBrands } from "../../utility/constant";
+import {
+  productCategory,
+  productBrands,
+  swalWithCustomConfiguration,
+} from "../../utility/constant";
 // import cloudinary from "../../cloudinary.config";
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 const API_KEY = process.env.REACT_APP_CLOUDINARY_API_KEY;
@@ -92,7 +95,6 @@ const ProductUpload = ({ authToken }) => {
     }
   };
   const uploadProduct = async (detail) => {
-    console.log(API_KEY);
     axios({
       method: "POST",
       url: `${SERVER_URL}/api/product/add-product`,
@@ -105,15 +107,16 @@ const ProductUpload = ({ authToken }) => {
       .then((response) => {
         const { data, status } = response;
         if (status === 201) {
-          swal(
-            "Product successfully uploaded",
-            "your product is added",
-            "success"
-          ).then(() => {
-            setProductDetails(initialProductDetail);
-            setImage(() => []);
-          });
-          // console.log("Product added successfully", data);
+          swalWithCustomConfiguration
+            ?.fire(
+              "Product successfully uploaded",
+              "your product is added",
+              "success"
+            )
+            .then(() => {
+              setProductDetails(initialProductDetail);
+              setImage(() => []);
+            });
         }
         setProductUploading(false);
         // setProductDetails({});
@@ -124,9 +127,13 @@ const ProductUpload = ({ authToken }) => {
         const { data, status } = error?.response;
         setProductUploading(false);
         if (status === 500) {
-          swal("Error uploading!", data?.message, "error");
+          swalWithCustomConfiguration.fire(
+            "Error uploading!",
+            data?.message,
+            "error"
+          );
         } else if (status === 400) {
-          swal("Error uploading!", data?.message);
+          swalWithCustomConfiguration?.fire("Error uploading!", data?.message);
         }
         console.log("Error uploading product", error);
         console.log(productDetails);
@@ -135,12 +142,8 @@ const ProductUpload = ({ authToken }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // console.log(productDetails);
-    // uploadProduct(productDetails);
-    // return;
     setProductUploading((prev) => !prev);
     const updatedProductDetail = await saveImageToCloudinary();
-    console.log(updatedProductDetail);
     if (updatedProductDetail) {
       await uploadProduct(updatedProductDetail);
     }
@@ -234,7 +237,7 @@ const ProductUpload = ({ authToken }) => {
               {productBrands?.map((item) => {
                 return (
                   <option key={item?.id} value={item?.value}>
-                    {item.value.capitalise()}
+                    {item.value.toCapitalise()}
                   </option>
                 );
               })}
@@ -256,7 +259,7 @@ const ProductUpload = ({ authToken }) => {
               {productCategory?.map((item) => {
                 return (
                   <option key={item?.id} value={item?.value}>
-                    {item.value.capitalise()}
+                    {item.value.toCapitalise()}
                   </option>
                 );
               })}
@@ -286,7 +289,7 @@ const ProductUpload = ({ authToken }) => {
                   ? item.child?.map((subItem) => {
                       return (
                         <option key={subItem?.id} value={subItem?.value}>
-                          {subItem.capitalise()}
+                          {subItem.toCapitalise()}
                         </option>
                       );
                     })

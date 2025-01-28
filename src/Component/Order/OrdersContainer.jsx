@@ -1,13 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import {
-  Link,
-  Navigate,
-  useLocation,
-  useNavigate,
-  useNavigation,
-} from "react-router-dom";
-import { Button, Loader } from "../UI";
+import { useLocation, useNavigate } from "react-router-dom";
+import { Loader } from "../UI";
 import OrderCard from "./OrderCard";
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 const OrdersContainer = ({ userDetail, authToken }) => {
@@ -16,6 +10,7 @@ const OrdersContainer = ({ userDetail, authToken }) => {
   const [isOrdersFetching, setIsOrdersFetching] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+
   const getAllOrders = () => {
     setIsOrdersFetching(true);
     axios({
@@ -38,10 +33,8 @@ const OrdersContainer = ({ userDetail, authToken }) => {
       .catch((error) => console.log(error));
   };
   useEffect(() => {
-    if (authToken === undefined || authToken === "" || authToken === null) {
-      navigate(
-        `/login?redirect-from=${encodeURIComponent(location?.pathname)}`
-      );
+    if (!authToken) {
+      navigate(`/login? redirect=${encodeURIComponent(location?.pathname)}`);
     } else {
       getAllOrders();
     }
@@ -49,7 +42,7 @@ const OrdersContainer = ({ userDetail, authToken }) => {
   }, [authToken]);
 
   useEffect(() => {
-    if (ordersArr.length > 0) {
+    if (ordersArr?.length > 0) {
       setFiltertedOrdersArr(() =>
         [...ordersArr].sort((a, b) => {
           const dateA = new Date(
@@ -68,10 +61,6 @@ const OrdersContainer = ({ userDetail, authToken }) => {
     }
   }, [ordersArr]);
 
-  // useEffect(() => {
-  //   if (authToken !== null && authToken !== undefined) getAllOrders();
-  // }, [authToken]);
-  console.log(ordersArr);
   if (isOrdersFetching) {
     return <Loader />;
   }

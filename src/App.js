@@ -2,7 +2,6 @@ import "./App.css";
 import { useState, useEffect } from "react";
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 import axios from "axios";
-import swal from "sweetalert";
 import { Navigate } from "react-router-dom";
 import { useCart } from "./Context/cartContext";
 //import components
@@ -20,7 +19,7 @@ import ProductsContainer from "./Component/Product/ProductsContainer";
 import { OrdersContainer } from "./Component/Order";
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 const AppLayout = ({ authToken, setAuthToken, userDetail, setUserDetail }) => {
-  String.prototype.capitalise = function () {
+  String.prototype.toCapitalise = function () {
     if (this.length === 0) return;
     const name = this.split(" ");
     for (let i = 0; i < name.length; i++) {
@@ -45,37 +44,32 @@ const AppLayout = ({ authToken, setAuthToken, userDetail, setUserDetail }) => {
 const App = () => {
   const [authToken, setAuthToken] = useState(localStorage.getItem("AuthToken"));
   const [userDetail, setUserDetail] = useState();
-  const { setCartCount } = useCart();
+  const { setCartCount } = useCart(null);
   const getUserDetail = async () => {
-    axios({
-      method: "POST",
-      url: `${SERVER_URL}/api/user/profile`,
-      headers: {
-        "Content-type": "application/json; charset=UTF-8",
-        Authorization: `Bearer ${authToken}`,
-      },
-    })
-      .then((response) => {
-        const { status, data } = response;
-        setUserDetail(data?.userDetail);
-        if (data?.userDetail?.cartCount)
-          setCartCount(() => data?.userDetail?.cartCount);
-      })
-      .catch((error) => {
-        console.log(error?.response?.data?.message);
-        if (error?.response?.data?.message === "Token expired") {
-          localStorage.removeItem("AuthToken");
-          setAuthToken(null);
-        }
+    try {
+      const response = await axios({
+        method: "POST",
+        url: `${SERVER_URL}/api/user/profile`,
+        headers: {
+          "Content-type": "application/json; charset=UTF-8",
+          Authorization: `Bearer ${authToken}`,
+        },
       });
+
+      const { status, data } = response;
+      setUserDetail(data?.userDetail);
+      if (data?.userDetail?.cartCount) {
+        setCartCount(data?.userDetail?.cartCount);
+      }
+    } catch (error) {
+      console.log(error?.response?.data?.message);
+      if (error?.response?.data?.message === "Token expired") {
+        localStorage.removeItem("AuthToken");
+        setAuthToken(null);
+      }
+    }
   };
-  // const { data } = getUserDetail();
-  // if (data && data.message === "Token expired") {
-  //   swal("Expired", "Please login again", "error").then(() => {
-  //     localStorage.removeItem("AuthToken");
-  //     setAuthToken(null);
-  //   });
-  // }
+
   useEffect(() => {
     if (authToken) {
       getUserDetail();
@@ -121,7 +115,7 @@ const App = () => {
           element: <Cart userDetail={userDetail} authToken={authToken} />,
         },
         {
-          path: "product/buy/:productId",
+          path: "/product/buy/:productId",
           element: <BuyNow authToken={authToken} userDetail={userDetail} />,
         },
         {
@@ -139,7 +133,7 @@ const App = () => {
           ),
         },
         {
-          path: "order/:orderId",
+          path: "/order/:orderId",
           element: <OrderPage authToken={authToken} userDetail={userDetail} />,
         },
         {

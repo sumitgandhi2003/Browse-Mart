@@ -12,7 +12,7 @@ const Navbar = ({ authToken, setAuthToken, userDetail, setUserDetail }) => {
   const [showProfileSlider, setShowProfileSlider] = useState(false);
   const { theme, toggleTheme } = useContext(themeContext);
   const { cartCount } = useCart();
-  // String.prototype.capitalise = function () {
+  // String.prototype.toCapitalise = function () {
   //   if (this.length === 0) return "";
   //   return this.charAt(0).toUpperCase() + this.slice(1);
   // };
@@ -62,7 +62,7 @@ const Navbar = ({ authToken, setAuthToken, userDetail, setUserDetail }) => {
                 />
               </div>
               <div className=" w-max mobile:hidden small-device:block ">
-                {userDetail?.name?.capitalise().split(" ")[0] || "Profile"}
+                {userDetail?.name?.toCapitalise().split(" ")[0] || "Profile"}
               </div>
             </div>
           </div>

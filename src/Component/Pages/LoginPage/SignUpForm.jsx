@@ -3,8 +3,9 @@ import { FaEyeSlash, FaEye } from "react-icons/fa";
 import Input from "../../UI/Input";
 import Button from "../../UI/Button";
 import axios from "axios";
-import swal from "sweetalert";
 import { Navigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import { swalWithCustomConfiguration } from "../../../utility/constant";
 const SignUpForm = ({ setIsSignUpShow, setAuthToken }) => {
   const SERVER_URL = process.env.REACT_APP_SERVER_URL;
   const [initialUserDetail, setInitialUserDetail] = useState({
@@ -34,16 +35,22 @@ const SignUpForm = ({ setIsSignUpShow, setAuthToken }) => {
       [name]: type === "checkbox" ? checked : value,
     });
   };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!userDetail.email || !userDetail.name || !userDetail.password) {
-      swal("Oops!", "All fields  are required!", "warning");
+      swalWithCustomConfiguration?.fire(
+        "Oops!",
+        "All fields  are required!",
+        "warning"
+      );
     } else {
       handleRegisteration();
       setUserDetail(initialUserDetail);
     }
     // make API call to server here
   };
+
   const handleRegisteration = () => {
     axios({
       method: "POST",
@@ -53,28 +60,34 @@ const SignUpForm = ({ setIsSignUpShow, setAuthToken }) => {
     })
       .then((response) => {
         if (response.status === 201) {
-          swal(
-            "Registered Successfully!",
-            "you are now registered with us you can proceed",
-            "success"
-          ).then(() => {
-            localStorage.setItem("AuthToken", response?.data?.AuthToken);
-            setAuthToken(response?.data?.AuthToken);
-            <Navigate to={"/"} />;
-          });
+          swalWithCustomConfiguration
+            ?.fire(
+              "Registered Successfully!",
+              "you are now registered with us you can proceed",
+              "success"
+            )
+            .then(() => {
+              localStorage.setItem("AuthToken", response?.data?.AuthToken);
+              setAuthToken(response?.data?.AuthToken);
+              <Navigate to={"/"} />;
+            });
         }
       })
       .catch((error) => {
         console.log(error);
         const status = error?.response?.status;
         if (status === 400) {
-          swal(
+          swalWithCustomConfiguration?.fire(
             "Resgistration Failed!",
             "You are already registered with us",
             "warning"
           );
         } else {
-          swal("Oops!", "Something went wrong", "error");
+          swalWithCustomConfiguration?.fire(
+            "Oops!",
+            "Something went wrong",
+            "error"
+          );
         }
       });
   };

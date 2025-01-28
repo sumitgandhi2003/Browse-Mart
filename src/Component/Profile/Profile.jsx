@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Button from "../UI/Button";
 import Input from "../UI/Input";
 import axios from "axios";
-import swal from "sweetalert";
+import { swalWithCustomConfiguration } from "../../utility/constant";
 const defaultProileImage = require("../../assets/images/maleprofileicon.jpg");
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 const Profile = ({ userDetail, authToken, setUserDetail }) => {
@@ -11,7 +11,7 @@ const Profile = ({ userDetail, authToken, setUserDetail }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
 
-  // String.prototype.capitalise = function () {
+  // String.prototype.toCapitalise = function () {
   //   if (this.length === 0) return "";
   //   return this.charAt(0).toUpperCase() + this.slice(1);
   // };
@@ -47,7 +47,11 @@ const Profile = ({ userDetail, authToken, setUserDetail }) => {
       })
       .catch((error) => {
         const { data, status } = error?.response;
-        swal(`Oops! Error ${status}`, data?.message, "error");
+        swalWithCustomConfiguration?.fire(
+          `Oops! Error ${status}`,
+          data?.message,
+          "error"
+        );
         setIsUpdating((prev) => !prev);
         console.log(error);
       });
@@ -58,7 +62,7 @@ const Profile = ({ userDetail, authToken, setUserDetail }) => {
     }
   }, [userDetail]);
   return (
-    <div className="w-11/12 h-full relative flex items-center">
+    <div className="w-11/12 h-full relative flex items-center bg-blue-100 text-blue-500">
       <form className="w-full h-full relative flex flex-col overflow-y-scroll items-center justify-between p-2 gap-6">
         {/* <div className=" w-full h-full"> */}
         <div
@@ -85,13 +89,13 @@ const Profile = ({ userDetail, authToken, setUserDetail }) => {
                   value={profileDetails?.name}
                   placeholder={"Enter Name"}
                   className={
-                    "px-2 py-1 bg-gray-100 outline-none border-gray-300 border-2 w-2/3 text-left font-semibold rounded"
+                    "px-2 py-1 bg-gray-100  border-gray-300 border-2 w-2/3 text-left font-semibold rounded"
                   }
                   onChange={handleChange}
                 />
               ) : (
                 <p className="name w-2/3 text-left font-semibold" id="name">
-                  {profileDetails?.name?.capitalise() || "N/A"}
+                  {profileDetails?.name?.toCapitalise() || "N/A"}
                 </p>
               )}
             </div>
@@ -105,7 +109,7 @@ const Profile = ({ userDetail, authToken, setUserDetail }) => {
                   name={"email"}
                   value={profileDetails?.email}
                   className={
-                    "px-2 py-1 bg-gray-100 outline-none border-gray-300 border-2 w-2/3 text-left font-semibold rounded"
+                    "px-2 py-1 bg-gray-100  border-gray-300 border-2 w-2/3 text-left font-semibold rounded"
                   }
                   placeholder={"Enter Email"}
                   onChange={handleChange}
@@ -129,7 +133,7 @@ const Profile = ({ userDetail, authToken, setUserDetail }) => {
                   name={"phoneNumber"}
                   value={profileDetails?.phoneNumber}
                   className={
-                    "px-2 py-1 bg-gray-100 outline-none border-gray-300 border-2 w-2/3 text-left font-semibold rounded"
+                    "px-2 py-1 bg-gray-100 border-gray-300 border-2 w-2/3 text-left font-semibold rounded"
                   }
                   placeholder={"Enter Phone Number"}
                   onChange={handleChange}
@@ -151,7 +155,7 @@ const Profile = ({ userDetail, authToken, setUserDetail }) => {
                   name={"address"}
                   value={profileDetails?.address}
                   className={
-                    "px-2 py-1 bg-gray-100 outline-none border-gray-300 border-2 w-2/3 text-left font-semibold rounded break-words overflow-hidden"
+                    "px-2 py-1 bg-gray-100 border-gray-300 border-2 w-2/3 text-left font-semibold rounded break-words overflow-hidden"
                   }
                   placeholder={"Enter Address"}
                   onChange={handleChange}
@@ -170,8 +174,8 @@ const Profile = ({ userDetail, authToken, setUserDetail }) => {
         <div className=" absolute bottom-3  right-2 flex gap-3">
           <Button
             btntext={isEditing ? "Cancel" : "Edit"}
-            classname={
-              "bg-blue-500   px-3 py-1 text-white font-roboto outline-none border-none "
+            className={
+              "bg-blue-300 px-3 py-1 text-lg text-blue-100 font-roboto hover:bg-blue-500 hover:text-white outline-none border-none rounded"
             }
             onClick={(e) => {
               e.preventDefault();
@@ -186,6 +190,7 @@ const Profile = ({ userDetail, authToken, setUserDetail }) => {
               btntext={"Save"}
               onClick={handleSubmit}
               loading={isUpdating}
+              className="bg-blue-500 px-3 py-1 text-lg text-blue-100 font-roboto hover:bg-blue-500 hover:text-white outline-none border-none rounded"
             />
           ) : (
             ""

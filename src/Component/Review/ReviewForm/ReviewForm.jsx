@@ -4,9 +4,9 @@ import TextArea from "../../UI/TextArea";
 import Button from "../../UI/Button";
 import "./ReviewForm.css";
 import axios from "axios";
-import swal from "sweetalert";
 // import component
 import ReviewStar from "./ReviewStar";
+import { swalWithCustomConfiguration } from "../../../utility/constant";
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 const ReviewForm = ({
   onClose,
@@ -51,11 +51,13 @@ const ReviewForm = ({
         setIsReviewUploading(false);
         onClose();
         // alert("Review submitted successfully!");
-        swal({
-          title: "Thankyou for your Review!",
-          text: "Review submitted successfully",
-          icon: "success",
-        }).then(() => setIsRefreshClicked((prev) => !prev));
+        swalWithCustomConfiguration
+          ?.fire({
+            title: "Thankyou for your Review!",
+            text: "Review submitted successfully",
+            icon: "success",
+          })
+          .then(() => setIsRefreshClicked((prev) => !prev));
       })
       .catch((error) => {
         setIsReviewUploading(false);
@@ -112,12 +114,6 @@ const ReviewForm = ({
               setStarRating={setReviewData}
               rating={reviewData?.rating}
             />
-            {/* <i class="fa-solid fa-star text-5xl text-yellow-500 "></i>
-            <i class="fa-regular fa-star text-5xl text-blue-500 s1"></i>
-            <i class="fa-regular fa-star text-5xl text-blue-500 s2"></i>
-            <i class="fa-regular fa-star text-5xl text-blue-500 s3"></i>
-            <i class="fa-regular fa-star text-5xl text-blue-500 s4"></i>
-            <i class="fa-regular fa-star text-5xl text-blue-500 s5"></i> */}
           </div>
           <div className="title p-3 mt-3">
             <Input

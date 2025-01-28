@@ -5,7 +5,9 @@ import SignUpForm from "./SignUpForm";
 import { useLocation, useNavigate } from "react-router-dom";
 import Button from "../../UI/Button";
 import axios from "axios";
-import swal from "sweetalert";
+import { swalWithCustomConfiguration } from "../../../utility/constant";
+import { Toast } from "../../../utility/constant";
+import Swal from "sweetalert2";
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 //form direct action config
 // action={`${SERVER_URL}${isSignUpShow ? "/create-user" : ""}`}
@@ -20,9 +22,7 @@ const LoginPage = ({ authToken, setAuthToken }) => {
     email: "guest@gmail.com",
     password: "guestuser",
   };
-  const redirectFrom = new URLSearchParams(location?.search)?.get(
-    "redirect-from"
-  );
+  const redirect = new URLSearchParams(location?.search)?.get("redirect");
 
   const handleGuestLogin = () => {
     setIslogining((prev) => !prev);
@@ -33,17 +33,21 @@ const LoginPage = ({ authToken, setAuthToken }) => {
       headers: { "Content-type": "application/json; charset=UTF-8" },
     })
       .then((response) => {
-        // localStorage.setItem("token", response.data.token);
-        // localStorage.setItem("userId", response.data.userId);
-        // setIsSignUpShow(false);
-        if (response.status === 200) {
-          // swal("success", "User Login Successfully", "success");
+        if (response?.status === 200) {
           localStorage.setItem("AuthToken", response?.data?.AuthToken);
           setAuthToken(response?.data?.AuthToken);
           setIslogining((prev) => !prev);
-          navigate(redirectFrom ? `${redirectFrom}` : "/");
+          navigate(redirect ? `${redirect}` : "/");
+          Toast?.fire({
+            icon: "success",
+            title: "User Login Successfully!",
+          });
         } else {
-          swal("Oops!", "Something went wrong", "error");
+          swalWithCustomConfiguration?.fire(
+            "Oops!",
+            "Something went wrong",
+            "error"
+          );
         }
       })
       .catch((error) => {
@@ -51,19 +55,23 @@ const LoginPage = ({ authToken, setAuthToken }) => {
         const message = error?.response?.data?.message;
         setIslogining((prev) => !prev);
         if (status === 404) {
-          swal("Oops!", message, "error");
+          swalWithCustomConfiguration?.fire("Oops!", message, "error");
         } else if (status === 401) {
-          swal("Oops!", message, "error");
+          swalWithCustomConfiguration?.fire("Oops!", message, "error");
         } else if (status === 400) {
-          swal("Oops!", message, "error");
+          swalWithCustomConfiguration?.fire("Oops!", message, "error");
         } else {
-          swal("Oops!", "Something went wrong", "error");
+          swalWithCustomConfiguration?.fire(
+            "Oops!",
+            "Something went wrong",
+            "error"
+          );
         }
       });
   };
   // const [authToken, setAuthToken] = useState(localStorage.getItem("AuthToken"));
   useEffect(() => {
-    if (authToken !== null && authToken !== undefined) navigate("/");
+    if (authToken) navigate("/");
   }, [authToken]);
 
   return (
@@ -114,6 +122,7 @@ const LoginPage = ({ authToken, setAuthToken }) => {
             <LoginForm
               setIsSignUpShow={setIsSignUpShow}
               setAuthToken={setAuthToken}
+              redirect={redirect}
             />
           )}
           <div className="w-full p-3 flex justify-center">

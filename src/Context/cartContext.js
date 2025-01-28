@@ -1,7 +1,7 @@
 const { createContext, useState, useContext } = require("react");
 
-const cartContext = createContext();
-const useCart = () => useContext(cartContext);
+const CartContext = createContext();
+const useCart = () => useContext(CartContext);
 const CartProvider = ({ children }) => {
   const [cartCount, setCartCount] = useState(0);
   //   const getCartItem = () => {
@@ -29,10 +29,10 @@ const CartProvider = ({ children }) => {
   //     getCartItem();
   //   }, []);
   return (
-    <cartContext.Provider value={{ cartCount, setCartCount }}>
+    <CartContext.Provider value={{ cartCount, setCartCount }}>
       {children}
-    </cartContext.Provider>
+    </CartContext.Provider>
   );
 };
 
-export { CartProvider, cartContext, useCart };
+export { CartProvider, CartContext, useCart };

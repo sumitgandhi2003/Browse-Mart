@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import { FaPlus, FaMinus } from "react-icons/fa6";
 import { FaRupeeSign } from "react-icons/fa";
 import axios from "axios";
-import swal from "sweetalert";
 import Button from "../UI/Button";
-import { formatAmount } from "../../utility/constant";
+import {
+  formatAmount,
+  swalWithCustomConfiguration,
+} from "../../utility/constant";
 import { useCart } from "../../Context/cartContext";
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 const CartCard = ({
@@ -41,7 +43,11 @@ const CartCard = ({
       .catch((error) => {
         console.log(error);
         // setIsDataFetching((prevState) => !prevState);
-        swal("Something went wrong!", "Cant update cart", "error");
+        swalWithCustomConfiguration?.fire(
+          "Something went wrong!",
+          "Cant update cart",
+          "error"
+        );
       });
   };
 
@@ -58,7 +64,6 @@ const CartCard = ({
   const handleRemoveClicked = () => {
     updateCart();
   };
-  console.log(product?.item?.sellingPrice);
   return (
     <div className="flex gap-4 w-full max-h-[200px] items-center p-2 mobile:flex-col small-device:flex-row">
       <div className="w-1/2 flex gap-4 items-center justify-between overflow-scroll  mobile:w-full small-device:w-1/2">
@@ -81,7 +86,7 @@ const CartCard = ({
           <Button
             btntext={"remove"}
             className={
-              "w-min p-1 bg-gray-300 rounded mobile:hidden small-device:block"
+              "w-min py-1 px-2 bg-blue-100 text-blue-500 rounded mobile:hidden small-device:block hover:bg-blue-500 hover:text-white"
             }
             onClick={handleRemoveClicked}
           />
@@ -99,7 +104,7 @@ const CartCard = ({
           >
             <FaMinus />
           </span>
-          <span className=" bg-gray-200 border-gray-300 border-2 px-3 py-1">
+          <span className=" bg-blue-100 border-blue-300 border-2 px-3 py-1">
             {product?.quantity}
           </span>
           <span
@@ -110,7 +115,7 @@ const CartCard = ({
           </span>
         </div>
         <span className="w-1/3 flex justify-center items-center text-lg">
-          <FaRupeeSign className="font-roboto font-medium text-sm" />
+          {/* <FaRupeeSign className="font-roboto font-medium text-sm" /> */}
           {formatAmount(
             product?.quantity * product?.item?.price ||
               product?.item?.sellingPrice

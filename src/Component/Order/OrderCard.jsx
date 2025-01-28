@@ -3,26 +3,13 @@ import { Button } from "../UI";
 import { Link } from "react-router-dom";
 import { formatAmount } from "../../utility/constant";
 import { FaRupeeSign } from "react-icons/fa";
+import { months } from "../../utility/constant";
 const OrderCard = ({ order }) => {
   const [isOrderItemExpanded, setIsOrderItemExpanded] = useState(false);
   const displayItem = order?.orderItems?.slice(
     0,
     isOrderItemExpanded ? order?.orderItems?.length : 2
   );
-  const months = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
   return (
     <div className="border-2  border-gray-400 rounded-lg w-full h-full font-roboto">
       <div className=" w-full flex justify-between p-3 border-b-2 border-gray-400 ">
@@ -36,7 +23,7 @@ const OrderCard = ({ order }) => {
           <div className=" flex flex-col">
             <span className="font-medium">Order Date</span>
             <span className="">
-              {months?.[order?.orderDate?.month - 1] +
+              {months?.[order?.orderDate?.month - 1]?.alphabetics +
                 " " +
                 order?.orderDate?.day +
                 ", " +
@@ -74,17 +61,7 @@ const OrderCard = ({ order }) => {
           </Link>
         </div>
       </div>
-      {/* <hr className="border-1 border-gray-400" /> */}
-      {/* <p>Order ID: {order?.orderId || order?.id}</p> */}
-      {/* <p>Product ID: {order.productId}</p> */}
       <div className="">
-        {/* <p>Status: {order.orderStatus}</p>
-                  <p>
-                    Date:{" "}
-                    {`${order.orderDate?.day}-${order.orderDate?.month}-${order.orderDate?.year}`}
-                  </p>
-                  <p>Quantity: {order.quantity}</p>
-                  <p>Price: {order.price}</p> */}
         {displayItem?.map((item, index) => {
           const islastItem = index === displayItem.length - 1;
           return (
@@ -102,7 +79,7 @@ const OrderCard = ({ order }) => {
                 />
                 <div className="w-full ">
                   <div className="flex justify-between font-semibold">
-                    <p className="font-semibold mobile:w-full">
+                    <p className="font-semibold mobile:w-full line-clamp-3">
                       {" "}
                       {item?.productName}
                     </p>

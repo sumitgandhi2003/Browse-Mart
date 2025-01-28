@@ -3,10 +3,10 @@ import axios from "axios";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
 import Input from "../../UI/Input";
 import Button from "../../UI/Button";
-import swal from "sweetalert";
 import { useNavigate } from "react-router-dom";
+import { Toast, swalWithCustomConfiguration } from "../../../utility/constant";
 
-const LoginForm = ({ setIsSignUpShow, setAuthToken }) => {
+const LoginForm = ({ setIsSignUpShow, setAuthToken, redirect }) => {
   const navigate = useNavigate();
   const SERVER_URL = process.env.REACT_APP_SERVER_URL;
   const [initialUserDetail, setInitialUserDetail] = useState({
@@ -40,7 +40,11 @@ const LoginForm = ({ setIsSignUpShow, setAuthToken }) => {
       (error.isError && userDetail.email === "") ||
       userDetail.password === ""
     ) {
-      swal("Oops!", "All field are required", "warning");
+      swalWithCustomConfiguration?.fire(
+        "Oops!",
+        "All field are required",
+        "warning"
+      );
     } else {
       handleLogin();
       setUserDetail(initialUserDetail);
@@ -55,29 +59,37 @@ const LoginForm = ({ setIsSignUpShow, setAuthToken }) => {
       headers: { "Content-type": "application/json; charset=UTF-8" },
     })
       .then((response) => {
-        // localStorage.setItem("token", response.data.token);
-        // localStorage.setItem("userId", response.data.userId);
-        // setIsSignUpShow(false);
         if (response.status === 200) {
-          // swal("success", "User Login Successfully", "success");
           localStorage.setItem("AuthToken", response?.data?.AuthToken);
           setAuthToken(response?.data?.AuthToken);
-          navigate("/");
+          navigate(redirect ? `${redirect}` : "/");
+          Toast?.fire({
+            icon: "success",
+            title: "User Login Successfully !",
+          });
         } else {
-          swal("Oops!", "Something went wrong", "error");
+          swalWithCustomConfiguration?.fire(
+            "Oops!",
+            "Something went wrong",
+            "error"
+          );
         }
       })
       .catch((error) => {
         const status = error?.response?.status;
         const message = error?.response?.data?.message;
         if (status === 404) {
-          swal("Oops!", message, "error");
+          swalWithCustomConfiguration?.fire("Oops!", message, "error");
         } else if (status === 401) {
-          swal("Oops!", message, "error");
+          swalWithCustomConfiguration?.fire("Oops!", message, "error");
         } else if (status === 400) {
-          swal("Oops!", message, "error");
+          swalWithCustomConfiguration?.fire("Oops!", message, "error");
         } else {
-          swal("Oops!", "Something went wrong", "error");
+          swalWithCustomConfiguration?.fire(
+            "Oops!",
+            "Something went wrong",
+            "error"
+          );
         }
       });
   };

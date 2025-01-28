@@ -7,8 +7,7 @@ import { Button, Loader } from "../UI";
 import { ReviewForm, ReviewCard } from "../Review";
 import ProductImage from "../Product/ProductImage";
 import { formatAmount, socialMedia } from "../../utility/constant";
-import { handleAddToCart } from "../../utility/addToCart";
-import { useCart } from "../../Context/cartContext";
+import AddToCartButton from "../../utility/AddToCartButton";
 // import { SERVER_URL } from "../../config";
 const pageNotFind = require("../../assets/images/pageNotFind.jpg");
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
@@ -22,11 +21,9 @@ const ProductPage = ({ isAuthenticated, userDetail, authToken }) => {
   const [isReviewClicked, setIsReviewClicked] = useState(false);
   const [isRefreshClicked, setIsRefreshClicked] = useState(false);
   const [isShareShow, setIsShareShow] = useState(false);
-  const [productAdding, setProductAdding] = useState(false);
   const [isError, setIsError] = useState({});
   const [isExpened, setIsExpened] = useState(false);
   const location = useLocation();
-  const { setCartCount } = useCart();
   const message = `🚀 Exciting News! 🌟\n\nI just discovered the **${productData.name}** and I can't stop raving about it! 🎉\n\n✨ **Why You’ll Love It**:\n- Top-notch quality that speaks for itself!\n- Perfect for tech enthusiasts.\n- Limited-time offer: Don't miss out! 🕒\n\n👉 Check it out here: ${currentURL}\n\n💬 Let me know what you think, and tag your friends who need this in their lives!`;
   const navigate = useNavigate();
   const handleClick = () => {
@@ -57,8 +54,6 @@ const ProductPage = ({ isAuthenticated, userDetail, authToken }) => {
           setIsError({ error: data?.message, status: status });
           setIsDataFetch(true);
         }
-        // swal(`Oops! Error ${status}`, data?.message, "error");
-        // console.error(error);
       });
   };
 
@@ -132,14 +127,14 @@ const ProductPage = ({ isAuthenticated, userDetail, authToken }) => {
               )}
             </p>
             <p className="product-price text-left">
-              ₹ {formatAmount(productData?.price || productData?.sellingPrice)}
+              {formatAmount(productData?.price || productData?.sellingPrice)}
             </p>
 
             <div className="buy-buttons  flex gap-3 w-full   ">
               {userDetail && authToken ? (
                 productData?.stock > 0 ? (
                   <div className="w-full flex gap-4">
-                    <Button
+                    {/* <Button
                       btntext={"Add to Cart"}
                       className={
                         "bg-blue-200 rounded w-1/2 font-roboto text-white p-2"
@@ -155,6 +150,14 @@ const ProductPage = ({ isAuthenticated, userDetail, authToken }) => {
                         )
                       }
                       loading={productAdding}
+                    /> */}
+                    <AddToCartButton
+                      authToken={authToken}
+                      userDetail={userDetail}
+                      productId={productId}
+                      className={
+                        "bg-blue-200 rounded w-1/2 font-roboto text-white p-2"
+                      }
                     />
                     <Link to={"/product/buy/" + productId} className="w-1/2">
                       <Button
@@ -162,15 +165,6 @@ const ProductPage = ({ isAuthenticated, userDetail, authToken }) => {
                         className={
                           "bg-blue-500 rounded w-full text-white p-2 shadow-md hover:scale-105 transition-all active:bg-blue-100"
                         }
-                        // onClick={() => {
-                        //   if (userDetail && authToken) {
-                        //     swal("Buy Sucessfully!", "", "success");
-                        //     <Link to={"/buynow/" + productId}>Buy Now</Link>;
-                        //   } else
-                        //     alert(
-                        //       "This site is under maintenance some functionality is not working please try again later."
-                        //     );
-                        // }}
                       />
                     </Link>
                   </div>
@@ -179,7 +173,7 @@ const ProductPage = ({ isAuthenticated, userDetail, authToken }) => {
                 )
               ) : (
                 <Link
-                  to={`/login?redirect-from=${encodeURIComponent(
+                  to={`/login?redirect=${encodeURIComponent(
                     location?.pathname
                   )}`}
                   className="w-full"
@@ -189,15 +183,6 @@ const ProductPage = ({ isAuthenticated, userDetail, authToken }) => {
                     className={
                       "bg-blue-500 rounded w-full text-white p-2 shadow-md hover:scale-105 transition-all active:bg-blue-100"
                     }
-                    // onClick={() => {
-                    //   if (userDetail && authToken) {
-                    //     swal("Buy Sucessfully!", "", "success");
-                    //     <Link to={"/buynow/" + productId}>Buy Now</Link>;
-                    //   } else
-                    //     alert(
-                    //       "This site is under maintenance some functionality is not working please try again later."
-                    //     );
-                    // }}
                   />
                 </Link>
               )}
@@ -249,7 +234,10 @@ const ProductPage = ({ isAuthenticated, userDetail, authToken }) => {
               {relatedProduct.length > 0 &&
                 relatedProduct.map((product, index) => {
                   return (
-                    <Link to={`/product/${product?.id}`} key={index}>
+                    <Link
+                      to={`/product/${product?.id || product?._id}`}
+                      key={product?.id || product?._id}
+                    >
                       <ProductCard
                         product={product}
                         authToken={authToken}

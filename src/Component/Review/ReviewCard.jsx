@@ -45,10 +45,10 @@ const ReviewCard = ({ review }) => {
       </div>
       <div className="font-roboto text-base group absolute bg-white rounded p-1  bottom-1 right-2 font-bold ">
         <div className="text-ellipsis overflow-hidden whitespace-nowrap max-w-40">
-          By {userName?.capitalise() || "User"}
+          By {userName?.toCapitalise() || "User"}
         </div>
         <div className="group-hover:block bg-gray-600 p-1 absolute bottom-7 font-semibold text-white text-[10px] rounded  hidden  ">
-          By {userName?.capitalise() || "User"}
+          By {userName?.toCapitalise() || "User"}
         </div>
       </div>
     </div>

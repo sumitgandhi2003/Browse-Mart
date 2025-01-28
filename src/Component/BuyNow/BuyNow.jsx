@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import swal from "sweetalert";
-import CartCard from "../Cart/CartCard";
 import Input from "../UI/Input";
-import { predominant } from "@cloudinary/url-gen/qualifiers/background";
-import { FaRupeeSign } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { formatAmount } from "../../utility/constant";
+import {
+  formatAmount,
+  swalWithCustomConfiguration,
+} from "../../utility/constant";
 import Button from "../UI/Button";
 import "./style.css";
 import {
@@ -32,12 +31,9 @@ const BuyNow = ({ authToken, userDetail }) => {
     methodName: "",
     methodDetail: {},
   });
-
   const [shippingAddress, setShippingAddress] = useState({});
   const [isError, setIsError] = useState({});
-  if (authToken === null || authToken === undefined || authToken === "") {
-    navigate("/login");
-  }
+
   //Getting Single Product Data By Id
   const getProductDataById = () => {
     setIsDataFetch(false);
@@ -72,8 +68,6 @@ const BuyNow = ({ authToken, userDetail }) => {
           setIsError({ error: data?.message, status: status });
           setIsDataFetch(true);
         }
-        // swal(`Oops! Error ${status}`, data?.message, "error");
-        // console.error(error);
       });
   };
 
@@ -152,6 +146,7 @@ const BuyNow = ({ authToken, userDetail }) => {
     // If not, display error message
     // Navigate to success page
     setIsOrderSubmitting((prev) => !prev);
+
     axios({
       method: "POST",
       url: `${SERVER_URL}/api/order/submit-order`,
@@ -168,16 +163,6 @@ const BuyNow = ({ authToken, userDetail }) => {
         console.log(data);
         setIsOrderSubmitting((prev) => !prev);
         if (status === 201) {
-          // swal(
-          //   "Order Placed successfully!",
-          //   "your order has been placed successfully",
-          //   "success"
-          // );
-          // navigate(
-          //   `/order-success?orderId=${
-          //     data?.orderIds.length === 1 ? `${data?.orderIds}` : ""
-          //   }`
-          // );
           console.log(data?.orderIds);
           navigate("/order-success", { state: data?.orderIds });
         }
@@ -186,7 +171,7 @@ const BuyNow = ({ authToken, userDetail }) => {
         const { data, status } = error?.response;
         setIsOrderSubmitting((prev) => !prev);
         if (status === 404) {
-          swal("Oops!", data?.message, "error");
+          swalWithCustomConfiguration?.fire("Oops!", data?.message, "error");
         }
         console.error(error);
       });
@@ -197,15 +182,22 @@ const BuyNow = ({ authToken, userDetail }) => {
     const address = checkAddressDetailsCompleted();
     const payment = checkPaymentDetailsCompleted();
     if (!address || !payment) {
-      swal(
-        !address
+      swalWithCustomConfiguration?.fire({
+        title: !address
           ? "Please Enter Address Detail!"
           : "Please Enter Payment Detail!",
-        !address
+        text: !address
           ? "Please Enter required address detail which denote by *"
           : "Please Enter required Payment Detail which denote by *",
-        "warning"
-      );
+        icon: "warning",
+        // buttons: {
+        //   confirm: {
+        //     text: "Ok",
+        //     className: "confirm-btn",
+        //     closeModal: true,
+        //   },
+        // },
+      });
       return;
     }
     submitOrder();
@@ -307,6 +299,11 @@ const BuyNow = ({ authToken, userDetail }) => {
       getCartItem();
     }
   }, [productId]);
+  useEffect(() => {
+    if (!authToken) {
+      navigate("/login");
+    }
+  });
   return (
     <div className="w-full loader-container ">
       {/* <CartCard product={productData} />
@@ -338,7 +335,7 @@ const BuyNow = ({ authToken, userDetail }) => {
                       userDetail?.name ? "cursor-not-allowed" : ""
                     }`}
                     placeholder={"Name"}
-                    value={userDetail?.name?.capitalise()}
+                    value={userDetail?.name?.toCapitalise()}
                     disabled={userDetail?.name ? true : false}
                   />
                 </div>
@@ -394,7 +391,7 @@ const BuyNow = ({ authToken, userDetail }) => {
                     }
                     placeholder={"Address Line 1"}
                     onChange={handleShippingAddressChange}
-                    value={shippingAddress?.addressLine1?.capitalise()}
+                    value={shippingAddress?.addressLine1?.toCapitalise()}
                   />
                 </div>
 
@@ -409,7 +406,7 @@ const BuyNow = ({ authToken, userDetail }) => {
                     }
                     placeholder={"Address Line 2"}
                     onChange={handleShippingAddressChange}
-                    value={shippingAddress?.addressLine2?.capitalise()}
+                    value={shippingAddress?.addressLine2?.toCapitalise()}
                   />
                 </div>
 
@@ -435,7 +432,7 @@ const BuyNow = ({ authToken, userDetail }) => {
                     // }}
                     placeholder={"Country"}
                     onChange={handleShippingAddressChange}
-                    value={shippingAddress?.country?.capitalise()}
+                    value={shippingAddress?.country?.toCapitalise()}
                   />
                   {/* {countryList.length > 0 && (
                     <div className="absolute w-full hidden max-h-50  divide-y-2 bg-white rounded border-2 p-2 border-gray-400 top-20 group-focus-within:grid grid-rows-4">
@@ -474,7 +471,7 @@ const BuyNow = ({ authToken, userDetail }) => {
                     }
                     placeholder={"State"}
                     onChange={handleShippingAddressChange}
-                    value={shippingAddress?.state?.capitalise()}
+                    value={shippingAddress?.state?.toCapitalise()}
                   />
                 </div>
                 <div className="flex flex-col gap-2">
@@ -490,7 +487,7 @@ const BuyNow = ({ authToken, userDetail }) => {
                     }
                     placeholder={"City"}
                     onChange={handleShippingAddressChange}
-                    value={shippingAddress?.city?.capitalise()}
+                    value={shippingAddress?.city?.toCapitalise()}
                   />
                 </div>
 
@@ -781,9 +778,7 @@ const BuyNow = ({ authToken, userDetail }) => {
                       </div>
                       <span className="flex w-full items-center ">
                         Subtotal:{" "}
-                        <span>
-                          <FaRupeeSign className="text-xs" />
-                        </span>
+                        <span>{/* <FaRupeeSign className="text-xs" /> */}</span>
                         {formatAmount(
                           (product?.item?.price ||
                             product?.item?.sellingPrice) * product.quantity
@@ -800,9 +795,7 @@ const BuyNow = ({ authToken, userDetail }) => {
               <div className="flex gap-4 p-2 w-full total-price">
                 <span className="text-lg font-roboto w-full">Total</span>
                 <span className="flex items-center ">
-                  <span>
-                    <FaRupeeSign className="text-lg" />
-                  </span>
+                  <span>{/* <FaRupeeSign className="text-lg" /> */}</span>
                   <span className="text-lg font-semibold font-roboto">
                     {formatAmount(
                       productArr?.reduce((total, product) => {
@@ -821,9 +814,7 @@ const BuyNow = ({ authToken, userDetail }) => {
               <div className="flex gap-4 p-2 w-full total-price">
                 <span className="  text-lg font-roboto w-full">Discount</span>
                 <span className="flex items-center ">
-                  <span>
-                    <FaRupeeSign className="text-lg" />
-                  </span>
+                  <span>{/* <FaRupeeSign className="text-lg" /> */}</span>
                   <span className="text-lg font-semibold font-roboto">
                     {formatAmount(
                       productArr?.reduce((total, product) => {
