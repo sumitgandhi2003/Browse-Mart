@@ -15,6 +15,7 @@ const Input = ({
   pattern,
   disabled,
   onFocus,
+  maxLength,
   // Add any other props you need here for your specific use case. For example, a label tag for accessibility:
 }) => {
   return (
@@ -33,6 +34,7 @@ const Input = ({
       pattern={pattern}
       disabled={disabled}
       onFocus={onFocus}
+      maxLength={maxLength}
     />
   );
 };

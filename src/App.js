@@ -12,7 +12,12 @@ import { useCart } from "./Context/cartContext";
 // import Home from "./Component/Home/Home";
 import Cart from "./Component/Cart/Cart";
 import Navbar from "./Component/Navbar/Navbar";
-import { LoginPage, OrderPage, ProductPage } from "./Component/Pages";
+import {
+  LoginPage,
+  OrderPage,
+  ProductPage,
+  SellerRegistrationPage,
+} from "./Component/Pages";
 import BuyNow from "./Component/BuyNow/BuyNow";
 import SuccessPage from "./Component/BuyNow/SuccessPage";
 import ProductsContainer from "./Component/Product/ProductsContainer";
@@ -29,7 +34,7 @@ const AppLayout = ({ authToken, setAuthToken, userDetail, setUserDetail }) => {
     // return this.charAt(0).toUpperCase() + this.slice(1);
   };
   return (
-    <div className="App">
+    <div className="App flex flex-col min-h-screen">
       <Navbar
         authToken={authToken}
         setAuthToken={setAuthToken}
@@ -135,6 +140,15 @@ const App = () => {
         {
           path: "/order/:orderId",
           element: <OrderPage authToken={authToken} userDetail={userDetail} />,
+        },
+        {
+          path: "/seller-registration",
+          element: (
+            <SellerRegistrationPage
+              authToken={authToken}
+              userDetail={userDetail}
+            />
+          ),
         },
         {
           path: "*",

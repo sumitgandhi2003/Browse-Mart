@@ -34,13 +34,22 @@ const Button = ({
   onClick = () => "",
   loading = false,
   loaderColor = "",
+  icon = null,
+  iconPosition = "left",
 }) => {
   return (
     <button className={className} disabled={disabled} onClick={onClick}>
       {loading ? (
         <div className="loader inline-block w-4 h-4 border-2 border-t-2 border-t-white border-blue-400 rounded-full animate-spin"></div>
       ) : (
-        btntext
+        <span
+          className={`flex items-center justify-center ${
+            iconPosition === "right" ? "flex-row-reverse" : ""
+          }`}
+        >
+          {icon && <span>{icon}</span>}
+          {btntext}
+        </span>
       )}
     </button>
   );

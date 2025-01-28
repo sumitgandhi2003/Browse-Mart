@@ -7,7 +7,7 @@ import { FaUser } from "react-icons/fa";
 import Swal from "sweetalert2";
 import { swalWithCustomConfiguration } from "../../utility/constant";
 import Profile from "./Profile";
-import ProductUpload from "../UploadProduct/ProductUpload";
+import ProductUpload from "../Seller/UploadProduct/ProductUpload";
 import { useNavigate } from "react-router-dom";
 // const wishListIcon = require("../../assets/images/wishlist-list-favorite-svgrepo-com.svg");
 const ProfileSlider = ({

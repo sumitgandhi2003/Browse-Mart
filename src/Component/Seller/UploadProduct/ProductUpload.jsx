@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 // import Input from "../UI/Input";
 // import Button from "../UI/Button";
-import { Button, Input } from "../UI";
+import { Button, Input } from "../../UI";
 import axios from "axios";
 import { FiUpload } from "react-icons/fi";
 import { useDropzone } from "react-dropzone";
@@ -10,7 +10,7 @@ import {
   productCategory,
   productBrands,
   swalWithCustomConfiguration,
-} from "../../utility/constant";
+} from "../../../utility/constant";
 // import cloudinary from "../../cloudinary.config";
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 const API_KEY = process.env.REACT_APP_CLOUDINARY_API_KEY;
