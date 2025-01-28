@@ -12,6 +12,7 @@ const userSchema = new mongoose.Schema({
     enum: ["consumer", "seller", "admin"],
     default: "consumer",
   },
+  sellerId: { type: mongoose.Schema.Types.ObjectId, ref: "SellerUser" },
   // cart: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
   // wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: "Product" }],
   // order: [{ type: mongoose.Schema.Types.ObjectId, ref: "Order" }],
