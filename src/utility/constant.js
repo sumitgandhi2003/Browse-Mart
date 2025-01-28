@@ -101,6 +101,244 @@ export const orderStatus = [
   "delivered",
   // "cancelled",
 ];
+export const initialSellerDetails = {
+  businessName: "",
+  panNumber: "",
+  gstNumber: "",
+  phoneNumber: "",
+  emailAddress: "",
+  businessAddress: "",
+  city: "",
+  State: "",
+  PinCode: "",
+  coutry: "",
+  businessType: "",
+  websiteUrl: "",
+  companyRegistrationNumber: "",
+  tradeLicenseNumber: "",
+  bankAccountNumber: "",
+  bankName: "",
+  ifscCode: "",
+  socialMediaLinks: "",
+};
+
+export const sellerRegistrationInputFields = [
+  {
+    id: 1,
+    name: "businessName", // camelCase
+    label: "Business Name",
+    type: "text",
+    placeholder: "Enter business name",
+    required: true,
+    tab: "businessInformation",
+    validationRule: (value) =>
+      !value?.trim() ? "Business Name is required" : null,
+  },
+  {
+    id: 2,
+    name: "panNumber", // camelCase
+    label: "PAN Number",
+    type: "text",
+    placeholder: "Enter PAN number",
+    required: true,
+    tab: "legalInformation",
+    maxLength: 10,
+    validationRule: (value) => {
+      const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
+      if (!value?.trim()) {
+        return "PAN Number is required";
+      }
+      if (!panRegex.test(value)) {
+        return "Invalid PAN Number format";
+      }
+      return null;
+    },
+  },
+  {
+    id: 3,
+    name: "gstNumber", // camelCase
+    label: "GST Number",
+    type: "text",
+    placeholder: "Enter GST number",
+    required: true,
+    tab: "legalInformation",
+    maxLength: 15,
+    validationRule: (value) => {
+      const gstRegex =
+        /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[A-Z0-9]{1}[Z]{1}[A-Z0-9]{1}$/;
+      if (!value?.trim()) {
+        return "GST Number is required";
+      }
+      if (!gstRegex.test(value)) {
+        return "Invalid GST Number format";
+      }
+      return null;
+    },
+  },
+  {
+    id: 4,
+    name: "phoneNumber", // camelCase
+    label: "Phone Number",
+    type: "tel",
+    placeholder: "Enter phone number",
+    tab: "businessInformation",
+    required: true,
+    validationRule: (value) =>
+      !value?.trim() ? "Phone Number is required" : null,
+  },
+  {
+    id: 5,
+    name: "emailAddress", // camelCase
+    label: "Email Address",
+    type: "email",
+    placeholder: "Enter email address",
+    tab: "businessInformation",
+    required: true,
+    validationRule: (value) =>
+      !value?.trim() ? "Email Address is required" : null,
+  },
+  {
+    id: 6,
+    name: "businessAddress", // camelCase
+    label: "Business Address",
+    type: "text",
+    placeholder: "Enter business address",
+    required: true,
+    tab: "businessInformation",
+    validationRule: (value) =>
+      !value?.trim() ? "Business Address is required" : null,
+  },
+  {
+    id: 7,
+    name: "city", // camelCase
+    label: "City",
+    type: "text",
+    placeholder: "Enter City name",
+    tab: "businessInformation",
+    required: true,
+    validationRule: (value) => (!value?.trim() ? "City is required" : null),
+  },
+  {
+    id: 8,
+    name: "State", // camelCase
+    label: "State",
+    type: "text",
+    placeholder: "Enter State Name",
+    tab: "businessInformation",
+    required: true,
+    validationRule: (value) => (!value?.trim() ? "State is required" : null),
+  },
+  {
+    id: 9,
+    name: "PinCode", // camelCase
+    label: "Pin Code",
+    type: "text",
+    placeholder: "Enter Pin Code",
+    tab: "businessInformation",
+    required: true,
+    validationRule: (value) => (!value?.trim() ? "Pin Code is required" : null),
+  },
+  {
+    id: 10,
+    name: "coutry", // camelCase
+    label: "Country",
+    type: "text",
+    placeholder: "Enter Country Name",
+    tab: "businessInformation",
+    required: true,
+    validationRule: (value) => (!value?.trim() ? "Country is required" : null),
+  },
+  {
+    id: 11,
+    name: "businessType", // camelCase
+    label: "Business Type",
+    type: "text",
+    placeholder: "Enter business type",
+    required: true,
+    tab: "businessInformation",
+    validationRule: (value) =>
+      !value?.trim() ? "Business Type is required" : null,
+  },
+  {
+    id: 13,
+    name: "websiteUrl", // camelCase
+    label: "Website URL",
+    type: "url",
+    placeholder: "Enter website URL",
+    tab: "businessInformation",
+    validationRule: (value) =>
+      value
+        ? !/^https?:\/\/.+\..+/.test(value)
+          ? "Enter a valid Website URL"
+          : null
+        : null,
+  },
+  {
+    id: 15,
+    name: "companyRegistrationNumber", // camelCase
+    label: "Company Registration Number",
+    type: "text",
+    placeholder: "Enter company registration number",
+    tab: "legalInformation",
+    validationRule: (value) =>
+      value && !value.trim() ? "Company Registration Number is required" : null,
+  },
+  {
+    id: 16,
+    name: "tradeLicenseNumber", // camelCase
+    label: "Trade License Number",
+    type: "text",
+    placeholder: "Enter trade license number",
+    tab: "legalInformation",
+    validationRule: (value) =>
+      value && !value.trim() ? "Trade License Number is required" : null,
+  },
+  {
+    id: 17,
+    name: "bankAccountNumber", // camelCase
+    label: "Bank Account Number",
+    type: "text",
+    placeholder: "Enter bank account number",
+    required: true,
+    tab: "financialInformation",
+    validationRule: (value) =>
+      !value?.trim() ? "Bank Account Number is required" : null,
+  },
+  {
+    id: 18,
+    name: "bankName", // camelCase
+    label: "Bank Name",
+    type: "text",
+    placeholder: "Enter bank name",
+    required: true,
+    tab: "financialInformation",
+    validationRule: (value) =>
+      !value?.trim() ? "Bank Name is required" : null,
+  },
+  {
+    id: 19,
+    name: "ifscCode", // camelCase
+    label: "IFSC Code",
+    type: "text",
+    placeholder: "Enter IFSC code",
+    required: true,
+    tab: "financialInformation",
+    validationRule: (value) =>
+      !value?.trim() ? "IFSC Code is required" : null,
+  },
+  {
+    id: 20,
+    name: "socialMediaLinks", // camelCase
+    label: "Social Media Links",
+    type: "text",
+    placeholder: "Enter social media links (comma-separated)",
+    validationRule: (value) =>
+      value && value.trim() && !/^[\w\s,]+$/.test(value)
+        ? "Enter valid comma-separated links"
+        : null,
+  },
+];
+
 export const socialMedia = [
   {
     name: "Whatsapp",
