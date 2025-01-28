@@ -34,7 +34,6 @@ const submitOrder = async (req, res, next) => {
       try {
         // First, fetch the product to check the stock
         const product = await Product.findById(productId);
-        console.log("Line No 37", product);
         // console.log("Line No 38", product);
         if (!product) throw new Error("Product not found");
 
@@ -43,12 +42,6 @@ const submitOrder = async (req, res, next) => {
         //   If sufficient stock, update the stock by decrementing it
 
         const quantityToOrder = Math?.min(product?.stock, quantity);
-        // consol.log(
-        //   "line 44 Order quantity",
-        //   quantityToOrder,
-        //   "real quantity",
-        //   quantity
-        // );
         product.stock -= quantityToOrder;
         await product.save();
         return quantityToOrder;
