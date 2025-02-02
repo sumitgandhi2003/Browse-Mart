@@ -6,14 +6,10 @@ const userRoutes = require("./routes/userRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 const sellerRoutes = require("./routes/sellerRoutes");
 const app = express();
-
+const CORS_ORIGIN_URL = process.env.CORS_ORIGIN_URL || "*";
 app.use(
   cors({
-    origin: [
-      "https://browsemart.vercel.app",
-      "http://localhost:3000",
-      "http://192.168.1.40:3000",
-    ],
+    origin: CORS_ORIGIN_URL,
   })
 );
 // app.use(express.json());
