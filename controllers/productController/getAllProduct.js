@@ -1,7 +1,13 @@
 const Product = require("../../model/productSchema");
-
+const User = require("../../model/userSchema");
 const getAllProduct = async (req, res) => {
   try {
+    const { activeUserId } = req?.query;
+    const activeUser = activeUserId ? await User.findById(activeUserId) : null;
+    // const isAddedToWislist = await activeUser?.wishlist?.some(
+    //   (item) => item?.productId?.toString() === "670c1ca6dc874450c9d49338"
+    // );
+    // console.log("line 9", isAddedToWislist);
     const products = await Product.find();
     if (products.length === 0)
       return res?.status(200).json({ message: "Product not found" });
@@ -19,10 +25,16 @@ const getAllProduct = async (req, res) => {
           description: product?.description,
           image: product?.image?.[0],
           category: product?.category,
-          stock: product?.stock,
+          stock: product?.stock > 0,
           rating: Number(totalStarRating / product?.review?.length),
           mrpPrice: product?.mrpPrice,
           sellingPrice: product?.sellingPrice,
+          isAddedToWislist: activeUserId
+            ? activeUser?.wishlist?.some(
+                (item) =>
+                  item?.productId?.toString() === product?._id?.toString()
+              )
+            : false,
         };
       });
     return res

@@ -104,20 +104,19 @@ const submitOrder = async (req, res, next) => {
     //     ),
     //   });
     // });
-
     const filteredProduct = await Promise.all(
       productCard?.map(async (item) => {
         const orderedQuantity = await decreaseProductQuantity(
-          item?.item?.id || item?.item?._id,
+          item?.id || item?._id,
           item?.quantity
         );
         console.log(" Line No 120orderedQuantity ", orderedQuantity);
         if (orderedQuantity > 0)
           return {
-            productId: item?.item?.id || item?.item?._id,
-            productName: item?.item?.name,
-            price: item?.item?.price || item?.item?.sellingPrice,
-            sellerId: item?.item?.userId || item?.item?.userID,
+            productId: item?.id || item?._id,
+            productName: item?.name,
+            price: item?.price || item?.sellingPrice,
+            sellerId: item?.userId || item?.userID || item?.sellerId,
             quantity: orderedQuantity, // resolved quantity from decreaseProductQuantity
           };
       })
@@ -144,7 +143,6 @@ const submitOrder = async (req, res, next) => {
       acc[sellerId].push(item);
       return acc;
     }, {});
-    // console.log(groupProduct);
     for (const sellerId in groupProduct) {
       const filteredProduct = groupProduct[sellerId];
       // console.log("Active user", activeUser);
@@ -175,6 +173,7 @@ const submitOrder = async (req, res, next) => {
             : totalAmount;
         }, 0),
         orderDate: timeStamp?.toLocaleString(),
+        sellerId: sellerId,
       });
       await order.save();
       const { _id, orderId } = order;
@@ -184,7 +183,7 @@ const submitOrder = async (req, res, next) => {
       });
     }
 
-    console.log("Line No 193", orderIds);
+    // console.log("Line No 193", orderIds);
     if (!orderIds.length > 0) {
       return res.status(400).json({ message: "Failed to submit order" });
     }

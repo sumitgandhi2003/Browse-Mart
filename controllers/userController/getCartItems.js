@@ -13,13 +13,14 @@ const getCartItems = async (req, res, next) => {
         description: product?.description,
         image: [product?.image?.[0]],
         category: product?.category,
-        stock: product?.stock,
-        userId: product?.userID,
+        // stock: product?.stock,
+        sellerId: product?.userId || product?.userID || product?.sellerId,
         sellingPrice: product?.sellingPrice || null,
       };
       // console.log(filteredProduct);
       cartProduct?.push({
-        item: { ...filteredProductData },
+        // item: { ...filteredProductData },
+        ...filteredProductData,
         quantity: cartItem[i]?.quantity,
       });
     }

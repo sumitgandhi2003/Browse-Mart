@@ -24,7 +24,7 @@ const getRelatedProduct = async (req, res) => {
           description: product?.description,
           image: product?.image?.[0],
           category: product?.category,
-          stock: product?.stock,
+          stock: product?.stock > 0,
           rating: Number(totalStarRating / product?.review?.length),
         };
       });

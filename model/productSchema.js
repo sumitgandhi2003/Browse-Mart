@@ -23,7 +23,12 @@ const productSchema = new mongoose.Schema({
       createdAt: { type: Date, default: Date.now },
     },
   ],
-  userID: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  userID: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: false,
+    ref: "User",
+  },
+  sellerId: { type: mongoose.Schema.Types.ObjectId, ref: "SellerUser" },
   // productId: {
   //   type: mongoose.Schema.Types.ObjectId,
   //   required: true,
