@@ -8,8 +8,11 @@ const connectDB = async () => {
   } else {
     console.log(`using ${NODE_ENV} database URL`);
   }
+  console.log(DB_NAME, DB_URL);
   mongoose
-    .connect(`${DB_URL}/${DB_NAME}`)
+    .connect(
+      `mongodb+srv://sumitgandhi932:XEfJg6XOcxGSeD7j@cluster0.e6ou6.mongodb.net/browsemart`
+    )
     .then(() => console.log("Database connected..."))
     .catch((error) => {
       console.log(error.message);
