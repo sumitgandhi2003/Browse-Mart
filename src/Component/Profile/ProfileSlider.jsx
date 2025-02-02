@@ -2,13 +2,15 @@ import React, { useState } from "react";
 import { RxCross2 } from "react-icons/rx";
 import { LuLogOut } from "react-icons/lu";
 import { FaUpload } from "react-icons/fa6";
-import { FaUser } from "react-icons/fa";
+import { FaUser, FaHeart } from "react-icons/fa";
 
 import Swal from "sweetalert2";
 import { swalWithCustomConfiguration } from "../../utility/constant";
 import Profile from "./Profile";
 import ProductUpload from "../Seller/UploadProduct/ProductUpload";
 import { useNavigate } from "react-router-dom";
+import BecomeASeller from "./BecomeASeller";
+import WishListContainer from "./WishListContainer";
 // const wishListIcon = require("../../assets/images/wishlist-list-favorite-svgrepo-com.svg");
 const ProfileSlider = ({
   showProfileSlider,
@@ -63,21 +65,25 @@ const ProfileSlider = ({
             />
           </div>
           <div>
-            {userDetail?.userType === "seller" ? (
-              <FaUpload
-                className=" text-3xl rounded-full p-1 text-white hover:text-blue-500 cursor-pointer font-extrabold hover:bg-white"
-                onClick={() => setActiveTab("upload")}
-              />
-            ) : userDetail?.userType === "admin" ? (
+            {/* {userDetail?.userType === "seller" ? ( */}
+            <FaUpload
+              className=" text-3xl rounded-full p-1 text-white hover:text-blue-500 cursor-pointer font-extrabold hover:bg-white"
+              onClick={() => setActiveTab("upload")}
+            />
+            {/* ) : userDetail?.userType === "admin" ? (
               <div>Admin</div>
             ) : (
               <div>Buyer</div>
-            )}
+            )} */}
           </div>
           <div>
             {/* <img src={wishListIcon} alt="" className=" h-5" />
              */}
-            <svg
+            <FaHeart
+              className=" text-3xl rounded-full p-1 text-white hover:text-blue-500 cursor-pointer font-extrabold hover:bg-white"
+              onClick={() => setActiveTab("wishList")}
+            />
+            {/* <svg
               fill="currentColor"
               stroke="currentColor"
               strokeWidth="1.05"
@@ -96,7 +102,7 @@ const ProfileSlider = ({
                 <path d="M45.75,38.46V9.93A3.718,3.718,0,0,0,41.96,6.3H35.5V5.5a2.006,2.006,0,0,0-2-2H22.45a2.006,2.006,0,0,0-2,2v.8H13.99a3.727,3.727,0,0,0-3.8,3.63V52.2a3.728,3.728,0,0,0,3.8,3.64H33.45a11.248,11.248,0,1,0,12.3-17.38ZM22.45,5.5H33.5V9.09H22.45ZM13.99,53.84a1.752,1.752,0,0,1-1.8-1.64V9.93a1.751,1.751,0,0,1,1.8-1.63h6.46v.79a2,2,0,0,0,2,2H33.5a2,2,0,0,0,2-2V8.3h6.46a1.741,1.741,0,0,1,1.79,1.63V38.06a11.726,11.726,0,0,0-1.2-.07A11.238,11.238,0,0,0,32.29,53.84ZM42.55,58.5a9.255,9.255,0,1,1,9.26-9.25A9.261,9.261,0,0,1,42.55,58.5Z" />
                 <path d="M49.52,46.61c-.01-.11-.03-.21-.05-.32a3.519,3.519,0,0,0-3.48-2.94h-.02a5,5,0,0,0-3.42,1.46,4.963,4.963,0,0,0-3.42-1.46h-.01a3.326,3.326,0,0,0-.96.15.749.749,0,0,0-.16.04,3.5,3.5,0,0,0-2.01,1.73c-.01.03-.02.05-.03.08a3.682,3.682,0,0,0-.33.95c-.02.1-.03.2-.05.31-.65,4.9,4.37,8.58,5.89,9.57l.51.35a.931.931,0,0,0,.57.19.959.959,0,0,0,.58-.19l.47-.33C45.15,55.19,50.17,51.51,49.52,46.61ZM42.55,54.5c-2.67-1.76-5.38-4.67-4.98-7.63l.03-.21a1.526,1.526,0,0,1,1.52-1.31,3.026,3.026,0,0,1,2.54,1.58,1.039,1.039,0,0,0,1.78,0,3.039,3.039,0,0,1,2.54-1.58,1.518,1.518,0,0,1,1.52,1.3l.04.22C47.93,49.82,45.25,52.72,42.55,54.5Z" />
               </g>
-            </svg>
+            </svg> */}
           </div>
         </div>
 
@@ -105,6 +111,7 @@ const ProfileSlider = ({
           onClick={handleLogOut}
         />
       </div>
+
       {activeTab === "profile" && (
         <Profile
           userDetail={userDetail}
@@ -112,12 +119,15 @@ const ProfileSlider = ({
           setUserDetail={setUserDetail}
         />
       )}
-      {/* {isProfileShow && (
-        <Profile userDetail={userDetail} authToken={authToken} />
-      )} */}
-      {activeTab === "upload" && userDetail?.userType === "seller" && (
-        <ProductUpload authToken={authToken} />
-      )}
+
+      {activeTab === "upload" &&
+        (userDetail?.userType === "seller" ? (
+          <ProductUpload authToken={authToken} />
+        ) : (
+          <BecomeASeller />
+        ))}
+
+      {activeTab === "wishList" && <WishListContainer authToken={authToken} />}
     </div>
   );
 };

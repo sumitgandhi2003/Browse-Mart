@@ -3,7 +3,7 @@ import { useParams, Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FaShare } from "react-icons/fa";
 import ProductCard from "../Product/ProductCard";
-import { Button, Loader } from "../UI";
+import { Button, Loader, ServerError } from "../UI";
 import { ReviewForm, ReviewCard } from "../Review";
 import ProductImage from "../Product/ProductImage";
 import { formatAmount, socialMedia } from "../../utility/constant";
@@ -49,9 +49,12 @@ const ProductPage = ({ isAuthenticated, userDetail, authToken }) => {
         setIsDataFetch(true);
       })
       .catch((error) => {
-        const { data, status } = error?.response;
+        const { data, status } = error?.response || {};
         if (status === 404) {
-          setIsError({ error: data?.message, status: status });
+          setIsError({ message: data?.message, status: status });
+          setIsDataFetch(true);
+        } else {
+          setIsError({ error: "Internal Server Error", status: 500 });
           setIsDataFetch(true);
         }
       });
@@ -62,7 +65,7 @@ const ProductPage = ({ isAuthenticated, userDetail, authToken }) => {
       method: "post",
       url: `${SERVER_URL}/api/product/get-related-product`,
       data: {
-        category: productData.category,
+        category: productData?.category,
         productId: productId,
       },
     })
@@ -76,10 +79,14 @@ const ProductPage = ({ isAuthenticated, userDetail, authToken }) => {
   // eslint-disable-next-line
   useEffect(() => getProductDataById(), [productId, isRefreshClicked]);
   // eslint-disable-next-line
-  useEffect(() => getRelatedProduct(), [productData]);
+  useEffect(() => {
+    if (productData?.category) {
+      getRelatedProduct();
+    }
+  }, [productData]);
 
   if (!isDataFetch && !isReviewClicked) return <Loader />; // Loading state while data is fetched.  Replace with your own loading component.  e.g., <Loading /> or <CircularProgress /> from material-ui.  Also, add error handling here.  e.g., axios.get().catch(error => console.error(error))
-  if (isError.error) {
+  if (isError?.status === 404) {
     return (
       <div className="w-full loader-container flex justify-center items-center">
         <div className="flex flex-col gap-4 items-center">
@@ -96,6 +103,7 @@ const ProductPage = ({ isAuthenticated, userDetail, authToken }) => {
       </div>
     );
   }
+  if (isError?.status === 500) return <ServerError />;
   return (
     productData &&
     relatedProduct && (
@@ -132,7 +140,7 @@ const ProductPage = ({ isAuthenticated, userDetail, authToken }) => {
 
             <div className="buy-buttons  flex gap-3 w-full   ">
               {userDetail && authToken ? (
-                productData?.stock > 0 ? (
+                productData?.stock ? (
                   <div className="w-full flex gap-4">
                     {/* <Button
                       btntext={"Add to Cart"}

@@ -1,11 +1,9 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import Loader from "../UI/Loader/Loader";
+import { Loader, ServerError, Button } from "../UI";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import Button from "../UI/Button";
 import CartCard from "./CartCard";
 import EmptyCart from "./EmptyCart";
-import ServerError from "../ServerError/ServerError";
 import { formatAmount } from "../../utility/constant";
 
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
@@ -25,11 +23,13 @@ const Cart = ({ userDetail, authToken }) => {
       );
       setCartItem(response?.data?.cartProduct || []);
     } catch (error) {
-      console.error(error);
-      setError({
-        message: "Failed to fetch cart items",
-        status: error?.response?.status,
-      });
+      // console.error(error);
+      const { data, status } = error?.response || {};
+      if (status === 404) {
+        setError({ message: data?.message, status: status });
+      } else {
+        setError({ error: "Internal Server Error", status: 500 });
+      }
     } finally {
       setIsDataFetching(false);
     }
@@ -47,15 +47,14 @@ const Cart = ({ userDetail, authToken }) => {
   // Calculate total amount
   if (cartItem) {
     cartItem.forEach((item) => {
-      totalAmount +=
-        item?.quantity * (item?.item?.price || item?.item?.sellingPrice || 0);
+      totalAmount += item?.quantity * (item?.price || item?.sellingPrice || 0);
     });
   }
   //display Loading UI while fetaching CartItem
   if (isDataFetching) return <Loader />;
   //Display EmptyCart UI when cart is empty
+  if (error?.status === 500) return <ServerError />;
   if (!isDataFetching && cartItem?.length === 0) return <EmptyCart />;
-  if (error) return <ServerError />;
 
   return (
     <div className="flex gap-5 p-3  min-h-screen mobile:h-full mobile:flex-col tablet:flex-row bg-blue-400 relative">

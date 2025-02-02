@@ -1,11 +1,13 @@
 import Button from "../UI/Button";
 import React, { useState } from "react";
 import { formatAmount } from "../../utility/constant";
-import { FaRegHeart } from "react-icons/fa";
-import { FaHeart } from "react-icons/fa";
-import AddToCartButton from "../../utility/AddToCartButton";
+// import { FaRegHeart } from "react-icons/fa";
+// import { FaHeart } from "react-icons/fa";
+import {
+  AddToCartButton,
+  AddRemoveProductFromWishListButton,
+} from "../../utility";
 const ProductCard = ({ product, userDetail, authToken }) => {
-  const [isSaved, setIsSaved] = useState(false);
   const { image, name, price, category, id, rating, stock, sellingPrice } =
     product;
 
@@ -14,20 +16,11 @@ const ProductCard = ({ product, userDetail, authToken }) => {
       className="product-card group w-full h-full max-h-[400px] max-w-[300px]  gap-4 border-2  border-gray-00 tablet:hover:border-blue-500 tablet:hover:bg-gray-200
  rounded-md p-2 shadow-md relative laptop:hover:scale-105 transition-all duration-300 ease-in-out "
     >
-      <span
-        className="bg-white absolute h-8 w-8 p-1.5 flex items-center justify-center rounded-full  right-4 top-4"
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          setIsSaved((prev) => !prev);
-        }}
-      >
-        {isSaved ? (
-          <FaHeart className={`text-red-500 w-full h-full `} />
-        ) : (
-          <FaRegHeart className="text-red-500 w-full h-full" />
-        )}
-      </span>
+      <AddRemoveProductFromWishListButton
+        authToken={authToken}
+        productId={id}
+        userDetail={userDetail}
+      />
 
       {/* <Link to={"/product/" + id} className="w-full"> */}
       <img

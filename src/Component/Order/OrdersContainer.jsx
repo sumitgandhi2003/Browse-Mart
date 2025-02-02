@@ -1,13 +1,14 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Loader } from "../UI";
+import { Loader, ServerError } from "../UI";
 import OrderCard from "./OrderCard";
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 const OrdersContainer = ({ userDetail, authToken }) => {
   const [ordersArr, setOrdersArr] = useState([]);
   const [filtertedOrdersArr, setFiltertedOrdersArr] = useState([]);
   const [isOrdersFetching, setIsOrdersFetching] = useState(false);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -30,7 +31,17 @@ const OrdersContainer = ({ userDetail, authToken }) => {
           setIsOrdersFetching(false);
         }
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        const { data, status } = error?.response || {};
+        if (status === 404) {
+          setError({ message: data?.message, status: status });
+        } else {
+          setError({ error: "Internal Server Error", status: 500 });
+        }
+      })
+      .finally(() => {
+        setIsOrdersFetching(false);
+      });
   };
   useEffect(() => {
     if (!authToken) {
@@ -63,6 +74,9 @@ const OrdersContainer = ({ userDetail, authToken }) => {
 
   if (isOrdersFetching) {
     return <Loader />;
+  }
+  if (error?.status === 500) {
+    return <ServerError />;
   }
   return (
     filtertedOrdersArr?.length > 0 && (

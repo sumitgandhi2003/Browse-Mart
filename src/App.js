@@ -22,6 +22,8 @@ import BuyNow from "./Component/BuyNow/BuyNow";
 import SuccessPage from "./Component/BuyNow/SuccessPage";
 import ProductsContainer from "./Component/Product/ProductsContainer";
 import { OrdersContainer } from "./Component/Order";
+import SellerDashBoard from "./Component/Seller/SellerDashBoard";
+import HomePage from "./Component/Pages/HomePage";
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 const AppLayout = ({ authToken, setAuthToken, userDetail, setUserDetail }) => {
   String.prototype.toCapitalise = function () {
@@ -104,6 +106,10 @@ const App = () => {
           ),
         },
         {
+          path: "/home",
+          element: <HomePage />,
+        },
+        {
           path: "/allproduct",
           element: (
             <ProductsContainer authToken={authToken} userDetail={userDetail} />
@@ -148,6 +154,12 @@ const App = () => {
               authToken={authToken}
               userDetail={userDetail}
             />
+          ),
+        },
+        {
+          path: "/seller-dashboard",
+          element: (
+            <SellerDashBoard userDetail={userDetail} authToken={authToken} />
           ),
         },
         {

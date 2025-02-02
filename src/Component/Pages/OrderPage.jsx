@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Loader } from "../UI";
+import { Loader, ServerError } from "../UI";
 import { formatAmount, orderStatus } from "../../utility/constant";
 import { FaCheck } from "react-icons/fa";
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
@@ -11,6 +11,7 @@ const Orderpage = ({ authToken, userDetail }) => {
   const { orderId } = useParams();
   const [isOrderDataFetching, setIsOrderDataFetching] = useState(true);
   const [orderDetails, setOrderDetails] = useState(null);
+  const [error, setError] = useState(null);
 
   const getOrderDetailsById = async () => {
     setIsOrderDataFetching(true);
@@ -32,7 +33,12 @@ const Orderpage = ({ authToken, userDetail }) => {
         setOrderDetails(data?.filteredOrderDetails);
       }
     } catch (error) {
-      console.log(error);
+      const { data, status } = error?.response || {};
+      if (status === 404) {
+        setError({ message: data?.message, status: status });
+      } else {
+        setError({ error: "Internal Server Error", status: 500 });
+      }
     } finally {
       setIsOrderDataFetching(false);
     }
@@ -47,13 +53,14 @@ const Orderpage = ({ authToken, userDetail }) => {
   if (isOrderDataFetching) {
     return <Loader />;
   }
-  if (!isOrderDataFetching && !orderDetails) {
+  if (!isOrderDataFetching && !orderDetails && !error) {
     return (
       <div className="text-center text-2xl font-semibold text-red-500">
         No Order Found
       </div>
     );
   }
+  if (error?.status === 500) return <ServerError />;
   return (
     <div className="min-h-screen w-screen flex justify-center font-roboto">
       <div className="w-8/12 mt-4 border-2 h-min border-gray-300 rounded-lg font-roboto overflow-hidden">

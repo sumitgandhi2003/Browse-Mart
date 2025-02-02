@@ -39,7 +39,7 @@ const SuccessPage = () => {
               <span>Order ID: </span>
               <div className="font-semibold flex flex-col gap-1">
                 {orderIds?.map((id) => {
-                  return <span> {id}</span>;
+                  return <span key={"id"}> {id}</span>;
                 })}
               </div>
             </div>

@@ -52,7 +52,7 @@ const BuyNow = ({ authToken, userDetail }) => {
           setProductArr((prev) => {
             return [
               {
-                item: data?.product,
+                ...data?.product,
                 quantity: 1,
               },
             ];
@@ -760,28 +760,27 @@ const BuyNow = ({ authToken, userDetail }) => {
                   <div key={index} className="flex gap-4 p-2 w-full">
                     {/* <div className="flex gap-2 p-2"> */}
                     <img
-                      src={product?.item?.image[0]}
-                      alt={product.name}
+                      src={product?.image?.[0]}
+                      alt={product?.name}
                       className="w-20 h-20 object-cover object-top rounded scale-105"
                     />
                     <div className="w-2/3 flex flex-col gap-2">
                       <span className="font-semibold font-roboto w-full">
-                        {product?.item?.name}
+                        {product?.name}
                       </span>
                       <div>
-                        Qty: {product.quantity}
+                        Qty: {product?.quantity}
                         <span className="text-gray-400">
                           {" "}
-                          x{" "}
-                          {product?.item?.price || product?.item?.sellingPrice}
+                          x {product?.price || product?.sellingPrice}
                         </span>
                       </div>
                       <span className="flex w-full items-center ">
                         Subtotal:{" "}
                         <span>{/* <FaRupeeSign className="text-xs" /> */}</span>
                         {formatAmount(
-                          (product?.item?.price ||
-                            product?.item?.sellingPrice) * product.quantity
+                          (product?.price || product?.sellingPrice) *
+                            product?.quantity
                         )}
                       </span>
                     </div>
@@ -801,9 +800,8 @@ const BuyNow = ({ authToken, userDetail }) => {
                       productArr?.reduce((total, product) => {
                         return (
                           total +
-                          (product?.item?.price ||
-                            product?.item?.sellingPrice) *
-                            product.quantity
+                          (product?.price || product?.sellingPrice) *
+                            product?.quantity
                         );
                       }, 0)
                     )}
@@ -820,9 +818,8 @@ const BuyNow = ({ authToken, userDetail }) => {
                       productArr?.reduce((total, product) => {
                         return (
                           total +
-                          (product.item.price * product.quantity -
-                            product?.item?.discountedPrice ||
-                            0 * product?.quantity)
+                          (product?.price * product.quantity -
+                            product?.discountedPrice || 0 * product?.quantity)
                         );
                       }, 0)
                     )}

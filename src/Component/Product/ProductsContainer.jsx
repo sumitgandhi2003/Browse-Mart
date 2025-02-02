@@ -3,8 +3,7 @@ import { useEffect, useState } from "react";
 import { API_URL } from "../../utility/constant";
 import { Link } from "react-router-dom";
 import Productcard from "./ProductCard";
-import Loader from "../UI/Loader/Loader";
-import ServerError from "../ServerError/ServerError";
+import { Loader, ServerError } from "../UI";
 const noResultImage = require("../../assets/images/noResult.png");
 // import { SERVER_URL } from "../../config";
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
@@ -37,10 +36,11 @@ const ProductsContainer = ({ userDetail, authToken }) => {
     });
     SetFilteredProduct(filter);
   };
-
   const getAllProduct = () => {
     axios
-      .get(`${SERVER_URL}/api/product/get-all-products`)
+      .get(`${SERVER_URL}/api/product/get-all-products`, {
+        params: { activeUserId: userDetail?.id },
+      })
       .then((response) => {
         const { data, status } = response;
         if (status === 200) {
@@ -51,7 +51,6 @@ const ProductsContainer = ({ userDetail, authToken }) => {
       })
       .catch((error) => {
         setIsDataFetch(true);
-        console.log(error);
         setError({ error: error?.message });
       });
   };
@@ -87,7 +86,7 @@ const ProductsContainer = ({ userDetail, authToken }) => {
     //   .catch((error) => console.log(error));
     getAllProduct();
     // getAllCategory();
-  }, []);
+  }, [userDetail?.id]);
   if (error.error) {
     return <ServerError />;
   }

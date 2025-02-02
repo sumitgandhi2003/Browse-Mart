@@ -32,7 +32,7 @@ const CartCard = ({
     axios({
       method: "POST",
       url: `${SERVER_URL}/api/user/update-cart`,
-      data: { productId: product?.item?.id, quantity: newQuantity },
+      data: { productId: product?.id, quantity: newQuantity },
       headers: { Authorization: `Bearer ${authToken}` },
     })
       .then((res) => {
@@ -69,18 +69,18 @@ const CartCard = ({
       <div className="w-1/2 flex gap-4 items-center justify-between overflow-scroll  mobile:w-full small-device:w-1/2">
         <div className="w-2/5">
           <img
-            src={product?.item?.image || ""}
-            alt={product?.item?.name || ""}
+            src={product?.image || ""}
+            alt={product?.name || ""}
             className=" min-w-[70px] min-h-[70px] max-w-[100px] max-h-[100px] w-full object-cover object-top aspect-square rounded"
           />
         </div>
 
         <div className="h-full w-3/5  flex flex-col gap-2 overflow-scroll">
           <span className="text-lg font-roboto font-semibold text-ellipsis overflow-hidden whitespace-nowrap">
-            {product?.item?.name}
+            {product?.name}
           </span>
           <span className="text-sm font-roboto text-ellipsis line-clamp-2 ">
-            {product?.item?.description}
+            {product?.description}
           </span>
           {/* <span>{product?.item?.price}</span> */}
           <Button
@@ -95,7 +95,7 @@ const CartCard = ({
       <div className="flex gap-2 items-center w-1/2 justify-between font-medium text-sm mobile:w-full small-device:w-1/2">
         <span className="w-1/3 flex justify-center items-center mobile:hidden small-device:flex">
           <FaRupeeSign className="font-roboto font-medium text-sm" />
-          {product?.item?.price || product?.item?.sellingPrice}
+          {product?.price || product?.sellingPrice}
         </span>
         <div className="w-1/3 flex justify-center items-center gap-3">
           <span
@@ -117,8 +117,7 @@ const CartCard = ({
         <span className="w-1/3 flex justify-center items-center text-lg">
           {/* <FaRupeeSign className="font-roboto font-medium text-sm" /> */}
           {formatAmount(
-            product?.quantity * product?.item?.price ||
-              product?.item?.sellingPrice
+            product?.quantity * product?.price || product?.sellingPrice
           )}
         </span>
       </div>
