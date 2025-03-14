@@ -13,6 +13,6 @@ router
   .post(otpVerification, verifyOTPForRegistration);
 router.route("/login").post(login);
 router.route("/forget-password").post(forgetPassword);
-router.route("/verify-otp").post(verifyOtp);
+router.route("/verify-otp").post(otpVerification, verifyOtp);
 router.route("/set-password").post(resetPassword);
 module.exports = router;
