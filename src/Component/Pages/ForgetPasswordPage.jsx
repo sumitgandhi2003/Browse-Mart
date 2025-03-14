@@ -117,6 +117,7 @@ const ForgetPasswordPage = ({ authToken, userDetail }) => {
       );
       return;
     }
+    setIsProcessing(true);
     e.preventDefault();
     axios({
       method: "post",
@@ -141,6 +142,7 @@ const ForgetPasswordPage = ({ authToken, userDetail }) => {
       })
       .finally(() => {
         localStorage.removeItem("resetToken");
+        setIsProcessing(false);
       });
   };
   useEffect(() => {
@@ -192,13 +194,6 @@ const ForgetPasswordPage = ({ authToken, userDetail }) => {
                       : "text-gray-900 bg-gray-100 border-gray-300 focus:border-gray-600"
                   }`}
                 />
-                {/* <input
-                  type="email"
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full p-3 mb-4 border text-black rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                /> */}
                 <p className="text-red-600 px-2 pb-2 font-normal mobile:text-xs small-device:text-sm tablet:text-base laptop:text-lg ">
                   {errorMessage}
                 </p>
@@ -214,6 +209,7 @@ const ForgetPasswordPage = ({ authToken, userDetail }) => {
                     )
                   }
                   className="w-full px-4 py-2 bg-green-600 text-white rounded-md shadow-md hover:bg-green-700"
+                  disabled={isProcessing}
                 />
               </div>
             )}
@@ -224,41 +220,6 @@ const ForgetPasswordPage = ({ authToken, userDetail }) => {
                 isProcessing={isProcessing}
                 onOtpVerify={handleVerifyOtp}
               />
-              // <div>
-              //   <h2 className="text-xl mobile:text-2xl font-semibold mb-4 text-center">
-              //     Enter OTP
-              //   </h2>
-              //   <p
-              //     className={`px-2 pb-2 font-normal mobile:text-xs small-device:text-sm tablet:text-base laptop:text-lg`}
-              //   >
-              //     {message}
-              //   </p>
-              //   <input
-              //     type="text"
-              //     placeholder="Enter OTP"
-              //     value={otp}
-              //     onChange={(e) => setOtp(e.target.value)}
-              //     className="w-full p-3 mb-4 border rounded-md text-black focus:ring-2 focus:ring-blue-500 focus:outline-none"
-              //   />
-              //   <div className="flex">
-              //     <span className="text-red-600 w-10/12 px-2 pb-2 font-normal mobile:text-xs small-device:text-sm tablet:text-base laptop:text-lg ">
-              //       {errorMessage}
-              //     </span>
-              //     <span className="w-2/12 px-2 pb-2"> Resend in 50s</span>
-              //   </div>
-              //   <Button
-              //     btntext={isProcessing ? "Verifying" : "Verify OTP"}
-              //     onClick={handleVerifyOtp}
-              //     className="w-full px-4 py-2 bg-green-600 text-white rounded-md shadow-md hover:bg-green-700"
-              //     icon={
-              //       isProcessing ? (
-              //         <BiLoaderAlt className="animate-spin h-6 w-6" />
-              //       ) : (
-              //         ""
-              //       )
-              //     }
-              //   />
-              // </div>
             )}
 
             {step === 3 && (
@@ -270,42 +231,44 @@ const ForgetPasswordPage = ({ authToken, userDetail }) => {
                   <p className="px-2 py-4 font-normal mobile:text-xs small-device:text-sm tablet:text-base laptop:text-lg">
                     {message} You Can Enter New Password
                   </p>
-                  <input
-                    type={`${isPasswordShow ? "text" : "password"}`}
-                    placeholder="New Password"
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    className="w-full p-3 mb-4 border text-black rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
-                  />
-                  <div
-                    onClick={passwordToggle}
-                    className={`hover:cursor-pointer absolute  right-3 top-2/3  -translate-y-2/3 ${
-                      newPassword
-                        ? "flex items-center justify-center"
-                        : "hidden"
-                    }  
+                  <div className="relative mb-4">
+                    <Input
+                      type={`${isPasswordShow ? "text" : "password"}`}
+                      placeholder="New Password"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      className="w-full p-3  border text-black rounded-md focus:ring-2  focus:outline-none"
+                    />
+
+                    <div
+                      onClick={passwordToggle}
+                      className={`hover:cursor-pointer absolute  right-3 top-1/2 -translate-y-1/2 
                   `}
-                  >
-                    {isPasswordShow ? (
-                      <FaEyeSlash
-                        // className={`${
-                        //   theme === "dark" ? "text-white" : "text-gray-900"
-                        // }`}
-                        className="text-gray-900"
-                      />
-                    ) : (
-                      <FaEye
-                        className="text-gray-900"
-                        // className={` ${
-                        //   theme === "dark" ? "text-white" : "text-gray-900"
-                        // }`}
-                      />
-                    )}
+                    >
+                      {isPasswordShow ? (
+                        <FaEyeSlash
+                          className={`${
+                            theme === "dark" ? "text-white" : "text-gray-900"
+                          }`}
+                        />
+                      ) : (
+                        <FaEye
+                          className={` ${
+                            theme === "dark" ? "text-white" : "text-gray-900"
+                          }`}
+                        />
+                      )}
+                    </div>
                   </div>
+                  {errorMessage && (
+                    <p className="text-red-500 text-sm font-medium my-1 mb-2">
+                      {errorMessage}
+                    </p>
+                  )}
                 </div>
 
                 <Button
-                  btntext={isProcessing ? "Resetting" : "Reset Password"}
+                  btntext={isProcessing ? "Resetting..." : "Reset Password"}
                   onClick={handleResetPassword}
                   className="w-full px-4 py-2 bg-green-600 text-white rounded-md shadow-md hover:bg-green-700"
                   icon={
@@ -315,6 +278,7 @@ const ForgetPasswordPage = ({ authToken, userDetail }) => {
                       ""
                     )
                   }
+                  disabled={isProcessing}
                 />
               </div>
             )}

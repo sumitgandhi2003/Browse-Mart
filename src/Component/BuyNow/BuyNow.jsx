@@ -298,7 +298,7 @@ const BuyNow = ({ authToken, userDetail }) => {
   return (
     productArr?.length > 0 && (
       <div
-        className={`w-full min-h-screen  ${
+        className={`w-full min-h-screen transition-all duration-300  ${
           theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-gray-900"
         }`}
       >
@@ -380,9 +380,11 @@ const BuyNow = ({ authToken, userDetail }) => {
                     Object.keys(userDetail?.shippingAddress).length > 0 && (
                       <Button
                         btntext={"Use Default Address"}
-                        className={
-                          "bg-blue-100 text-blue-500 px-3 py-1 rounded-full text-sm font-medium "
-                        }
+                        className={` px-3 py-1 rounded-full text-sm font-medium ${
+                          theme === "dark"
+                            ? "bg-gray-700 text-white border-gray-600"
+                            : "text-gray-900 bg-gray-100 border-gray-300"
+                        }`}
                         onClick={() =>
                           setShippingAddress(() => userDetail?.shippingAddress)
                         }
@@ -731,7 +733,6 @@ const BuyNow = ({ authToken, userDetail }) => {
                             );
                           }, 0)
                         )}
-                        {/* {formatAmount(totalPrice)} */}
                       </span>
                     </span>
                   </div>

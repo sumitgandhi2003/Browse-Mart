@@ -42,7 +42,7 @@ const Button = ({
   const { theme } = useTheme();
   return (
     <button
-      className={`${className} border-none transition-all duration-300  `}
+      className={`${className} border-none transition-all duration-300 font-roboto  `}
       disabled={disabled}
       onClick={onClick}
     >

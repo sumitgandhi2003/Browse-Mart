@@ -1,124 +1,9 @@
-// import React, { useState, useEffect, useRef } from "react";
-// import Input from "./Input";
-// import { useTheme } from "../../Context/themeContext";
-// import Button from "./Button";
-// import { FaSearch } from "react-icons/fa";
-// import { useNavigate } from "react-router-dom";
-
-// const SearchBar = () => {
-//   const [searchQuery, setSearchQuery] = useState("");
-//   const { theme } = useTheme();
-//   const [searchHistory, setSearchHistory] = useState([]);
-//   const [showDropdown, setShowDropdown] = useState(false);
-//   const navigate = useNavigate();
-//   const searchRef = useRef(null);
-
-//   // Load search history from localStorage when the component mounts
-//   // Function to handle search
-//   const handleSearch = () => {
-//     if (searchQuery.trim() === "") return;
-
-//     const updatedHistory = [
-//       searchQuery,
-//       ...searchHistory.filter((term) => term !== searchQuery),
-//     ];
-//     setSearchHistory(updatedHistory);
-//     localStorage.setItem("searchHistory", JSON.stringify(updatedHistory));
-//     navigate(`/products?q=${encodeURIComponent(searchQuery?.trim())}`);
-//     setSearchQuery("");
-//   };
-
-//   // Function to delete a specific search term
-//   const handleDelete = (term, e) => {
-//     e.stopPropagation();
-//     const updatedHistory = searchHistory.filter((item) => item !== term);
-//     setSearchHistory(updatedHistory);
-//     localStorage.setItem("searchHistory", JSON.stringify(updatedHistory));
-//   };
-
-//   useEffect(() => {
-//     const storedHistory =
-//       JSON.parse(localStorage.getItem("searchHistory")) || [];
-//     setSearchHistory(storedHistory);
-//   }, []);
-
-//   useEffect(() => {
-//     const handleClickOutside = (event) => {
-//       if (searchRef.current && !searchRef.current.contains(event.target)) {
-//         setShowDropdown(false);
-//       }
-//     };
-//     document.addEventListener("click", handleClickOutside);
-//     return () => document.removeEventListener("click", handleClickOutside);
-//   }, []);
-//   return (
-//     <div
-//       //  className="relative w-80 mx-auto mt-10"
-//       className={`relative  items-center border   ${
-//         theme === "dark" ? "border-gray-600" : "border-gray-300 "
-//       } rounded-lg  `}
-//       ref={searchRef}
-//     >
-//       <Input
-//         type={"text"}
-//         placeholder={"Search..."}
-//         onChange={(e) => setSearchQuery(e.target.value)}
-//         onFocus={() => setShowDropdown(true)}
-//         onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
-//         value={searchQuery}
-//         className={`p-2 pl-4 pr-10 w-full border-none outline-none   ${
-//           theme === "dark"
-//             ? "bg-gray-700 text-white "
-//             : "bg-white text-gray-900"
-//         }  rounded-lg focus:outline-none w-64 transition-all duration-300`}
-//         onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-//       />
-//       <Button
-//         className={`absolute right-2 top-1/2 -translate-y-1/2 hover:text-indigo-600  ${
-//           theme === "dark" ? "text-gray-300" : " text-gray-600"
-//         }`}
-//         icon={<FaSearch />}
-//         onClick={handleSearch}
-//       />
-
-//       {/* Dropdown for previous searches */}
-//       {showDropdown && searchHistory.length > 0 && (
-//         <div
-//           className={`absolute w-full border  rounded shadow-md mt-1 max-h-40 overflow-y-auto ${
-//             theme === "dark"
-//               ? "border-gray-600 bg-gray-800"
-//               : "border-gray-300  bg-gray-200"
-//           } rounded-lg`}
-//         >
-//           {searchHistory.map((term, index) => (
-//             <div
-//               key={index}
-//               className="flex justify-between items-center p-2 hover:bg-gray-100"
-//             >
-//               <span className="cursor-pointer">{term}</span>
-//               <button
-//                 onClick={(e) => handleDelete(term, e)}
-//                 className="text-red-500 font-bold"
-//               >
-//                 ×
-//               </button>
-//             </div>
-//           ))}
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default SearchBar;
-
 import React, { useState, useEffect, useRef } from "react";
 import Input from "./Input";
 import { useTheme } from "../../Context/themeContext";
 import Button from "./Button";
-import { FaCross, FaSearch } from "react-icons/fa";
+import { FaSearch } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { Cross, EyeClosed, EyeClosedIcon } from "lucide-react";
 import { MdClose } from "react-icons/md";
 
 const SearchBar = () => {
@@ -171,13 +56,9 @@ const SearchBar = () => {
 
   return (
     <div
-      className={`relative hidden small-device:block h-9   items-center border ${
+      className={`relative hidden small-device:block h-9   items-center border transition-all duration-300 ${
         theme === "dark" ? "border-gray-600" : "border-gray-300"
       } rounded-lg`}
-      //   className={`relative  mobile:absolute  mobile:top-1/2 mobile:mt-16 mobile:left-1/2 mobile:-translate-x-1/2 mobile:-translate-y-1/2 small-device:relative small-device:top-0 small-device:left-0 small-device:translate-x-0 small-device:translate-y-0 small-device:mt-0 items-center border ${
-      //     theme === "dark" ? "border-gray-600" : "border-gray-300"
-      //   } rounded-lg`}
-
       ref={searchRef}
     >
       {/* Search Input */}

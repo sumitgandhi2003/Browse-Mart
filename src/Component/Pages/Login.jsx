@@ -6,7 +6,7 @@ import { customToast, swalCustomConfiguration } from "../../utility/constant";
 import axios from "axios";
 import { useNavigate, useLocation, Navigate, Link } from "react-router-dom";
 import { FaMoon, FaSun } from "react-icons/fa6";
-import { guestUser } from "../../utility/constant";
+import { guestUser, sellerUser } from "../../utility/constant";
 import { BiLoaderAlt } from "react-icons/bi";
 const Login = ({ setAuthToken, authToken }) => {
   const SERVER_URL = process.env.REACT_APP_SERVER_URL;
@@ -132,6 +132,10 @@ const Login = ({ setAuthToken, authToken }) => {
   const handleGuestLogin = (e) => {
     e.preventDefault();
     handleLogin(guestUser);
+  };
+  const handleSellerLogin = (e) => {
+    e.preventDefault();
+    handleLogin(sellerUser);
   };
   const handleInput = (e) => {
     const { name, value } = e.target;
@@ -268,6 +272,7 @@ const Login = ({ setAuthToken, authToken }) => {
                       <BiLoaderAlt className="animate-spin h-6 w-6" />
                     )
                   }
+                  disabled={isProcessing}
                 />
 
                 <div className="text-center my-4 text-gray-500">
@@ -288,8 +293,26 @@ const Login = ({ setAuthToken, authToken }) => {
                   }
                   onClick={handleGuestLogin}
                   btntext={"Continue with Guest"}
+                  disabled={isProcessing}
                 />
 
+                <Button
+                  className={`w-full flex items-center justify-center gap-2 p-2 rounded-md ${
+                    theme === "dark"
+                      ? "bg-gray-700 text-white"
+                      : "bg-gray-200 text-gray-900"
+                  }`}
+                  icon={
+                    isProcessing ? (
+                      <BiLoaderAlt className="animate-spin h-6 w-6" />
+                    ) : (
+                      ""
+                    )
+                  }
+                  onClick={handleSellerLogin}
+                  btntext={"Continue with Seller"}
+                  disabled={isProcessing}
+                />
                 {/* <Button
               className={`w-full flex items-center justify-center gap-2 p-2 rounded-md ${
                 theme === "dark"
@@ -340,7 +363,7 @@ const Login = ({ setAuthToken, authToken }) => {
           }`}
           icon={
             theme === "dark" ? (
-              <FaSun className="text-yellow-400 w-5 h-5 " />
+              <FaSun className="text-white w-5 h-5 " />
             ) : (
               <FaMoon className="text-gray-800 w-5 h-5" />
             )

@@ -36,7 +36,7 @@ const Input = forwardRef(
         value={value || ""}
         name={name}
         id={id}
-        className={`${className} outline-none p-2 rounded-md border-2 ${
+        className={`${className} outline-none p-2 rounded-md border-2 font-roboto ${
           theme === "dark"
             ? "bg-gray-700 text-white border-gray-600 focus:border-gray-300"
             : "text-gray-900 bg-gray-100 border-gray-300 focus:border-gray-600"

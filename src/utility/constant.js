@@ -126,6 +126,10 @@ export const guestUser = {
   email: "guest@gmail.com",
   password: "guestuser",
 };
+export const sellerUser = {
+  email: "seller@gmail.com",
+  password: "seller123",
+};
 
 export const sellerRegistrationInputFields = [
   {
