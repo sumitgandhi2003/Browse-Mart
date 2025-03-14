@@ -6,7 +6,7 @@
 }
 .loading {
   border: 5px solid whitesmoke;
-  border-top: 5px solid var(--bluetheme);
+  border-top: 5px solid var(--indigo);
   animation: loading 1s linear infinite;
   -webkit-animation: loading 1s linear infinite;
   width: 50px;

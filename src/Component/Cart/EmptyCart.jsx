@@ -1,11 +1,20 @@
 import React from "react";
 import Button from "../UI/Button";
 import { Link } from "react-router-dom";
+import { useTheme } from "../../Context/themeContext";
 const emptyCartImage = require("../../assets/images/emptyCart.png");
 
 const EmptyCart = () => {
+  const { theme, setTheme } = useTheme();
   return (
-    <div className="loader-container flex justify-center items-center ">
+    <div
+      // className={`flex gap-5 p-3  min-h-screen mobile:h-full mobile:flex-col tablet:flex-row ${
+      //   theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-gray-900"
+      // } transition-all duration-300 `}
+      className={`min-h-screen flex justify-center items-center  ${
+        theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-gray-900"
+      } transition-all duration-300 `}
+    >
       <div className="flex flex-col items-center gap-3">
         <img
           src={emptyCartImage}
@@ -18,7 +27,7 @@ const EmptyCart = () => {
         <Link to={"/"}>
           <Button
             btntext={"Shop Now"}
-            className={"font-roboto bg-blue-400 text-white p-2 rounded"}
+            className={"font-roboto bg-indigo-600 text-white p-2 rounded"}
           />
         </Link>
       </div>

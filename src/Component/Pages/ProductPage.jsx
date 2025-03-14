@@ -8,6 +8,7 @@ import { ReviewForm, ReviewCard } from "../Review";
 import ProductImage from "../Product/ProductImage";
 import { formatAmount, socialMedia } from "../../utility/constant";
 import AddToCartButton from "../../utility/AddToCartButton";
+import { useTheme } from "../../Context/themeContext";
 // import { SERVER_URL } from "../../config";
 const pageNotFind = require("../../assets/images/pageNotFind.jpg");
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
@@ -24,20 +25,21 @@ const ProductPage = ({ isAuthenticated, userDetail, authToken }) => {
   const [isError, setIsError] = useState({});
   const [isExpened, setIsExpened] = useState(false);
   const location = useLocation();
-  const message = `🚀 Exciting News! 🌟\n\nI just discovered the **${productData.name}** and I can't stop raving about it! 🎉\n\n✨ **Why You’ll Love It**:\n- Top-notch quality that speaks for itself!\n- Perfect for tech enthusiasts.\n- Limited-time offer: Don't miss out! 🕒\n\n👉 Check it out here: ${currentURL}\n\n💬 Let me know what you think, and tag your friends who need this in their lives!`;
+  const message = `🚀 Exciting News! 🌟\n\nI just discovered the **${productData?.name}** and I can't stop raving about it! 🎉\n\n✨ **Why You’ll Love It**:\n- Top-notch quality that speaks for itself!\n- Perfect for tech enthusiasts.\n- Limited-time offer: Don't miss out! 🕒\n\n👉 Check it out here: ${currentURL}\n\n💬 Let me know what you think, and tag your friends who need this in their lives!`;
   const navigate = useNavigate();
+  const { theme } = useTheme();
   const handleClick = () => {
     setIsReviewClicked((isReview) => !isReview);
   };
   const getProductDataById = () => {
     setIsDataFetch(false);
     axios({
-      method: "post",
-      url: `${SERVER_URL}/api/product/get-product-by-id`,
-      data: {
-        productId: productId,
-        quantity: 1,
-      },
+      method: "get",
+      url: `${SERVER_URL}/api/product/${productId}`,
+      // data: {
+      //   productId: productId,
+      //   quantity: 1,
+      // },
     })
       .then((response) => {
         const { data, status } = response;
@@ -59,11 +61,65 @@ const ProductPage = ({ isAuthenticated, userDetail, authToken }) => {
         }
       });
   };
+  const addToRecentlyViewed = (product) => {
+    let totalStarRating = 0;
+    product?.review?.map((review) => (totalStarRating += review?.rating));
+    let recentlyViewed =
+      JSON.parse(localStorage.getItem("recentlyViewed")) || [];
+    const modifiedProduct = {
+      id: product?.id || product?._id,
+      name: product?.name,
+      price: product?.price,
+      description: product?.description,
+      image: product?.image?.[0],
+      category: product?.category,
+      stock: product?.stock,
+      rating: Number(totalStarRating / product?.review?.length),
+      ratingNumber: product?.review?.length,
+      mrpPrice: product?.mrpPrice,
+      sellingPrice: product?.sellingPrice,
+      isAddedToWislist: false,
+    };
+
+    //   {
+    //     "_id": "670c1b01dc874450c9d49325",
+    //     "name": "BENYAR Stylish Mens Watch",
+    //     "price": 1985,
+    //     "description": "BENYAR Stylish Mens Watch Chronograph Quartz Movement Business Sport Design 3ATM Waterproof Elegant Gift for Men",
+    //     "image": [
+    //         "https://res.cloudinary.com/dxt1wnzba/image/upload/v1728846593/eoaoaxsme18to7pkfrhj.jpg",
+    //         "https://res.cloudinary.com/dxt1wnzba/image/upload/v1728846593/uadypaxwkajbw4g9ca6s.jpg",
+    //         "https://res.cloudinary.com/dxt1wnzba/image/upload/v1728846593/uqkxw8mfrnwiyujomyyg.jpg",
+    //         "https://res.cloudinary.com/dxt1wnzba/image/upload/v1728846593/qqcf7asealfgezlnvwmw.jpg",
+    //         "https://res.cloudinary.com/dxt1wnzba/image/upload/v1728846594/y9yhfutimqq2ug2i6qnv.jpg"
+    //     ],
+    //     "category": "fashion",
+    //     "stock": 47,
+    //     "review": [],
+    //     "__v": 0,
+    //     "isHide": false,
+    //     "mrpPrice": null,
+    //     "sellingPrice": null,
+    //     "sellerId": "679cb65479bc3c35dc3b5804"
+    // }
+
+    recentlyViewed = recentlyViewed.filter(
+      (p) => (p.id || p._id) !== modifiedProduct.id
+    );
+
+    recentlyViewed.unshift(modifiedProduct);
+
+    if (recentlyViewed.length > 5) {
+      recentlyViewed.pop();
+    }
+
+    localStorage.setItem("recentlyViewed", JSON.stringify(recentlyViewed));
+  };
 
   const getRelatedProduct = () => {
     axios({
-      method: "post",
-      url: `${SERVER_URL}/api/product/get-related-product`,
+      method: "get",
+      url: `${SERVER_URL}/api/product?category=${productData?.category}&id=${productId}`,
       data: {
         category: productData?.category,
         productId: productId,
@@ -77,13 +133,21 @@ const ProductPage = ({ isAuthenticated, userDetail, authToken }) => {
       });
   };
   // eslint-disable-next-line
-  useEffect(() => getProductDataById(), [productId, isRefreshClicked]);
+  useEffect(() => {
+    getProductDataById();
+  }, [productId, isRefreshClicked]);
   // eslint-disable-next-line
   useEffect(() => {
+    if (productData?.id || productData?._id) {
+      addToRecentlyViewed(productData);
+    }
     if (productData?.category) {
       getRelatedProduct();
     }
   }, [productData]);
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   if (!isDataFetch && !isReviewClicked) return <Loader />; // Loading state while data is fetched.  Replace with your own loading component.  e.g., <Loading /> or <CircularProgress /> from material-ui.  Also, add error handling here.  e.g., axios.get().catch(error => console.error(error))
   if (isError?.status === 404) {
@@ -108,7 +172,13 @@ const ProductPage = ({ isAuthenticated, userDetail, authToken }) => {
     productData &&
     relatedProduct && (
       // productData && (
-      <div className="product-page-section">
+      <div
+        className={`product-page-section py-5 transition-all duration-300 ${
+          theme === "dark"
+            ? " bg-gray-900 text-white"
+            : "bg-white text-gray-900"
+        }`}
+      >
         {/* product detail section */}
 
         <div className="flex p-3 gap-3 mobile:flex-col tablet:flex-row">
@@ -206,7 +276,7 @@ const ProductPage = ({ isAuthenticated, userDetail, authToken }) => {
                   {socialMedia.map((media, index) => (
                     <div className="group relative">
                       <span
-                        className={`bg-blue-400 absolute bottom-0 left-10 mobile:-left-3 mobile:-bottom-8  tablet:left-10 tablet:bottom-0 text-white text-xs hidden grou p-1 rounded group-hover:block`}
+                        className={`bg-blue-400 absolute bottom-0 left-10 mobile:-left-3 mobile:-bottom-8  tablet:left-10 tablet:bottom-0 text-white text-xs hidden p-1 rounded group-hover:block`}
                       >
                         {media.name}
                       </span>
@@ -231,8 +301,8 @@ const ProductPage = ({ isAuthenticated, userDetail, authToken }) => {
 
         <div className="related-product-section p-4 mt-4">
           {relatedProduct.length > 0 && (
-            <h2 className="text-4xl font-bold font-roboto w-max min-w-[10rem] mb-5">
-              Related Products
+            <h2 className=" font-bold my-6 font-roboto text-2xl mobile:text-xl  w-max min-w-[10rem] ">
+              item you may like it
             </h2>
           )}
           <div className="">

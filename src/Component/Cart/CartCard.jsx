@@ -8,6 +8,7 @@ import {
   swalWithCustomConfiguration,
 } from "../../utility/constant";
 import { useCart } from "../../Context/cartContext";
+import { useTheme } from "../../Context/themeContext";
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 const CartCard = ({
   product,
@@ -18,6 +19,7 @@ const CartCard = ({
 }) => {
   const [quantity, setQuantity] = useState(product?.quantity || 1);
   const { setCartCount } = useCart();
+  const { theme } = useTheme();
   // const handleIncrement = () => {
   //   setQuantity((prevQuantity) => prevQuantity + 1);
   // };
@@ -65,7 +67,11 @@ const CartCard = ({
     updateCart();
   };
   return (
-    <div className="flex gap-4 w-full max-h-[200px] items-center p-2 mobile:flex-col small-device:flex-row">
+    <div
+      className={`flex gap-4 w-full  rounded max-h-[200px] items-center p-2 mobile:flex-col small-device:flex-row ${
+        theme === "dark" ? "bg-gray-800" : "bg-gray-100"
+      }  transition-all duration-300`}
+    >
       <div className="w-1/2 flex gap-4 items-center justify-between overflow-scroll  mobile:w-full small-device:w-1/2">
         <div className="w-2/5">
           <img
@@ -85,9 +91,9 @@ const CartCard = ({
           {/* <span>{product?.item?.price}</span> */}
           <Button
             btntext={"remove"}
-            className={
-              "w-min py-1 px-2 bg-blue-100 text-blue-500 rounded mobile:hidden small-device:block hover:bg-blue-500 hover:text-white"
-            }
+            className={`w-min py-1 px-2 bg-blue-100 ${
+              theme === "dark" ? "bg-gray-700" : "bg-gray-100"
+            }  rounded mobile:hidden small-device:block bg-indigo-600 text-white  transition-all duration-300 relative`}
             onClick={handleRemoveClicked}
           />
         </div>

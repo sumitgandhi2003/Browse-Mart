@@ -54,7 +54,7 @@ const SignUpForm = ({ setIsSignUpShow, setAuthToken }) => {
   const handleRegisteration = () => {
     axios({
       method: "POST",
-      url: `${SERVER_URL}/api/user/register`,
+      url: `${SERVER_URL}/api/auth/register`,
       data: userDetail,
       headers: { "Content-Type": "application/json; charset=UTF-8" },
     })

@@ -3,38 +3,68 @@ import { useState, useEffect } from "react";
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 import axios from "axios";
 import { Navigate } from "react-router-dom";
-import { useCart } from "./Context/cartContext";
+import { useCart } from "../../Context/cartContext";
 //import components
 // import Signup from "./Component/Signup/Signup";
 // import Footer from "./Component/Footer/Footer";
 // import Checkout from "./Component/Checkout/Checkout";
 // import ForgotPassword from "./Component/ForgotPassword/ForgotPassword";
 // import Home from "./Component/Home/Home";
-import Cart from "./Component/Cart/Cart";
-import Navbar from "./Component/Navbar/Navbar";
+import Cart from "../Cart/Cart";
+import Navbar from "../Navbar/Navbar";
+import Footer from "../Footer/Footer";
 import {
   LoginPage,
   OrderPage,
   ProductPage,
+  RegisterPage,
+  ForgetPasswordPage,
+  HomePage,
+  Login,
   SellerRegistrationPage,
-} from "./Component/Pages";
-import BuyNow from "./Component/BuyNow/BuyNow";
-import SuccessPage from "./Component/BuyNow/SuccessPage";
-import ProductsContainer from "./Component/Product/ProductsContainer";
-import { OrdersContainer } from "./Component/Order";
-import SellerDashBoard from "./Component/Seller/SellerDashBoard";
-import HomePage from "./Component/Pages/HomePage";
+} from "../Pages";
+import BuyNow from "../BuyNow/BuyNow";
+import SuccessPage from "../BuyNow/SuccessPage";
+import ProductsContainer from "../Product/ProductsContainer";
+import { OrdersContainer } from "../Order";
+import SellerDashBoard from "../Seller/SellerDashBoard";
+import { useTheme } from "../../Context/themeContext";
+import { Button } from "../UI";
+import { FaMoon, FaSun } from "react-icons/fa";
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 const AppLayout = ({ authToken, setAuthToken, userDetail, setUserDetail }) => {
-  String.prototype.toCapitalise = function () {
-    if (this.length === 0) return;
-    const name = this.split(" ");
-    for (let i = 0; i < name.length; i++) {
-      name[i] = name[i].charAt(0).toUpperCase() + name[i].slice(1);
-    }
-    return name.join(" ");
-    // return this.charAt(0).toUpperCase() + this.slice(1);
-  };
+  const { theme, toggleTheme } = useTheme();
+  // String.prototype.toCapitalize = function () {
+  //   if (this.length === 0) return;
+  //   const name = this.split(" ");
+  //   for (let i = 0; i < name.length; i++) {
+  //     name[i] = name[i].charAt(0).toUpperCase() + name[i].slice(1);
+  //   }
+  //   return name.join(" ");
+  // };
+  // String.prototype.toCapitalize = function () {
+  //   if (this.length === 0) return "";
+  //   const words = this.split(" ");
+  //   for (let i = 0; i < words.length; i++) {
+  //     words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1);
+  //   }
+  //   return words.join(" ");
+  // };
+
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      if (e.ctrlKey && e.key?.toString().toLowerCase() === "b") {
+        e.preventDefault();
+        // alert(" ctrl + B pressd");
+        toggleTheme();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyPress);
+    return () => {
+      window.removeEventListener("keydown", handleKeyPress);
+    };
+  }, [toggleTheme]);
   return (
     <div className="App flex flex-col min-h-screen">
       <Navbar
@@ -44,6 +74,7 @@ const AppLayout = ({ authToken, setAuthToken, userDetail, setUserDetail }) => {
         setUserDetail={setUserDetail}
       />
       <Outlet />
+      <Footer />
     </div>
   );
 };
@@ -76,7 +107,14 @@ const App = () => {
       }
     }
   };
-
+  String.prototype.toCapitalize = function () {
+    if (this.length === 0) return "";
+    const words = this.split(" ");
+    for (let i = 0; i < words.length; i++) {
+      words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1);
+    }
+    return words.join(" ");
+  };
   useEffect(() => {
     if (authToken) {
       getUserDetail();
@@ -86,7 +124,23 @@ const App = () => {
   const router = createBrowserRouter([
     {
       path: "/login",
-      element: <LoginPage authToken={authToken} setAuthToken={setAuthToken} />,
+      element: <Login authToken={authToken} setAuthToken={setAuthToken} />,
+    },
+    {
+      path: "/login-1",
+      element: <LoginPage setAuthToken={setAuthToken} authToken={authToken} />,
+    },
+    {
+      path: "/register",
+      element: (
+        <RegisterPage setAuthToken={setAuthToken} authToken={authToken} />
+      ),
+    },
+    {
+      path: "/forget-password",
+      element: (
+        <ForgetPasswordPage authToken={authToken} userDetail={userDetail} />
+      ),
     },
     {
       path: "/",
@@ -101,16 +155,10 @@ const App = () => {
       children: [
         {
           path: "/",
-          element: (
-            <ProductsContainer authToken={authToken} userDetail={userDetail} />
-          ),
+          element: <HomePage authToken={authToken} userDetail={userDetail} />,
         },
         {
-          path: "/home",
-          element: <HomePage />,
-        },
-        {
-          path: "/allproduct",
+          path: "/products",
           element: (
             <ProductsContainer authToken={authToken} userDetail={userDetail} />
           ),
@@ -164,7 +212,7 @@ const App = () => {
         },
         {
           path: "*",
-          element: <Navigate to="/allproduct" />,
+          element: <Navigate to="/" />,
         },
       ],
     },

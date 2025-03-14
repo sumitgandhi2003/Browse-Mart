@@ -8,9 +8,11 @@ import {
 } from "../../utility/constant";
 import { Button, Input } from "../UI";
 import axios from "axios";
+import { useTheme } from "../../Context/themeContext";
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 const SellerRegistrationPage = ({ authToken, userDetail }) => {
   const [sellerDetail, setSellerDetail] = useState(initialSellerDetails);
+  const { theme } = useTheme();
   const [isDataSending, setIsDataSending] = useState(false);
   const [isSubmit, setIsSubmit] = useState(false);
   const [error, setError] = useState(null);
@@ -46,10 +48,8 @@ const SellerRegistrationPage = ({ authToken, userDetail }) => {
         },
         data: sellerDetail,
       });
-      console.log(response);
       const { data, status } = response;
       if (status === 201) {
-        console.log(data);
         swalWithCustomConfiguration?.fire({
           title: "Seller Registration Successful!",
           text: "You have successfully registered as a seller.",
@@ -93,7 +93,6 @@ const SellerRegistrationPage = ({ authToken, userDetail }) => {
 
   const handleTabChange = (index) => {
     if (validateTabFields(tab[activeTab]?.id)) {
-      console.log(sellerDetail);
       setActiveTab(index);
     }
   };
@@ -111,14 +110,24 @@ const SellerRegistrationPage = ({ authToken, userDetail }) => {
   }, [authToken, navigate, userDetail?.userType]);
 
   return (
-    <div className=" flex-1 flex justify-center items-center  h-full bg-gray-200">
-      <div className="rounded-lg bg-white w-full min-h-[90vh] max-w-4xl mt-4 relative">
+    <div
+      className={` flex-1 flex justify-center  items-center transition-all duration-300 h-full ${
+        theme === "dark"
+          ? " bg-gray-900 text-white"
+          : "bg-gray-200 text-gray-900"
+      }`}
+    >
+      <div
+        className={`rounded-lg m-8 w-full max-w-4xl mobile:m-0 mobile:mt-10 mobile:rounded-none small-device:m-8 small-device:rounded-lg mt-4 relative  ${
+          theme === "dark" ? " bg-gray-800" : "bg-white"
+        } transition-all duration-300`}
+      >
         <h1 className="font-roboto text-center  text-gray-400 text-3xl m-3 p-4 font-semibold">
           Seller Registration
         </h1>
         <form action="" method="post">
           <div className="flex flex-col gap-4">
-            <div className="grid grid-cols-3">
+            <div className="grid grid-cols-3 mobile:grid-cols-2 tablet:grid-cols-3">
               {tab.map((item, index) => (
                 <span
                   key={item.id}
@@ -127,17 +136,17 @@ const SellerRegistrationPage = ({ authToken, userDetail }) => {
                   //     e.preventDefault();
                   //     handleTabChange(index);
                   //   }}
-                  className={`p-2 flex items-center border-y-2 font-roboto  border-r-2 last:border-r-0  ${
+                  className={`p-2 flex items-center border-y-2 font-roboto  border-r-2 last:border-r-0   mobile:last:col-span-2  mobile:last:border-t-0 mobile:last:flex mobile:last:justify-center  tablet:last:col-span-1 tablet:last:border-t-2  tablet:last:flex tablet:last:justify-start ${
                     activeTab === index
-                      ? "text-blue-600 bg-blue-50 text-lg font-medium  border-b-blue-500 border-b-4"
-                      : "border-gray-200"
+                      ? "text-bluetext-center bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent  text-lg font-medium  border-b-indigo-600 border-b-4"
+                      : " "
                   }`}
                 >
                   {item.value}
                 </span>
               ))}
             </div>
-            <div className="w-full grid p-4  gap-4 gap-y-7 mobile:text-sm mobile:grid-cols-2 small-device:grid-cols-3 tablet:text-base tablet:grid-cols-2 laptop:grid-cols-3">
+            <div className="w-full grid  grid-1 p-4  gap-4 gap-y-7 mobile:text-sm mobile:grid-cols-2 small-device:grid-cols-2  tablet:text-base tablet:grid-cols-2 laptop:grid-cols-3">
               {sellerRegistrationInputFields
                 ?.filter((field) => field?.tab === tab[activeTab]?.id)
                 ?.map((field, index) => {
@@ -147,7 +156,7 @@ const SellerRegistrationPage = ({ authToken, userDetail }) => {
                       key={field?.id}
                     >
                       <label htmlFor={field?.name}>
-                        {field.label?.toCapitalise()}
+                        {field.label?.toCapitalize()}
                         {field?.required ? (
                           <span className="required"> *</span>
                         ) : (
@@ -158,25 +167,27 @@ const SellerRegistrationPage = ({ authToken, userDetail }) => {
                         type={field?.type}
                         id={field?.name}
                         name={field?.name}
-                        placeholder={field?.placeholder}
-                        className={`p-2 bg-gray-100 border-2 rounded border-gray-300 outline-gray-400 outline-2`}
+                        placeholder={field?.placeholder?.toCapitalize()}
+                        className={`p-2   rounded border-2  ${
+                          theme === "dark"
+                            ? "bg-gray-700 text-white border-gray-600 focus:border-gray-300"
+                            : "text-gray-900 bg-gray-100 border-gray-300 focus:border-gray-600"
+                        }`}
                         value={sellerDetail?.[field?.name]}
                         onChange={handleChange}
                         maxLength={field?.maxLength || null}
                       />
-                      <p className="text-red-600 absolute -bottom-5">
-                        {error?.[field?.name]}
-                      </p>
+                      <p className="text-red-600 ">{error?.[field?.name]}</p>
                     </div>
                   );
                 })}
             </div>
           </div>
-          <div className="w-full p-3 flex justify-between absolute bottom-0">
+          <div className="w-full p-3 flex  items-center justify-between ">
             <Button
               btntext={"Previous"}
               disabled={activeTab === 0}
-              className="font-bold text-blue-500 text-xl py-2 px-4 rounded hover:cursor-pointer"
+              className="font-bold text-blue-500  py-2 px-3 rounded hover:cursor-pointer"
               icon={<GrFormPrevious className="text-xl font-bold" />}
               onClick={(e) => {
                 e.preventDefault();
@@ -186,7 +197,7 @@ const SellerRegistrationPage = ({ authToken, userDetail }) => {
             <Button
               btntext={`${activeTab !== tab?.length - 1 ? "Next" : "Submit"}`}
               loading={isDataSending}
-              icon={<GrFormNext className="text-xl hover:cursor-pointer " />}
+              icon={<GrFormNext className="text-xl hover:cursor-pointer   " />}
               onClick={(e) => {
                 e.preventDefault();
                 setIsSubmit(true);
@@ -196,6 +207,7 @@ const SellerRegistrationPage = ({ authToken, userDetail }) => {
                   handleSubmit(e); // Submit when at last tab
                 }
               }}
+              className="   text-white px-3 py-2 rounded-md bg-gradient-to-r from-blue-500 to-purple-500"
               iconPosition="right"
             />
           </div>

@@ -46,7 +46,7 @@ const AddRemoveProductFromWishListButton = ({
   };
   return (
     <span
-      className={`bg-white absolute h-8 w-8 p-1.5 flex items-center justify-center rounded-full  right-4 top-4 ${
+      className={` absolute top-2 right-2 bg-white rounded-full p-2 shadow  h-8 w-8   flex items-center justify-center    ${
         !authToken ? "hidden" : ""
       }`}
       onClick={addProductToWishList}
@@ -54,7 +54,7 @@ const AddRemoveProductFromWishListButton = ({
       {isSaved ? (
         <FaHeart className={`text-red-500 w-full h-full `} />
       ) : (
-        <FaRegHeart className="text-red-500 w-full h-full" />
+        <FaRegHeart className="text-gray-500 w-full h-full" />
       )}
     </span>
   );

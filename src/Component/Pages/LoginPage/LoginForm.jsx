@@ -54,7 +54,7 @@ const LoginForm = ({ setIsSignUpShow, setAuthToken, redirect }) => {
   const handleLogin = () => {
     axios({
       method: "POST",
-      url: `${SERVER_URL}/api/user/login`,
+      url: `${SERVER_URL}/api/auth/login`,
       data: userDetail,
       headers: { "Content-type": "application/json; charset=UTF-8" },
     })

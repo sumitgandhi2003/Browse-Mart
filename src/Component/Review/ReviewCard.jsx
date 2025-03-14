@@ -1,10 +1,18 @@
 import React, { useState } from "react";
+import { useTheme } from "../../Context/themeContext";
 
 const ReviewCard = ({ review }) => {
   const { rating, title, message, userName } = review;
   const [isExpened, setIsExpened] = useState(false);
+  const { theme } = useTheme();
   return (
-    <div className="bg-white h-min relative p-2 border-2 overflow-hidden border-dashed border-black/60  text-black min-w-[300px] min-h-[150px] max-h-[200px] max-w-[400px] mobile:w-1/2 mobile:min-w-[100%] small-device:w-auto small-device:min-w-[300px] small-device:max-w-[150px]  rounded">
+    <div
+      className={` h-min relative p-2 border-2 overflow-hidden border-dashed   min-w-[300px] min-h-[150px] max-h-[200px] max-w-[400px] mobile:w-1/2 mobile:min-w-[100%] small-device:w-auto small-device:min-w-[300px] small-device:max-w-[150px]  rounded ${
+        theme === "dark"
+          ? "bg-gray-900 text-white border-white"
+          : "bg-white text-gray-900 border-gray-900/60"
+      }`}
+    >
       {/* <div className="absolute top-2 left-2 font-semibold text-white text-[12px] rounded-full bg-gray-600">
         {rating}
       </div> */}
@@ -29,7 +37,7 @@ const ReviewCard = ({ review }) => {
         {title}
       </div>
       {/* <div>{rating}</div> */}
-      <div className="font-roboto w-full max-h-[100px] overflow-scroll  bg-white break-words">
+      <div className="font-roboto w-full max-h-[100px] overflow-scroll   break-words">
         <span className="w-full">
           {isExpened ? message : message?.toString()?.substring(0, 60)}
         </span>
@@ -43,12 +51,12 @@ const ReviewCard = ({ review }) => {
         )}
         {/* {message} */}
       </div>
-      <div className="font-roboto text-base group absolute bg-white rounded p-1  bottom-1 right-2 font-bold ">
+      <div className="font-roboto text-base group absolute  rounded p-1  bottom-1 right-2 font-bold ">
         <div className="text-ellipsis overflow-hidden whitespace-nowrap max-w-40">
-          By {userName?.toCapitalise() || "User"}
+          By {userName?.toCapitalize() || "User"}
         </div>
         <div className="group-hover:block bg-gray-600 p-1 absolute bottom-7 font-semibold text-white text-[10px] rounded  hidden  ">
-          By {userName?.toCapitalise() || "User"}
+          By {userName?.toCapitalize() || "User"}
         </div>
       </div>
     </div>

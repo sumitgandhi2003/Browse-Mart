@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 // import Input from "../UI/Input";
 // import Button from "../UI/Button";
-import { Button, Input } from "../../UI";
+import { Button, Input, TextArea } from "../../UI";
 import axios from "axios";
 import { FiUpload } from "react-icons/fi";
 import { useDropzone } from "react-dropzone";
@@ -11,12 +11,15 @@ import {
   productBrands,
   swalWithCustomConfiguration,
 } from "../../../utility/constant";
+import Select from "../../UI/Select";
+import { useTheme } from "../../../Context/themeContext";
 // import cloudinary from "../../cloudinary.config";
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 const API_KEY = process.env.REACT_APP_CLOUDINARY_API_KEY;
 const CLOUD_NAME = process.env.REACT_APP_CLOUDINARY_CLOUD_NAME;
 const ProductUpload = ({ authToken }) => {
   const [productUploading, setProductUploading] = useState(false);
+  const { theme } = useTheme();
   const [initialProductDetail] = useState({
     name: "",
     price: "",
@@ -30,7 +33,6 @@ const ProductUpload = ({ authToken }) => {
     sellingPrice: "",
   });
   const [productDetails, setProductDetails] = useState(initialProductDetail);
-
   const [image, setImage] = useState([]);
   const [error, setError] = useState({
     name: "",
@@ -216,7 +218,7 @@ const ProductUpload = ({ authToken }) => {
               value={productDetails?.name}
               onChange={handleChange}
               placeholder={"Product Name"}
-              className="p-2 outline-gray-400 outline-2 bg-gray-100 border-2 rounded border-gray-300"
+              className="p-2  bg-gray-100 border-2 rounded border-gray-300"
             />
             {error.name && <p>{error.name}</p>}
           </div>
@@ -226,10 +228,19 @@ const ProductUpload = ({ authToken }) => {
             <label htmlFor="stock">
               Brand <span className="required">*</span>
             </label>
-            <select
+            <Select
               name="brand"
               id="brand"
-              className="p-2 bg-gray-100 border-2 rounded border-gray-300 outline-gray-400 outline-2"
+              className="p-2 bg-gray-100 border-2 rounded border-gray-300"
+              onChange={handleChange}
+              value={productDetails?.brand}
+              displayName="Select Brand"
+              itemArray={productBrands}
+            />
+            {/* <select
+              name="brand"
+              id="brand"
+              className="p-2 bg-gray-100 border-2 rounded "
               onChange={handleChange}
               value={productDetails?.brand}
             >
@@ -237,18 +248,27 @@ const ProductUpload = ({ authToken }) => {
               {productBrands?.map((item) => {
                 return (
                   <option key={item?.id} value={item?.value}>
-                    {item.value.toCapitalise()}
+                    {item.value.toCapitalize()}
                   </option>
                 );
               })}
-            </select>
+            </select> */}
           </div>
           {/* Category Section */}
           <div className=" flex flex-col gap-3 ">
             <label htmlFor="category">
               Category <span className="required">*</span>
             </label>
-            <select
+            <Select
+              name="category"
+              id="category"
+              className="p-2 bg-gray-100 border-2 rounded border-gray-300"
+              onChange={handleChange}
+              value={productDetails?.category}
+              itemArray={productCategory}
+              displayName={"Select Category"}
+            />
+            {/* <select
               name="category"
               id="category"
               className="p-2 bg-gray-100 border-2 rounded border-gray-300 outline-gray-400 outline-2"
@@ -259,11 +279,11 @@ const ProductUpload = ({ authToken }) => {
               {productCategory?.map((item) => {
                 return (
                   <option key={item?.id} value={item?.value}>
-                    {item.value.toCapitalise()}
+                    {item.value.toCapitalize()}
                   </option>
                 );
               })}
-            </select>
+            </select> */}
             {error.category && <p>{error.category}</p>}
           </div>
 
@@ -272,9 +292,26 @@ const ProductUpload = ({ authToken }) => {
             <label htmlFor="subCategory">
               Sub Category <span className="required">*</span>
             </label>
+            {/* <Select
+            name="subCategory"
+            className="p-2 bg-gray-100 border-2 rounded border-gray-300 outline-gray-400 outline-2"
+            id="subCategory"
+            disabled={
+              productDetails?.category === "others" ||
+              !productDetails?.category
+            }
+            onChange={handleChange}
+            value={productDetails?.subCategory}
+            displayName={"Select Sub Category"}
+            itemArray={productCategory}
+            /> */}
             <select
               name="subCategory"
-              className="p-2 bg-gray-100 border-2 rounded border-gray-300 outline-gray-400 outline-2"
+              className={`p-2 bg-gray-100 border-2 rounded border-gray-300 outline-gray-400 outline-0 transition-all duration-300 ${
+                theme === "dark"
+                  ? "bg-gray-700 text-white border-gray-600 focus:border-gray-300"
+                  : "text-gray-900 bg-gray-100 border-gray-300 focus:border-gray-600"
+              }  `}
               id="subCategory"
               disabled={
                 productDetails?.category === "others" ||
@@ -289,7 +326,7 @@ const ProductUpload = ({ authToken }) => {
                   ? item.child?.map((subItem) => {
                       return (
                         <option key={subItem?.id} value={subItem?.value}>
-                          {subItem.toCapitalise()}
+                          {subItem.toCapitalize()}
                         </option>
                       );
                     })
@@ -313,9 +350,7 @@ const ProductUpload = ({ authToken }) => {
               value={productDetails?.mrpPrice}
               onChange={handleChange}
               placeholder={"MRP Price"}
-              className={
-                "p-2 bg-gray-100 border-2 rounded border-gray-300 outline-gray-400 outline-2"
-              }
+              className={"p-2 bg-gray-100 border-2 rounded border-gray-300"}
             />
             {error.price && <p>{error.mrpPrice}</p>}
           </div>
@@ -332,9 +367,7 @@ const ProductUpload = ({ authToken }) => {
               value={productDetails?.sellingPrice}
               onChange={handleChange}
               placeholder={"Selling Price"}
-              className={
-                "p-2 bg-gray-100 border-2 rounded border-gray-300 outline-gray-400 outline-2"
-              }
+              className={"p-2 bg-gray-100 border-2 rounded border-gray-300"}
             />
             {error.price && <p>{error.sellingPrice}</p>}
           </div>
@@ -350,10 +383,8 @@ const ProductUpload = ({ authToken }) => {
               name={"stock"}
               value={productDetails?.stock}
               onChange={handleChange}
-              placeholder={"stock"}
-              className={
-                "p-2 bg-gray-100 border-2 rounded border-gray-300 outline-gray-400 outline-2"
-              }
+              placeholder={"Stock"}
+              className={"p-2 bg-gray-100 border-2 rounded border-gray-300"}
             />
             {error.quantity && <p>{error.stock}</p>}
           </div>
@@ -364,14 +395,30 @@ const ProductUpload = ({ authToken }) => {
               <label htmlFor="description">
                 Description <span className="required">*</span>
               </label>
-              <textarea
+              <TextArea
                 name="description"
                 id={"description"}
                 value={productDetails?.description}
                 onChange={handleChange}
                 placeholder="Description"
-                className="resize-none w-full min-h-[150px] p-2 bg-gray-100 border-2 rounded border-gray-300 outline-gray-400 outline-2"
-              ></textarea>
+                className={`resize-none w-full min-h-[150px] p-2 border-2 outline-none rounded ${
+                  theme === "dark"
+                    ? "bg-gray-700 text-white border-gray-600 focus:border-gray-300"
+                    : "text-gray-900 bg-gray-100 border-gray-300 focus:border-gray-600"
+                }`}
+              />
+              {/* <textarea
+                name="description"
+                id={"description"}
+                value={productDetails?.description}
+                onChange={handleChange}
+                placeholder="Description"
+                className={`resize-none w-full min-h-[150px] p-2 border-2 outline-none rounded ${
+                  theme === "dark"
+                    ? "bg-gray-700 text-white border-gray-600 focus:border-gray-300"
+                    : "text-gray-900 bg-gray-100 border-gray-300 focus:border-gray-600"
+                }`}
+              ></textarea> */}
               {error.description && <p>{error.description}</p>}
             </div>
           </div>
@@ -380,7 +427,7 @@ const ProductUpload = ({ authToken }) => {
           <Button
             btntext={"Upload"}
             loading={productUploading}
-            className={"w-full text-white bg-blue-500 p-2 rounded"}
+            className={"w-full text-white bg-indigo-600 p-2 rounded"}
           />
         </div>
       </form>

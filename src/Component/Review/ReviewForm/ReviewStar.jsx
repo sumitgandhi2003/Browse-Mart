@@ -4,11 +4,9 @@ const ReviewStar = ({ setStarRating, rating }) => {
   const [hoveredRating, setHoveredRating] = useState(0);
 
   const handleMouseOver = (rating) => {
-    console.log("hover ", rating);
     setHoveredRating(rating);
   };
   const handleClick = (index) => {
-    console.log("click ", index);
     // Call your function to handle the star rating click here
     setStarRating((prev) => {
       return {

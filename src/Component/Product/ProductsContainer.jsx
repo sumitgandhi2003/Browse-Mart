@@ -1,19 +1,30 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { API_URL } from "../../utility/constant";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Productcard from "./ProductCard";
 import { Loader, ServerError } from "../UI";
+import { useTheme } from "../../Context/themeContext";
 const noResultImage = require("../../assets/images/noResult.png");
 // import { SERVER_URL } from "../../config";
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 const ProductsContainer = ({ userDetail, authToken }) => {
+  const location = useLocation();
+  const { theme } = useTheme();
   const [allProduct, SetAllProduct] = useState();
   const [allCategories, SetAllCategories] = useState();
   const [filteredProduct, SetFilteredProduct] = useState();
   const [filteredCategory, SetFilteredCategory] = useState([]);
-  const [isDataFetch, setIsDataFetch] = useState(false);
+  const [isDataFetched, setIsDataFetched] = useState(false);
   const [error, setError] = useState({});
+  const searchQuery = new URLSearchParams(location?.search)
+    ?.get("q")
+    ?.toString()
+    ?.trim();
+  const searchCategory = new URLSearchParams(location?.search)
+    ?.get("category")
+    ?.toString()
+    ?.trim();
   const handleSubmit = (e) => {
     e.preventDefault();
     // const formElement = Array.from(e.target.elements).slice(0, -1);
@@ -39,7 +50,7 @@ const ProductsContainer = ({ userDetail, authToken }) => {
   const getAllProduct = () => {
     axios
       .get(`${SERVER_URL}/api/product/get-all-products`, {
-        params: { activeUserId: userDetail?.id },
+        params: { activeUserId: userDetail?.id, searchQuery, searchCategory },
       })
       .then((response) => {
         const { data, status } = response;
@@ -47,12 +58,13 @@ const ProductsContainer = ({ userDetail, authToken }) => {
           SetAllProduct(data?.products);
           SetFilteredProduct(data?.products);
         }
-        setIsDataFetch(true);
       })
       .catch((error) => {
-        setIsDataFetch(true);
-        setError({ error: error?.message });
-      });
+        const { message = "" } = error || error?.response?.data?.message;
+
+        setError({ errorMessage: message });
+      })
+      .finally(() => setIsDataFetched(true));
   };
 
   // const getAllCategory = () => {
@@ -86,16 +98,29 @@ const ProductsContainer = ({ userDetail, authToken }) => {
     //   .catch((error) => console.log(error));
     getAllProduct();
     // getAllCategory();
-  }, [userDetail?.id]);
-  if (error.error) {
+  }, [userDetail?.id, searchQuery, searchCategory]);
+  useEffect(() => {
+    window.scrollTo(0, 0); // Scroll to the top on component mount
+  }, []);
+  if (error.errorMessage) {
     return <ServerError />;
   }
 
-  if (isDataFetch && !filteredProduct?.length > 0)
+  if (isDataFetched && !filteredProduct?.length > 0 && !error.errorMessage)
     return (
-      <div className="w-full h-screen flex justify-center items-center">
+      <div
+        className={` w-full h-screen flex justify-center items-center ${
+          theme === "dark"
+            ? " bg-gray-900 text-white"
+            : "bg-white text-gray-900"
+        } transition-all duration-300`}
+      >
         <div className=" font-mono  flex flex-col gap-3 ">
-          <img src={noResultImage} className="max-w-[350px]" />
+          <img
+            src={noResultImage}
+            alt="there is not products"
+            className="max-w-[350px]"
+          />
           <div className="h-min flex flex-col gap-2 justify-center items-center">
             <span className="w-max max-w-[250px] text-lg font-semibold">
               No Result Found!
@@ -107,11 +132,17 @@ const ProductsContainer = ({ userDetail, authToken }) => {
         </div>
       </div>
     );
-  if (!isDataFetch) return <Loader />;
+  if (!isDataFetched && !error.errorMessage) return <Loader />;
 
   return (
     filteredProduct && (
-      <div className="product-container w-full h-full mt-4 flex gap-2 p-4">
+      <div
+        className={`product-container w-full h-full items-center justify-center pt-8 flex gap-2 p-4 ${
+          theme === "dark"
+            ? " bg-gray-900 text-white"
+            : "bg-white text-gray-900"
+        }  transition-all duration-300`}
+      >
         {/* <div className="left-section w-2/12 h-full border border-black bg-gray min-w-[200px] mobile:hidden laptop:block">
           <h2 className="text-center">Filter</h2>
           <div className="p-2 ">
@@ -143,13 +174,13 @@ const ProductsContainer = ({ userDetail, authToken }) => {
           </div>
         </div> */}
 
-        <div className="right-section grid grid-cols-5 mobile:grid-cols-2 small-device:grid-cols-3 tablet:grid-cols-4 laptop:grid-cols-4 desktop:grid-cols-6 large-device:grid-cols-6 w-10/12 justify-around flex-wrap gap-3 mobile:w-full laptop:w-full">
+        <div className="right-section grid grid-cols-1 place-items-center mobile:grid-cols-2 small-device:grid-cols-3 tablet:grid-cols-4 laptop:grid-cols-4 desktop:grid-cols-6 large-device:grid-cols-6 w-10/12 justify-around flex-wrap gap-3 mobile:w-full laptop:w-full">
           {filteredProduct &&
             filteredProduct.map((product, index) => {
               return (
                 <Link
                   to={"/product/" + (product?.id || product?._id)}
-                  className="w-full "
+                  className="w-full h-full "
                   key={product?.id || product?._id}
                 >
                   {/* <div className="flex w-full justify-center"> */}

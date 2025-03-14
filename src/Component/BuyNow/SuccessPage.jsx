@@ -1,13 +1,17 @@
 import React, { useEffect } from "react";
 import { Link, useLocation, useParams, useNavigate } from "react-router-dom";
 import Button from "../UI/Button";
+import { useTheme } from "../../Context/themeContext";
 const orderPlacedSuccessImage = require("../../assets/images/oderPlacedSuccessfully.gif");
 
 const SuccessPage = () => {
   const { orderId } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
+  const { theme } = useTheme();
   const orderIds = location?.state || [];
+  const themeClass =
+    theme === "dark" ? " bg-gray-900 text-white" : "bg-white text-gray-900";
   useEffect(() => {
     if (!orderIds.length) {
       navigate("/orders", { replace: true });
@@ -16,8 +20,14 @@ const SuccessPage = () => {
   });
   return (
     orderIds && (
-      <div className="p-6 flex justify-center items-center loader-container">
-        <div className="border-2 p-3 border-gray-100 rounded-lg shadow-2xl min-h-[400px] min-w-[600px] flex justify-center items-center mobile:w-full mobile:min-h-0 mobile:min-w-0 tablet:w-max tablet:min-h-[400px] tablet:min-w-[600px] ">
+      <div
+        className={`${themeClass} p-6 flex justify-center items-center min-h-screen`}
+      >
+        <div
+          className={` p-3 ${
+            theme === "dark" ? "bg-gray-800" : ""
+          }  rounded-lg shadow-2xl min-h-[400px] min-w-[600px] flex justify-center items-center mobile:w-full mobile:min-h-0 mobile:min-w-0 tablet:w-max tablet:min-h-[400px] tablet:min-w-[600px] `}
+        >
           <div className="w-full flex flex-col justify-center items-center">
             {/* <h2 className="text-2xl font-bold mb-4">
             Order Placed Successfully!
@@ -52,13 +62,17 @@ const SuccessPage = () => {
               >
                 <Button
                   btntext={"View Order "}
-                  className={"w-full  border-2 border-gray-200 p-2 rounded "}
+                  className={
+                    "w-full  border-2 border-gray-200 bg-gray-300 p-2 rounded "
+                  }
                 />
               </Link>
               <Link to="/" className=" w-3/4 mobile:w-1/2">
                 <Button
                   btntext={"Contuine Shopping"}
-                  className={"w-full text-white bg-blue-500 p-2 rounded"}
+                  className={
+                    "w-full text-white bg-indigo-600 p-2 rounded-lg font-semibold"
+                  }
                 />
               </Link>
             </div>

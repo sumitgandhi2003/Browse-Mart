@@ -5,9 +5,11 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 import CartCard from "./CartCard";
 import EmptyCart from "./EmptyCart";
 import { formatAmount } from "../../utility/constant";
+import { useTheme } from "../../Context/themeContext";
 
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 const Cart = ({ userDetail, authToken }) => {
+  const { theme, setTheme } = useTheme();
   const navigate = useNavigate();
   const [cartItem, setCartItem] = useState([]);
   const [isDataFetching, setIsDataFetching] = useState(false);
@@ -44,6 +46,9 @@ const Cart = ({ userDetail, authToken }) => {
     }
   }, [authToken, navigate]);
 
+  useEffect(() => {
+    window.scrollTo(0, 0); // Scroll to the top on component mount
+  }, []);
   // Calculate total amount
   if (cartItem) {
     cartItem.forEach((item) => {
@@ -57,9 +62,13 @@ const Cart = ({ userDetail, authToken }) => {
   if (!isDataFetching && cartItem?.length === 0) return <EmptyCart />;
 
   return (
-    <div className="flex gap-5 p-3  min-h-screen mobile:h-full mobile:flex-col tablet:flex-row bg-blue-400 relative">
+    <div
+      className={`flex gap-5 p-3  min-h-screen mobile:h-full mobile:flex-col tablet:flex-row ${
+        theme === "dark" ? "bg-gray-900 text-white" : "bg-white text-gray-900"
+      } transition-all duration-300 `}
+    >
       {/* Shopping cart section */}
-      <div className="w-10/12 h-min  mobile:w-full tablet:w-10/12 p-6 flex flex-col gap-5 bg-white rounded-md overflow-hidden">
+      <div className="w-10/12 h-min  mobile:w-full tablet:w-10/12 p-6 flex flex-col gap-5 bg-inherit rounded-md overflow-hidden">
         <div className="flex justify-between items-center p-2 border-b-2">
           <span className="font-semibold font-roboto text-3xl">
             Shopping Cart
@@ -89,7 +98,7 @@ const Cart = ({ userDetail, authToken }) => {
               return (
                 <CartCard
                   product={product}
-                  key={product?.item?._id || product?.item?.id}
+                  key={product?._id || product?.id}
                   authToken={authToken}
                   isDataFetching={isDataFetching}
                   setIsDataFetching={setIsDataFetching}
@@ -101,7 +110,7 @@ const Cart = ({ userDetail, authToken }) => {
       </div>
 
       {/* check Out Section */}
-      <div className="w-4/12 h-min mobile:flex mobile:w-full tablet:w-4/12 tablet:flex p-6 flex flex-col gap-5 bg-white rounded-md justify-between">
+      <div className="w-4/12 h-min mobile:flex mobile:w-full tablet:w-4/12 tablet:flex p-6 flex flex-col gap-5 rounded-md justify-between">
         <div className="flex justify-between items-center p-2 border-b-2">
           <span className="font-semibold font-roboto text-3xl">
             Order Summary
@@ -125,7 +134,7 @@ const Cart = ({ userDetail, authToken }) => {
           <Link to={"/checkout"}>
             <Button
               btntext={"Check Out"}
-              className={"bg-blue-500 text-white p-2 rounded-full w-full"}
+              className={"bg-indigo-600 text-white p-2 rounded-full w-full"}
             />
           </Link>
         </div>

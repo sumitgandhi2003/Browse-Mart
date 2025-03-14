@@ -33,7 +33,6 @@ const OrderCard = ({ order }) => {
           <div className=" flex flex-col">
             <span className="font-medium">Total Amount</span>
             <span className="flex items-center ">
-              <FaRupeeSign />
               {formatAmount(order?.totalAmount)}
             </span>
           </div>
@@ -112,7 +111,7 @@ const OrderCard = ({ order }) => {
                     <Button
                       btntext={"View Product"}
                       className={
-                        "text-blue-400 bg-none text-sm w-full font-semibold font-roboto"
+                        "text-indigo-500 bg-none text-sm w-full font-semibold font-roboto"
                       }
                     />
                   </Link>
@@ -126,7 +125,7 @@ const OrderCard = ({ order }) => {
                     <Button
                       btntext={"Buy Again"}
                       className={
-                        "text-blue-400 bg-none text-sm w-full font-semibold font-roboto"
+                        "text-indigo-500 bg-none text-sm w-full font-semibold font-roboto"
                       }
                     />
                   </Link>

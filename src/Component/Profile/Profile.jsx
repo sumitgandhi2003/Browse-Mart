@@ -11,7 +11,7 @@ const Profile = ({ userDetail, authToken, setUserDetail }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
 
-  // String.prototype.toCapitalise = function () {
+  // String.prototype.toCapitalize = function () {
   //   if (this.length === 0) return "";
   //   return this.charAt(0).toUpperCase() + this.slice(1);
   // };
@@ -29,7 +29,7 @@ const Profile = ({ userDetail, authToken, setUserDetail }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsUpdating((prev) => !prev);
-    console.log(profileDetails);
+
     updateProfile();
   };
   const updateProfile = async () => {
@@ -40,7 +40,6 @@ const Profile = ({ userDetail, authToken, setUserDetail }) => {
       data: profileDetails,
     })
       .then((response) => {
-        console.log(response);
         setUserDetail(response?.data?.updatedUser);
         setIsUpdating((prev) => !prev);
         setIsEditing((prev) => !prev);
@@ -95,7 +94,7 @@ const Profile = ({ userDetail, authToken, setUserDetail }) => {
                 />
               ) : (
                 <p className="name w-2/3 text-left font-semibold" id="name">
-                  {profileDetails?.name?.toCapitalise() || "N/A"}
+                  {profileDetails?.name?.toCapitalize() || "N/A"}
                 </p>
               )}
             </div>

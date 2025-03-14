@@ -4,6 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Loader, ServerError } from "../UI";
 import { formatAmount, orderStatus } from "../../utility/constant";
 import { FaCheck } from "react-icons/fa";
+import { useTheme } from "../../Context/themeContext";
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
 const Orderpage = ({ authToken, userDetail }) => {
@@ -12,7 +13,7 @@ const Orderpage = ({ authToken, userDetail }) => {
   const [isOrderDataFetching, setIsOrderDataFetching] = useState(true);
   const [orderDetails, setOrderDetails] = useState(null);
   const [error, setError] = useState(null);
-
+  const { theme } = useTheme();
   const getOrderDetailsById = async () => {
     setIsOrderDataFetching(true);
     try {
@@ -62,8 +63,12 @@ const Orderpage = ({ authToken, userDetail }) => {
   }
   if (error?.status === 500) return <ServerError />;
   return (
-    <div className="min-h-screen w-screen flex justify-center font-roboto">
-      <div className="w-8/12 mt-4 border-2 h-min border-gray-300 rounded-lg font-roboto overflow-hidden">
+    <div
+      className={`min-h-screen w-screen flex justify-center font-roboto ${
+        theme === "dark" ? " bg-gray-900 text-white" : "bg-white text-gray-900"
+      } transition-all duration-300`}
+    >
+      <div className="w-8/12 my-10 border-2 h-min border-gray-300 rounded-lg font-roboto overflow-hidden">
         <div className="border-b-2 border-gray-300 p-2 flex gap-3">
           <span className=" font-medium text-xl text-gray-600">
             Order Details
@@ -79,7 +84,7 @@ const Orderpage = ({ authToken, userDetail }) => {
               </h2>
               <div className="detail-div p-3">
                 <p className="text-lg font-medium">
-                  {orderDetails?.customerDetail?.customerName?.toCapitalise()}
+                  {orderDetails?.customerDetail?.customerName?.toCapitalize()}
                 </p>
                 <p>
                   {orderDetails?.shippingAddress &&
@@ -87,7 +92,7 @@ const Orderpage = ({ authToken, userDetail }) => {
                       .filter(Boolean) // Remove falsy values (e.g., null, undefined, empty strings)
                       .map((item, index, arr) => (
                         <span key={index}>
-                          {item.toString().toCapitalise()}
+                          {item.toString().toCapitalize()}
                           {index < arr.length - 1 ? ", " : ""}
                         </span>
                       ))}
@@ -115,7 +120,7 @@ const Orderpage = ({ authToken, userDetail }) => {
               </h2>
               <div className="detail-div p-3">
                 <p className="text-lg font-medium">
-                  {orderDetails?.customerDetail?.customerName?.toCapitalise()}
+                  {orderDetails?.customerDetail?.customerName?.toCapitalize()}
                 </p>
                 <p>
                   {orderDetails?.shippingAddress &&
@@ -123,7 +128,7 @@ const Orderpage = ({ authToken, userDetail }) => {
                       .filter(Boolean) // Remove falsy values (e.g., null, undefined, empty strings)
                       .map((item, index, arr) => (
                         <span key={index}>
-                          {item.toString().toCapitalise()}
+                          {item.toString().toCapitalize()}
                           {index < arr.length - 1 ? ", " : ""}
                         </span>
                       ))}
@@ -155,18 +160,26 @@ const Orderpage = ({ authToken, userDetail }) => {
                   <div className="flex  text-lg font-roboto p-1 border-b-2 last:border-none w-full">
                     <span className="w-1/2">Amount: </span>
                     <span className="w-1/2">
-                      {formatAmount(orderDetails?.totalAmount)}
+                      {formatAmount(orderDetails?.totalMrpPrice)}
                     </span>
                   </div>
                   <div className="flex  text-lg font-roboto p-1  w-full border-b-2 last:border-none">
                     <span className="w-1/2">Discount:</span>
-                    <span className="w-1/2">{orderDetails?.discount || 0}</span>
+                    <span className="w-1/2">
+                      {formatAmount(orderDetails?.totalDiscount || 0)}
+                    </span>
+                  </div>
+                  <div className="flex  text-lg font-roboto p-1  w-full border-b-2 last:border-none">
+                    <span className="w-1/2">ShippingCharges:</span>
+                    <span className="w-1/2">
+                      {formatAmount(orderDetails?.shippingCharge || 0) || 0}
+                    </span>
                   </div>
                 </div>
                 <div className="absolute flex  text-lg  bottom-0 w-full p-2 border-t-2 border-gray-300">
                   <span className="w-1/2">Total</span>
                   <span className="w-1/2 font-medium">
-                    {formatAmount(orderDetails?.totalAmount)}
+                    {formatAmount(orderDetails?.grandTotal)}
                   </span>
                 </div>
               </div>
@@ -229,7 +242,7 @@ const Orderpage = ({ authToken, userDetail }) => {
                             : "text-blue-500"
                         }`}
                       >
-                        {status?.toCapitalise()}
+                        {status?.toCapitalize()}
                       </span>
                     </div>
                     <div
@@ -244,14 +257,18 @@ const Orderpage = ({ authToken, userDetail }) => {
           </div>
         </div>
         <div className="flex flex-col gap-3 mb-2">
-          <div className="grid grid-cols-5 bg-gray-300 p-2 gap-3">
+          <div
+            className={`grid grid-cols-5  p-3 gap-3 duration-300 transition-all ${
+              theme === "dark" ? "bg-gray-800" : "bg-gray-100"
+            }`}
+          >
             <span className="col-span-2">Product Name</span>
             <span className="col-span-1"> Price</span>
             <span className="col-span-1">Quantity</span>
             <span className="col-span-1">Amount</span>
           </div>
 
-          <div className="flex flex-col  gap-3">
+          <div className="flex flex-col p-3  gap-3">
             {orderDetails?.orderItems?.map((product, index) => {
               return (
                 <div

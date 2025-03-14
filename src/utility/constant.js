@@ -2,7 +2,7 @@ import { FaWhatsapp, FaLinkedin } from "react-icons/fa";
 import { MdEmail } from "react-icons/md";
 import axios from "axios";
 import Swal from "sweetalert2";
-export const API_URL = "https://fakestoreapi.com/";
+import "sweetalert2/dist/sweetalert2.min.css"; // Ensure you import styles
 const LOCATION_SERVER_URL = process.env.REACT_APP_LOCATION_FETCHING_SERVER_URL;
 const LOCATION_API = process.env.REACT_APP_LOCATION_FETCHING_API_KEY;
 export const SERVER_URL = process.env.REACT_APP_SERVER_URL;
@@ -122,6 +122,11 @@ export const initialSellerDetails = {
   socialMediaLinks: "",
 };
 
+export const guestUser = {
+  email: "guest@gmail.com",
+  password: "guestuser",
+};
+
 export const sellerRegistrationInputFields = [
   {
     id: 1,
@@ -199,14 +204,14 @@ export const sellerRegistrationInputFields = [
   },
   {
     id: 6,
-    name: "businessAddress", // camelCase
-    label: "Business Address",
+    name: "addressLine1", // camelCase
+    label: "Address Line 1",
     type: "text",
     placeholder: "Enter business address",
     required: true,
     tab: "businessInformation",
     validationRule: (value) =>
-      !value?.trim() ? "Business Address is required" : null,
+      !value?.trim() ? " Address Line 1 is required" : null,
   },
   {
     id: 7,
@@ -220,7 +225,7 @@ export const sellerRegistrationInputFields = [
   },
   {
     id: 8,
-    name: "State", // camelCase
+    name: "state", // camelCase
     label: "State",
     type: "text",
     placeholder: "Enter State Name",
@@ -230,7 +235,7 @@ export const sellerRegistrationInputFields = [
   },
   {
     id: 9,
-    name: "PinCode", // camelCase
+    name: "pinCode", // camelCase
     label: "Pin Code",
     type: "text",
     placeholder: "Enter Pin Code",
@@ -240,7 +245,7 @@ export const sellerRegistrationInputFields = [
   },
   {
     id: 10,
-    name: "coutry", // camelCase
+    name: "country", // camelCase
     label: "Country",
     type: "text",
     placeholder: "Enter Country Name",
@@ -485,7 +490,9 @@ export const productBrands = [
 
 export const formatAmount = (amount) => {
   const amountString = amount?.toString();
-  return "₹" + amountString?.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return amount
+    ? "₹" + amountString?.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+    : "";
 };
 
 // Generating Dynamic future Years
@@ -526,20 +533,6 @@ export const getAllCountry = async () => {
   }
 };
 
-<svg
-  fill="none"
-  xmlns="http://www.w3.org/2000/svg"
-  viewBox="0 0 24 24"
-  className="w-8 h-8 p-1 font-bold text-white rounded-full cursor-pointer hover:bg-white hover:text-blue-500 flex justify-center items-center"
->
-  <g>
-    <path
-      fill="currentColor"
-      d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
-    />
-  </g>
-</svg>;
-
 export const swalWithCustomConfiguration = Swal.mixin({
   customClass: {
     //   cancelButton: "",
@@ -559,3 +552,176 @@ export const Toast = Swal.mixin({
     toast.onmouseleave = Swal.resumeTimer;
   },
 });
+
+export const customToast = (theme) => {
+  return Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 2000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      // Apply Tailwind classes manually
+      toast.classList.add("rounded-lg", "shadow-lg", "p-3", "font-medium");
+      if (theme === "dark") {
+        toast.classList.add("bg-gray-800", "text-white");
+      } else {
+        toast.classList.add("bg-white", "text-gray-900");
+      }
+
+      // Apply styles to the progress bar
+      const progressBar = toast.querySelector(".swal2-progress-bar");
+      if (progressBar) {
+        progressBar.style.backgroundColor =
+          theme === "dark" ? "#2563EB" : "#3B82F6"; // Equivalent to Tailwind blue-600/blue-400
+      }
+
+      // Pause timer on hover
+      toast.onmouseenter = Swal.stopTimer;
+      toast.onmouseleave = Swal.resumeTimer;
+    },
+  });
+};
+
+export const paymentMethods = [
+  {
+    id: "debitcard",
+    value: "debitcard",
+    label: "Debit / Credit Card",
+    classes: "debitcreditcard min-w-[60px] mobile:col-span-1",
+  },
+  {
+    id: "upi",
+    value: "upi",
+    label: "UPI",
+    classes: "upi min-w-[70px] mobile:col-span-1",
+  },
+  {
+    id: "cod",
+    value: "cod",
+    label: "Cash On Delivery",
+    classes:
+      "cod min-w-[60px] mobile:col-span-2 small-device:col-span-1 tablet:col-span-2 laptop:col-span-2 desktop:col-span-1",
+  },
+];
+export const addressInputField = [
+  {
+    label: "Address Line 1",
+    type: "text",
+    placeholder: "Address Line 1",
+    value: "addressLine1",
+    name: "addressLine1",
+    id: "addressLine1",
+    required: true,
+  },
+  {
+    label: "Address Line 2",
+    type: "text",
+    placeholder: "Address Line 2",
+    value: "adressLine2",
+    name: "adressLine2",
+    id: "addressLine2",
+    required: false,
+  },
+  {
+    label: "Country",
+    type: "text",
+    placeholder: "Country",
+    value: "country",
+    name: "country",
+    id: "country",
+    required: true,
+  },
+  {
+    label: "State",
+    type: "text",
+    placeholder: "State",
+    value: "state",
+    name: "state",
+    id: "state",
+    required: true,
+  },
+  {
+    label: "City",
+    type: "text",
+    placeholder: "City",
+    value: "city",
+    name: "city",
+    id: "city",
+    required: true,
+  },
+  {
+    label: "PinCode",
+    type: "text",
+    placeholder: "PinCode",
+    value: "pinCode",
+    name: "pinCode",
+    id: "PinCode",
+    required: true,
+  },
+];
+
+// export const customToast = (theme) => {
+//   console.log(theme);
+//   return Swal.mixin({
+//     toast: true,
+//     position: "top-end",
+//     showConfirmButton: false,
+//     timer: 2000,
+//     timerProgressBar: true,
+//     customClass: {
+//       popup:
+//         theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-gray-900",
+//       title: theme === "dark" ? "text-white" : "text-gray-900",
+//       timerProgressBar: theme === "dark" ? "bg-blue-600" : "bg-blue-400",
+//     },
+//     didOpen: (toast) => {
+//       toast.onmouseenter = Swal.stopTimer;
+//       toast.onmouseleave = Swal.resumeTimer;
+//     },
+//   });
+// };
+
+export const swalCustomConfiguration = (theme) => {
+  return Swal.mixin({
+    customClass: {
+      popup:
+        theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-gray-900",
+      title: theme === "dark" ? "text-white" : "text-gray-900",
+      htmlContainer: theme === "dark" ? "text-gray-300" : "text-gray-700",
+      confirmButton:
+        theme === "dark"
+          ? "bg-blue-600 text-white hover:bg-blue-500"
+          : "bg-blue-500 text-white hover:bg-blue-400",
+      denyButton:
+        theme === "dark"
+          ? "bg-gray-600 text-white hover:bg-gray-500"
+          : "bg-gray-300 text-gray-900 hover:bg-gray-200",
+      cancelButton:
+        theme === "dark"
+          ? "bg-red-600 text-white hover:bg-red-500"
+          : "bg-red-500 text-white hover:bg-red-400",
+    },
+    buttonsStyling: false, // Disable default styling to apply Tailwind classes
+  });
+};
+
+// export const swalWithCustomConfiguration = (theme) => {
+//   return Swal.mixin({
+//     customClass: {
+//       popup: theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-gray-900",
+//       title: theme === "dark" ? "text-white" : "text-gray-900",
+//       htmlContainer: theme === "dark" ? "text-gray-300" : "text-gray-700",
+//       confirmButton: theme === "dark"
+//         ? "bg-blue-600 text-white hover:bg-blue-500"
+//         : "bg-blue-500 text-white hover:bg-blue-400",
+//       denyButton: theme === "dark"
+//         ? "bg-gray-600 text-white hover:bg-gray-500"
+//         : "bg-gray-300 text-gray-900 hover:bg-gray-200",
+//       cancelButton: theme === "dark"
+//         ? "bg-red-600 text-white hover:bg-red-500"
+//         : "bg-red-500 text-white hover:bg-red-400",
+//     },
+//     buttonsStyling: false, // Disable default styling to apply Tailwind classes
+//   });
+// };
