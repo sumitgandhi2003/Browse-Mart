@@ -2,10 +2,12 @@ const Product = require("../../model/productSchema");
 const Order = require("../../model/orderSchema");
 
 const getRelatedProduct = async (req, res) => {
+  const { category, id } = req?.query;
+
   try {
     const product = await Product.find({
-      category: req.body.category,
-      _id: { $ne: req.body.productId },
+      category: category,
+      _id: { $ne: id },
       isHide: false,
     }).limit(5);
     const modifiedProducts = product

@@ -1,7 +1,7 @@
 const Product = require("../../model/productSchema");
 
 const getProductById = async (req, res) => {
-  const id = req.body.productId;
+  const id = req?.params?.id;
 
   try {
     const product = await Product.findById(id);

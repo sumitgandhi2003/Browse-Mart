@@ -5,7 +5,6 @@ const changePassword = async (req, res) => {
   const { email, prev_password, new_password } = req.body;
   try {
     const userExist = await User.findOne({ email: email.trim() });
-    console.log(userExist);
     if (!userExist) {
       return res.status(404).json({ message: "user not found" });
     }

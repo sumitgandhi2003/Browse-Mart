@@ -50,7 +50,6 @@ const addProduct = async (req, res) => {
       sellingPrice,
     });
     await newProduct.save();
-    console.log("data Saved");
     return res.status(201).json({
       success: true,
       message: "data Saved and Uploaded!",

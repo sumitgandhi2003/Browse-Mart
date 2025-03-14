@@ -16,6 +16,7 @@ const getCartItems = async (req, res, next) => {
         // stock: product?.stock,
         sellerId: product?.userId || product?.userID || product?.sellerId,
         sellingPrice: product?.sellingPrice || null,
+        mrpPrice: product?.mrpPrice || null,
       };
       // console.log(filteredProduct);
       cartProduct?.push({

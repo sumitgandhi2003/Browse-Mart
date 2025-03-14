@@ -1,5 +1,7 @@
 const Order = require("../../model/orderSchema");
 const Product = require("../../model/productSchema");
+const { generateOrderId } = require("../../utility/constraint");
+const sendOrderConfirmationEmail = require("../../services/sendOrderConfirmationEmail");
 const submitOrder = async (req, res, next) => {
   try {
     const activeUser = req.user;
@@ -7,10 +9,8 @@ const submitOrder = async (req, res, next) => {
     const shippingAddress = req?.body?.shippingAddress;
     const { methodName, methodDetail } = req?.body?.paymentData;
     const orderIds = [];
-    // const [date, time] = req?.body?.timeStamp?.toLocaleString().split(",");
+
     const timeStamp = req?.body?.timeStamp;
-    // const filteredProduct = [];
-    //Saving Default Shipping Address
     const saveDefaultShippingAddress = (shippingAddress, activeUser) => {
       try {
         if (!activeUser) return;
@@ -32,78 +32,19 @@ const submitOrder = async (req, res, next) => {
     // decrease product quantity
     const decreaseProductQuantity = async (productId, quantity) => {
       try {
-        // First, fetch the product to check the stock
         const product = await Product.findById(productId);
-        // console.log("Line No 38", product);
-        if (!product) throw new Error("Product not found");
 
-        // Check if the stock is greater than or equal to the quantity to be ordered
-        // if (product?.stock >= quantity) {
-        //   If sufficient stock, update the stock by decrementing it
+        if (!product) throw new Error("Product not found");
 
         const quantityToOrder = Math?.min(product?.stock, quantity);
         product.stock -= quantityToOrder;
         await product.save();
         return quantityToOrder;
-        // } else {
-        //   throw new Error("Insufficient stock");
-        // }
       } catch (error) {
         console.error("Line No 58", error.message);
       }
     };
-    // Generating Custom OrderID
-    const generateOrderId = (timeStamp) => {
-      const prefix = "ORD";
-      // const date = originalDate?.split("/")?.reverse()?.join("");
-      const [date, time] = timeStamp
-        ?.split(",")
-        ?.map((part) => part?.split(/[/:" "]/))
-        ?.map((part) =>
-          part
-            ?.filter(
-              (subPart) =>
-                subPart !== "" && subPart !== "AM" && subPart !== "PM"
-            )
-            ?.map((subPart) => subPart?.padStart(2, "0"))
-            ?.reverse()
-            ?.join("")
-        );
-      // const date = timeStamp
-      //   ?.toLocaleString()
-      //   .split(",")[0]
-      //   ?.split("/")
-      //   ?.map((part) => part?.padStart(2, "0"))
-      //   ?.reverse()
-      //   ?.join("");
-      // // const time = originalTime?.split(" ")[0]?.replaceAll(":", "");
-      // const time = timeStamp
-      //   ?.toLocaleString()
-      //   .split(",")[1]
-      //   ?.trim()
-      //   ?.split(" ")[0]
-      //   ?.trim()
-      //   ?.split(":")
-      //   ?.map((part) => part.padStart(2, "0"))
-      //   ?.join("");
-      // const orderId = prefix + date + time + Math.floor(Math.random() * 10000);
-      const orderId = `${prefix}-${date}-${time}-${Math.floor(
-        10000000 + Math.random() * 90000000
-      )}`;
-      return orderId;
-    };
 
-    // productCard?.map((item, index) => {
-    //   filteredProduct?.push({
-    //     productId: item?.item?.id || item?.item?._id,
-    //     productName: item?.item?.name,
-    //     price: item?.item?.price,
-    //     quantity: decreaseProductQuantity(
-    //       item?.item?.id || item?.item?._id,
-    //       item?.quantity
-    //     ),
-    //   });
-    // });
     const filteredProduct = await Promise.all(
       productCard?.map(async (item) => {
         const orderedQuantity = await decreaseProductQuantity(
@@ -116,15 +57,13 @@ const submitOrder = async (req, res, next) => {
             productId: item?.id || item?._id,
             productName: item?.name,
             price: item?.price || item?.sellingPrice,
+            mrpPrice: item?.mrpPrice || null,
+            sellingPrice: item?.sellingPrice || null,
             sellerId: item?.userId || item?.userID || item?.sellerId,
             quantity: orderedQuantity, // resolved quantity from decreaseProductQuantity
           };
       })
     );
-    // filteredProduct.map((product) => {
-    //   decreaseProductQuantity(product.productId, product.quantity);
-    // });
-    // console.log(filteredProduct);
     const isDefaultShippingAddressSaved = saveDefaultShippingAddress(
       shippingAddress,
       activeUser
@@ -143,6 +82,7 @@ const submitOrder = async (req, res, next) => {
       acc[sellerId].push(item);
       return acc;
     }, {});
+
     for (const sellerId in groupProduct) {
       const filteredProduct = groupProduct[sellerId];
       // console.log("Active user", activeUser);
@@ -150,6 +90,19 @@ const submitOrder = async (req, res, next) => {
         console.log("Line No 158 No products available for order");
         continue;
       }
+      const totalMrpPrice = filteredProduct.reduce((total, product) => {
+        return (
+          total + (product?.mrpPrice || product?.price) * product?.quantity
+        );
+      }, 0);
+      const totalSellingPrice = filteredProduct.reduce((total, product) => {
+        return (
+          total + (product?.sellingPrice || product?.price) * product?.quantity
+        );
+      }, 0);
+      const totalDiscount = totalMrpPrice - totalSellingPrice;
+      const shippingCharges =
+        totalSellingPrice < 1000 ? totalSellingPrice * 0.1 : 0;
 
       const order = new Order({
         orderId: generateOrderId(timeStamp),
@@ -174,6 +127,11 @@ const submitOrder = async (req, res, next) => {
         }, 0),
         orderDate: timeStamp?.toLocaleString(),
         sellerId: sellerId,
+        totalMrpPrice: totalMrpPrice,
+        totalSellingPrice: totalMrpPrice,
+        totalDiscount: totalDiscount,
+        grandTotal: totalSellingPrice + shippingCharges,
+        shippingCharge: shippingCharges,
       });
       await order.save();
       const { _id, orderId } = order;
@@ -181,6 +139,8 @@ const submitOrder = async (req, res, next) => {
       activeUser.order.push({
         orderId: _id,
       });
+
+      await sendOrderConfirmationEmail(activeUser?.email, order);
     }
 
     // console.log("Line No 193", orderIds);
@@ -188,6 +148,7 @@ const submitOrder = async (req, res, next) => {
       return res.status(400).json({ message: "Failed to submit order" });
     }
     await activeUser.save();
+
     res?.status(201)?.json({
       message: "Order submitted successfully",
       orderIds,

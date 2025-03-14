@@ -8,8 +8,8 @@ const submitReview = require("../controllers/reviewController/submitReview");
 const userAuthentication = require("../middleware/userAuthentication");
 router.route("/add-product").post(userAuthentication, addProduct);
 router.route("/get-all-products").get(getAllProduct);
-router.route("/get-product-by-id").post(getProductById);
-router.route("/get-related-product").post(getRelatedProduct);
+router.route("/:id").get(getProductById);
+router.route("").get(getRelatedProduct);
 
 router.route("/submit-review").post(userAuthentication, submitReview);
 

@@ -9,7 +9,7 @@ const sellerRegistration = async (req, res) => {
       gstNumber,
       phoneNumber,
       emailAddress,
-      businessAddress,
+      addressLine1,
       city,
       state,
       pinCode,
@@ -45,7 +45,7 @@ const sellerRegistration = async (req, res) => {
       gstNumber,
       phoneNumber,
       emailAddress,
-      businessAddress,
+      addressLine1,
       city,
       state,
       pinCode,
@@ -61,7 +61,6 @@ const sellerRegistration = async (req, res) => {
       social_media_links,
     });
     const savedSeller = await newSeller.save();
-    console.log(savedSeller);
     const updatedUser = await User.findByIdAndUpdate(
       activeUser?._id || activeUser?.id,
       {
