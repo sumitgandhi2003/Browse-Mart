@@ -66,7 +66,11 @@ const getAllProduct = async (req, res) => {
       });
     return res
       ?.status(200)
-      .json({ message: "data fetched", products: modifiedProducts });
+      .json({
+        message: "data fetched",
+        sucess: true,
+        products: modifiedProducts,
+      });
   } catch (error) {
     res?.status(500).json({ message: "Internal Server Error" });
     console.error(error);

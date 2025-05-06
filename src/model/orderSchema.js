@@ -42,7 +42,7 @@ const orderSchema = new mongoose.Schema(
       ],
       default: "order placed",
     },
-    totalAmount: { type: Number, required: true },
+    // totalAmount: { type: Number, required: true },
     totalMrpPrice: { type: Number, required: true },
     totalSellingPrice: { type: Number, required: true },
     totalDiscount: { type: Number, required: true },

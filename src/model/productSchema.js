@@ -30,6 +30,7 @@ const productSchema = new mongoose.Schema(
       ref: "User",
     },
     sellerId: { type: mongoose.Schema.Types.ObjectId, ref: "SellerUser" },
+    visibilityState: { type: Boolean, default: true },
     // productId: {
     //   type: mongoose.Schema.Types.ObjectId,
     //   required: true,

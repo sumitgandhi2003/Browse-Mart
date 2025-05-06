@@ -6,6 +6,10 @@ const sendOrderConfirmationEmail = async (email, orderDetail) => {
       <div style="max-width: 500px; margin: auto; background: #ffffff; padding: 20px; border-radius: 8px; box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);">
         <h2 style="text-align: center;">🛍️ Thank you for your order!</h2>
         <p><strong>Order ID:</strong> ${orderDetail?.orderId}</p>
+        <p><strong>Order Date:</strong> ${orderDetail?.createdAt.toLocaleDateString()}</p>
+        <p><strong>Shipping Charges:</strong> ${
+          orderDetail?.shippingCharge || 0
+        }</p>
         <p><strong>Total Amount:</strong> ₹${orderDetail?.grandTotal}</p>
         
         <h3>🛒 Order Details:</h3>
@@ -35,7 +39,7 @@ const sendOrderConfirmationEmail = async (email, orderDetail) => {
         <p><strong>Estimated Delivery:</strong> 4-7 business days</p>
         
         <p style="text-align: center; margin-top: 20px;">
-          <a href="https://browsemart.vercel.app/orders/${orderDetail.orderId}" 
+          <a href="https://browsemart.vercel.app/order/${orderDetail.orderId}" 
              style="display: inline-block; background: #007bff; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
             Track Your Order
           </a>

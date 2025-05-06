@@ -11,10 +11,13 @@ const CORS_ORIGIN_URL = process.env.CORS_ORIGIN_URL || "*";
 app.use(
   cors({
     origin: CORS_ORIGIN_URL,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    credentials: true,
   })
 );
+app.options("*", cors());
 // app.use(express.json());
-// app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use("/api/product", productRoutes);
 app.use("/api/user", userRoutes);

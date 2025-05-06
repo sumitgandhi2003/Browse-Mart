@@ -119,16 +119,16 @@ const submitOrder = async (req, res, next) => {
         paymentMethod: methodName,
         paymentStatus: methodName?.toString() !== "cod" ? "success" : "pending",
         paymentMethodDetail: { ...methodDetail },
-        totalAmount: filteredProduct?.reduce((totalAmount, product) => {
-          return product?.quantity > 0
-            ? totalAmount +
-                (product?.price || product?.sellingPrice) * product?.quantity
-            : totalAmount;
-        }, 0),
+        // totalAmount: filteredProduct?.reduce((totalAmount, product) => {
+        //   return product?.quantity > 0
+        //     ? totalAmount +
+        //         (product?.price || product?.sellingPrice) * product?.quantity
+        //     : totalAmount;
+        // }, 0),
         orderDate: timeStamp?.toLocaleString(),
         sellerId: sellerId,
         totalMrpPrice: totalMrpPrice,
-        totalSellingPrice: totalMrpPrice,
+        totalSellingPrice: totalSellingPrice,
         totalDiscount: totalDiscount,
         grandTotal: totalSellingPrice + shippingCharges,
         shippingCharge: shippingCharges,
@@ -139,7 +139,7 @@ const submitOrder = async (req, res, next) => {
       activeUser.order.push({
         orderId: _id,
       });
-
+      console.log("Line No 193", order);
       await sendOrderConfirmationEmail(activeUser?.email, order);
     }
 

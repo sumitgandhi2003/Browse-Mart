@@ -14,7 +14,7 @@ const connectDB = async (count = 0) => {
     .then(() => console.log("Database connected..."))
     .catch((error) => {
       console.log(error.message);
-      connectDB(count + 1);
+      // connectDB(count + 1);
     });
 };
 

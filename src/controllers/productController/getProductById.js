@@ -1,12 +1,17 @@
 const Product = require("../../model/productSchema");
 
 const getProductById = async (req, res) => {
-  const id = req?.params?.id;
-
   try {
+    const id = req?.params?.id;
+    if (!id) return res.status(400).json({ message: "Product ID is required" });
     const product = await Product.findById(id);
+    if (product?.isHide)
+      return res.status(404).json({
+        sucess: false,
+        message: "Product not found",
+      });
     if (!product) return res.status(404).json({ message: "Product not found" });
-    res.status(200).json({ message: "data returnned", product });
+    res.status(200).json({ success: true, message: "data returnned", product });
   } catch (error) {
     console.error(error);
     res.status(500).send("Server Error");

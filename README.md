@@ -11,7 +11,7 @@ BrowseMart is a full-stack e-commerce web application that allows users to brows
 - Seller registration and product uploads
 - Payment method selection and order management
 - Wishlist and profile management
-- Responsive design with Tailwind CSS
+- Responsive design + Tailwind CSS
 
 ## Tech Stack
 
