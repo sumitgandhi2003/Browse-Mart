@@ -1,9 +1,9 @@
 import React from "react";
 
-const Hamburger = ({ isShow, SetIsShow }) => {
+const Hamburger = ({ isShow, SetIsShow, className }) => {
   return (
     <div
-      className="w-10 h-8 grid gap-0 tablet:hidden relative"
+      className={` ${className} grid gap-0 tablet:hidden relative`}
       onClick={() => SetIsShow(!isShow)}
     >
       <div

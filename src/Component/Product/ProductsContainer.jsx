@@ -5,12 +5,14 @@ import { Link, useLocation } from "react-router-dom";
 import Productcard from "./ProductCard";
 import { Loader, ServerError } from "../UI";
 import { useTheme } from "../../Context/themeContext";
+import { useAuth } from "../../Context/authContext";
 const noResultImage = require("../../assets/images/noResult.png");
 // import { SERVER_URL } from "../../config";
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
-const ProductsContainer = ({ userDetail, authToken }) => {
+const ProductsContainer = ({ userDetail }) => {
   const location = useLocation();
   const { theme } = useTheme();
+  const { authToken } = useAuth();
   const [allProduct, SetAllProduct] = useState();
   const [allCategories, SetAllCategories] = useState();
   const [filteredProduct, SetFilteredProduct] = useState();

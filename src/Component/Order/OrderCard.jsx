@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button } from "../UI";
 import { Link } from "react-router-dom";
-import { formatAmount } from "../../utility/constant";
+import { formatNumber } from "../../utility/constant";
 import { FaRupeeSign } from "react-icons/fa";
 import { months } from "../../utility/constant";
 const OrderCard = ({ order }) => {
@@ -33,7 +33,7 @@ const OrderCard = ({ order }) => {
           <div className=" flex flex-col">
             <span className="font-medium">Total Amount</span>
             <span className="flex items-center ">
-              {formatAmount(order?.totalAmount)}
+              {formatNumber(order?.totalAmount)}
             </span>
           </div>
         </div>
@@ -85,7 +85,7 @@ const OrderCard = ({ order }) => {
                     <span className="flex items-center gap-1 mobile:hidden ">
                       <FaRupeeSign className="font-light" />
                       <p className="font-semibold">
-                        {formatAmount(item?.price)}
+                        {formatNumber(item?.price)}
                       </p>
                     </span>
                   </div>

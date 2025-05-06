@@ -8,16 +8,16 @@ import ProductUpload from "../Seller/UploadProduct/ProductUpload";
 import { useNavigate } from "react-router-dom";
 import { WishListContainer, BecomeASeller, Profile } from "./index";
 import { useTheme } from "../../Context/themeContext";
+import { useAuth } from "../../Context/authContext";
 const ProfileSlider = ({
   showProfileSlider,
   setShowProfileSlider,
   userDetail,
   setUserDetail,
-  authToken,
-  setAuthToken,
 }) => {
   const [activeTab, setActiveTab] = useState("profile");
   const { theme } = useTheme();
+  const { authToken, setAuthToken } = useAuth();
   const navigate = useNavigate();
   const [isProfileShow, setISProfileShow] = useState(true);
   const themeClass =

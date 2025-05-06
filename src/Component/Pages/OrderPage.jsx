@@ -2,18 +2,20 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Loader, ServerError } from "../UI";
-import { formatAmount, orderStatus } from "../../utility/constant";
+import { formatNumber, orderStatus } from "../../utility/constant";
 import { FaCheck } from "react-icons/fa";
 import { useTheme } from "../../Context/themeContext";
+import { useAuth } from "../../Context/authContext";
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
-const Orderpage = ({ authToken, userDetail }) => {
+const Orderpage = ({ userDetail }) => {
   const navigate = useNavigate();
   const { orderId } = useParams();
   const [isOrderDataFetching, setIsOrderDataFetching] = useState(true);
   const [orderDetails, setOrderDetails] = useState(null);
   const [error, setError] = useState(null);
   const { theme } = useTheme();
+  const { authToken } = useAuth();
   const getOrderDetailsById = async () => {
     setIsOrderDataFetching(true);
     try {
@@ -160,26 +162,26 @@ const Orderpage = ({ authToken, userDetail }) => {
                   <div className="flex  text-lg font-roboto p-1 border-b-2 last:border-none w-full">
                     <span className="w-1/2">Amount: </span>
                     <span className="w-1/2">
-                      {formatAmount(orderDetails?.totalMrpPrice)}
+                      {formatNumber(orderDetails?.totalMrpPrice)}
                     </span>
                   </div>
                   <div className="flex  text-lg font-roboto p-1  w-full border-b-2 last:border-none">
                     <span className="w-1/2">Discount:</span>
                     <span className="w-1/2">
-                      {formatAmount(orderDetails?.totalDiscount || 0)}
+                      {formatNumber(orderDetails?.totalDiscount || 0)}
                     </span>
                   </div>
                   <div className="flex  text-lg font-roboto p-1  w-full border-b-2 last:border-none">
                     <span className="w-1/2">ShippingCharges:</span>
                     <span className="w-1/2">
-                      {formatAmount(orderDetails?.shippingCharge || 0) || 0}
+                      {formatNumber(orderDetails?.shippingCharge || 0) || 0}
                     </span>
                   </div>
                 </div>
                 <div className="absolute flex  text-lg  bottom-0 w-full p-2 border-t-2 border-gray-300">
                   <span className="w-1/2">Total</span>
                   <span className="w-1/2 font-medium">
-                    {formatAmount(orderDetails?.grandTotal)}
+                    {formatNumber(orderDetails?.grandTotal)}
                   </span>
                 </div>
               </div>
@@ -284,11 +286,11 @@ const Orderpage = ({ authToken, userDetail }) => {
                     <p className="col-span-3">{product?.productName}</p>
                   </div>
                   <span className="col-span-1">
-                    {formatAmount(product?.price)}
+                    {formatNumber(product?.price)}
                   </span>
                   <span className="col-span-1">{product?.quantity}</span>
                   <span className="col-span-1">
-                    {formatAmount(product?.price * product?.quantity)}
+                    {formatNumber(product?.price * product?.quantity)}
                   </span>
                 </div>
               );

@@ -29,27 +29,12 @@ import ProductsContainer from "../Product/ProductsContainer";
 import { OrdersContainer } from "../Order";
 import SellerDashBoard from "../Seller/SellerDashBoard";
 import { useTheme } from "../../Context/themeContext";
-import { Button } from "../UI";
-import { FaMoon, FaSun } from "react-icons/fa";
+import Profile1 from "../Profile/profile1";
+import { Loader } from "../UI";
+import { useAuth } from "../../Context/authContext";
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
-const AppLayout = ({ authToken, setAuthToken, userDetail, setUserDetail }) => {
-  const { theme, toggleTheme } = useTheme();
-  // String.prototype.toCapitalize = function () {
-  //   if (this.length === 0) return;
-  //   const name = this.split(" ");
-  //   for (let i = 0; i < name.length; i++) {
-  //     name[i] = name[i].charAt(0).toUpperCase() + name[i].slice(1);
-  //   }
-  //   return name.join(" ");
-  // };
-  // String.prototype.toCapitalize = function () {
-  //   if (this.length === 0) return "";
-  //   const words = this.split(" ");
-  //   for (let i = 0; i < words.length; i++) {
-  //     words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1);
-  //   }
-  //   return words.join(" ");
-  // };
+const AppLayout = ({ setAuthToken, userDetail, setUserDetail }) => {
+  const { toggleTheme } = useTheme();
 
   useEffect(() => {
     const handleKeyPress = (e) => {
@@ -67,22 +52,17 @@ const AppLayout = ({ authToken, setAuthToken, userDetail, setUserDetail }) => {
   }, [toggleTheme]);
   return (
     <div className="App flex flex-col min-h-screen">
-      <Navbar
-        authToken={authToken}
-        setAuthToken={setAuthToken}
-        userDetail={userDetail}
-        setUserDetail={setUserDetail}
-      />
+      <Navbar userDetail={userDetail} setUserDetail={setUserDetail} />
       <Outlet />
-      <Footer />
+      <Footer userDetail={userDetail} />
     </div>
   );
 };
 
 const App = () => {
-  const [authToken, setAuthToken] = useState(localStorage.getItem("AuthToken"));
   const [userDetail, setUserDetail] = useState();
   const { setCartCount } = useCart(null);
+  const { authToken, setAuthToken } = useAuth();
   const getUserDetail = async () => {
     try {
       const response = await axios({
@@ -94,7 +74,7 @@ const App = () => {
         },
       });
 
-      const { status, data } = response;
+      const { data } = response;
       setUserDetail(data?.userDetail);
       if (data?.userDetail?.cartCount) {
         setCartCount(data?.userDetail?.cartCount);
@@ -107,6 +87,28 @@ const App = () => {
       }
     }
   };
+
+  const ProtectedRoute = ({ user, requiredRole, redirectPath, children }) => {
+    if (user === undefined) {
+      // Show loading UI or return null while fetching user data
+      console.log("loading...");
+      return <Loader />;
+    }
+    if (!user) {
+      // Redirect to login if not authenticated
+      console.log(user);
+      return <Navigate to="/login" replace />;
+    }
+
+    if (requiredRole && user.userType !== requiredRole) {
+      // Redirect if user does not have the required role
+      return <Navigate to={redirectPath} replace />;
+    }
+
+    return children;
+  };
+
+  // eslint-disable-next-line no-extend-native
   String.prototype.toCapitalize = function () {
     if (this.length === 0) return "";
     const words = this.split(" ");
@@ -118,13 +120,17 @@ const App = () => {
   useEffect(() => {
     if (authToken) {
       getUserDetail();
+    } else {
+      setUserDetail(null);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authToken]);
+  console.log(userDetail);
 
   const router = createBrowserRouter([
     {
       path: "/login",
-      element: <Login authToken={authToken} setAuthToken={setAuthToken} />,
+      element: <Login />,
     },
     {
       path: "/login-1",
@@ -132,54 +138,41 @@ const App = () => {
     },
     {
       path: "/register",
-      element: (
-        <RegisterPage setAuthToken={setAuthToken} authToken={authToken} />
-      ),
+      element: <RegisterPage />,
     },
     {
       path: "/forget-password",
-      element: (
-        <ForgetPasswordPage authToken={authToken} userDetail={userDetail} />
-      ),
+      element: <ForgetPasswordPage userDetail={userDetail} />,
     },
     {
       path: "/",
       element: (
-        <AppLayout
-          authToken={authToken}
-          setAuthToken={setAuthToken}
-          userDetail={userDetail}
-          setUserDetail={setUserDetail}
-        />
+        <AppLayout userDetail={userDetail} setUserDetail={setUserDetail} />
       ),
       children: [
         {
           path: "/",
-          element: <HomePage authToken={authToken} userDetail={userDetail} />,
+          element: <HomePage userDetail={userDetail} />,
         },
         {
           path: "/products",
-          element: (
-            <ProductsContainer authToken={authToken} userDetail={userDetail} />
-          ),
+          element: <ProductsContainer userDetail={userDetail} />,
         },
         {
           path: "/product/:productId",
-          element: (
-            <ProductPage userDetail={userDetail} authToken={authToken} />
-          ),
+          element: <ProductPage userDetail={userDetail} />,
         },
         {
           path: "/cart",
-          element: <Cart userDetail={userDetail} authToken={authToken} />,
+          element: <Cart userDetail={userDetail} />,
         },
         {
           path: "/product/buy/:productId",
-          element: <BuyNow authToken={authToken} userDetail={userDetail} />,
+          element: <BuyNow userDetail={userDetail} />,
         },
         {
           path: "/checkout",
-          element: <BuyNow authToken={authToken} userDetail={userDetail} />,
+          element: <BuyNow userDetail={userDetail} />,
         },
         {
           path: "/order-success",
@@ -187,28 +180,39 @@ const App = () => {
         },
         {
           path: "/orders",
-          element: (
-            <OrdersContainer userDetail={userDetail} authToken={authToken} />
-          ),
+          element: <OrdersContainer userDetail={userDetail} />,
         },
         {
           path: "/order/:orderId",
-          element: <OrderPage authToken={authToken} userDetail={userDetail} />,
+          element: <OrderPage userDetail={userDetail} />,
         },
         {
           path: "/seller-registration",
           element: (
-            <SellerRegistrationPage
-              authToken={authToken}
-              userDetail={userDetail}
-            />
+            <ProtectedRoute
+              user={userDetail}
+              requiredRole={"consumer"}
+              redirectPath={"/seller-dashboard"}
+            >
+              <SellerRegistrationPage userDetail={userDetail} />
+            </ProtectedRoute>
           ),
         },
         {
           path: "/seller-dashboard",
           element: (
-            <SellerDashBoard userDetail={userDetail} authToken={authToken} />
+            <ProtectedRoute
+              user={userDetail}
+              requiredRole={"seller"}
+              redirectPath={"/seller-registration"}
+            >
+              <SellerDashBoard userDetail={userDetail} />
+            </ProtectedRoute>
           ),
+        },
+        {
+          path: "/profile",
+          element: <Profile1 />,
         },
         {
           path: "*",

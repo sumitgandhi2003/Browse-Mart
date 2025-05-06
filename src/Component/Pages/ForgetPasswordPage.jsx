@@ -8,22 +8,23 @@ import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import { BiLoaderAlt } from "react-icons/bi";
 import { FaMoon, FaSun } from "react-icons/fa6";
+import { useAuth } from "../../Context/authContext";
 // import { BiLoaderAlt } from "react-icons/bi";
-const ForgetPasswordPage = ({ authToken, userDetail }) => {
+const ForgetPasswordPage = ({ userDetail }) => {
   const SERVER_URL = process.env.REACT_APP_SERVER_URL;
   const navigate = useNavigate();
-  //   const [isDarkTheme, setIsDarkTheme] = useState(false);
+
   const [step, setStep] = useState(1); // 1: Email, 2: OTP, 3: New Password
   const [email, setEmail] = useState("");
-  const [otp, setOtp] = useState("");
   const [newPassword, setNewPassword] = useState("");
-  const { theme, toggleTheme } = useTheme();
   const [message, setMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const [isPasswordShow, setIsPasswordShow] = useState(false);
+  const { theme, toggleTheme } = useTheme();
+  const { authToken } = useAuth();
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  // const [countDown, setCountDown]= useState(())
+
   const passwordToggle = () => {
     setIsPasswordShow((prev) => !prev);
   };
@@ -208,7 +209,7 @@ const ForgetPasswordPage = ({ authToken, userDetail }) => {
                       ""
                     )
                   }
-                  className="w-full px-4 py-2 bg-green-600 text-white rounded-md shadow-md hover:bg-green-700"
+                  className="w-full px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-md shadow-md hover:bg-green-700"
                   disabled={isProcessing}
                 />
               </div>
@@ -237,7 +238,7 @@ const ForgetPasswordPage = ({ authToken, userDetail }) => {
                       placeholder="New Password"
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
-                      className="w-full p-3  border text-black rounded-md focus:ring-2  focus:outline-none"
+                      className="w-full p-3  border text-black rounded-md "
                     />
 
                     <div
@@ -270,7 +271,7 @@ const ForgetPasswordPage = ({ authToken, userDetail }) => {
                 <Button
                   btntext={isProcessing ? "Resetting..." : "Reset Password"}
                   onClick={handleResetPassword}
-                  className="w-full px-4 py-2 bg-green-600 text-white rounded-md shadow-md hover:bg-green-700"
+                  className="w-full px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-md shadow-md"
                   icon={
                     isProcessing ? (
                       <BiLoaderAlt className="animate-spin h-6 w-6" />

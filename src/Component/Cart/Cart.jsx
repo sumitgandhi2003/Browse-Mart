@@ -1,20 +1,23 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Loader, ServerError, Button } from "../UI";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CartCard from "./CartCard";
 import EmptyCart from "./EmptyCart";
-import { formatAmount } from "../../utility/constant";
+import { formatNumber } from "../../utility/constant";
 import { useTheme } from "../../Context/themeContext";
+import { useAuth } from "../../Context/authContext";
 
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
-const Cart = ({ userDetail, authToken }) => {
-  const { theme, setTheme } = useTheme();
+const Cart = ({ userDetail }) => {
+  const { theme } = useTheme();
+  const { authToken } = useAuth();
   const navigate = useNavigate();
   const [cartItem, setCartItem] = useState([]);
   const [isDataFetching, setIsDataFetching] = useState(false);
   const [error, setError] = useState(null);
   let totalAmount = 0;
+
   const getCartItem = async () => {
     try {
       setIsDataFetching(true);
@@ -52,7 +55,7 @@ const Cart = ({ userDetail, authToken }) => {
   // Calculate total amount
   if (cartItem) {
     cartItem.forEach((item) => {
-      totalAmount += item?.quantity * (item?.price || item?.sellingPrice || 0);
+      totalAmount += (item?.price || item?.mrpPrice) * item?.quantity;
     });
   }
   //display Loading UI while fetaching CartItem
@@ -110,7 +113,11 @@ const Cart = ({ userDetail, authToken }) => {
       </div>
 
       {/* check Out Section */}
-      <div className="w-4/12 h-min mobile:flex mobile:w-full tablet:w-4/12 tablet:flex p-6 flex flex-col gap-5 rounded-md justify-between">
+      <div
+        className={`w-4/12 h-min mobile:flex mobile:w-full tablet:w-4/12 tablet:flex p-6 flex flex-col gap-5 rounded-md justify-between  transition-all duration-300 ${
+          theme === "dark" ? "bg-gray-800" : "bg-gray-100"
+        }`}
+      >
         <div className="flex justify-between items-center p-2 border-b-2">
           <span className="font-semibold font-roboto text-3xl">
             Order Summary
@@ -118,16 +125,45 @@ const Cart = ({ userDetail, authToken }) => {
         </div>
         <div className="w-full flex flex-col gap-10">
           <div className="flex flex-col gap-3">
-            <div>Discount</div>
-            <div className="w-full flex justify-between items-center">
+            {/* <div className="w-full flex justify-between items-center">
               <span className="w-1/2">Total Items:</span>{" "}
               <span className="w-1/2"> {cartItem?.length}</span>
-            </div>
+            </div> */}
             <div className="w-full flex justify-between items-center">
               <span className="w-1/2">Total Amount:</span>{" "}
               <span className="w-1/2 text-lg font-bold">
                 {" "}
-                {formatAmount(totalAmount)}
+                {formatNumber(totalAmount)}
+              </span>
+            </div>
+
+            <div className="w-full flex justify-between items-center">
+              <span className="w-1/2">Discount</span>
+              <span className="w-1/2 text-lg font-bold">
+                {formatNumber(
+                  cartItem?.reduce((total, product) => {
+                    return (
+                      total +
+                      (product?.mrpPrice - product?.sellingPrice) *
+                        product?.quantity
+                    );
+                  }, 0)
+                ) || 0}
+              </span>
+            </div>
+
+            <div className="w-full flex justify-between items-center">
+              <span className="w-1/2">Total</span>
+              <span className="w-1/2 text-lg font-bold">
+                {formatNumber(
+                  cartItem?.reduce((total, product) => {
+                    return (
+                      total +
+                      (product?.sellingPrice || product?.price) *
+                        product?.quantity
+                    );
+                  }, 0)
+                ) || 0}
               </span>
             </div>
           </div>

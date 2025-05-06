@@ -6,3 +6,6 @@ export { default as Loader } from "./Loader/Loader";
 export { default as ServerError } from "./ServerError";
 export { default as OTPInput } from "./OTPInput";
 export { default as SearchBar } from "./SearchBar";
+export { default as SideBar } from "./SideBar";
+export { default as Select } from "./Select";
+export { default as SectionTitle } from "./SectionTitle";

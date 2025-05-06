@@ -6,14 +6,15 @@ import ProductCard from "../Product/ProductCard";
 import { Button, Loader, ServerError } from "../UI";
 import { ReviewForm, ReviewCard } from "../Review";
 import ProductImage from "../Product/ProductImage";
-import { formatAmount, socialMedia } from "../../utility/constant";
+import { formatNumber, socialMedia } from "../../utility/constant";
 import AddToCartButton from "../../utility/AddToCartButton";
 import { useTheme } from "../../Context/themeContext";
+import { useAuth } from "../../Context/authContext";
 // import { SERVER_URL } from "../../config";
 const pageNotFind = require("../../assets/images/pageNotFind.jpg");
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
-const ProductPage = ({ isAuthenticated, userDetail, authToken }) => {
+const ProductPage = ({ userDetail }) => {
   const currentURL = window.location.href;
   const { productId } = useParams();
   const [productData, setProductData] = useState({});
@@ -28,6 +29,7 @@ const ProductPage = ({ isAuthenticated, userDetail, authToken }) => {
   const message = `🚀 Exciting News! 🌟\n\nI just discovered the **${productData?.name}** and I can't stop raving about it! 🎉\n\n✨ **Why You’ll Love It**:\n- Top-notch quality that speaks for itself!\n- Perfect for tech enthusiasts.\n- Limited-time offer: Don't miss out! 🕒\n\n👉 Check it out here: ${currentURL}\n\n💬 Let me know what you think, and tag your friends who need this in their lives!`;
   const navigate = useNavigate();
   const { theme } = useTheme();
+  const { authToken } = useAuth();
   const handleClick = () => {
     setIsReviewClicked((isReview) => !isReview);
   };
@@ -116,22 +118,23 @@ const ProductPage = ({ isAuthenticated, userDetail, authToken }) => {
     localStorage.setItem("recentlyViewed", JSON.stringify(recentlyViewed));
   };
 
-  const getRelatedProduct = () => {
-    axios({
-      method: "get",
-      url: `${SERVER_URL}/api/product?category=${productData?.category}&id=${productId}`,
-      data: {
-        category: productData?.category,
-        productId: productId,
-      },
-    })
-      .then((response) => {
-        setRelatedProduct(response?.data?.product);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+  const getRelatedProduct = async () => {
+    try {
+      const response = await axios.get(
+        `${SERVER_URL}/api/product/get-related-product`,
+        {
+          params: {
+            category: productData?.category,
+            productId,
+          },
+        }
+      );
+      setRelatedProduct(response?.data?.product);
+    } catch (error) {
+      console.error("Error fetching related products:", error);
+    }
   };
+
   // eslint-disable-next-line
   useEffect(() => {
     getProductDataById();
@@ -205,7 +208,7 @@ const ProductPage = ({ isAuthenticated, userDetail, authToken }) => {
               )}
             </p>
             <p className="product-price text-left">
-              {formatAmount(productData?.price || productData?.sellingPrice)}
+              {formatNumber(productData?.price || productData?.sellingPrice)}
             </p>
 
             <div className="buy-buttons  flex gap-3 w-full   ">

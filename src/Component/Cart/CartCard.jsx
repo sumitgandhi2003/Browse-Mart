@@ -4,7 +4,7 @@ import { FaRupeeSign } from "react-icons/fa";
 import axios from "axios";
 import Button from "../UI/Button";
 import {
-  formatAmount,
+  formatNumber,
   swalWithCustomConfiguration,
 } from "../../utility/constant";
 import { useCart } from "../../Context/cartContext";
@@ -99,9 +99,8 @@ const CartCard = ({
         </div>
       </div>
       <div className="flex gap-2 items-center w-1/2 justify-between font-medium text-sm mobile:w-full small-device:w-1/2">
-        <span className="w-1/3 flex justify-center items-center mobile:hidden small-device:flex">
-          <FaRupeeSign className="font-roboto font-medium text-sm" />
-          {product?.price || product?.sellingPrice}
+        <span className="w-1/3 flex justify-center text-base items-center mobile:hidden small-device:flex">
+          {formatNumber(product?.price || product?.mrpPrice)}
         </span>
         <div className="w-1/3 flex justify-center items-center gap-3">
           <span
@@ -122,8 +121,8 @@ const CartCard = ({
         </div>
         <span className="w-1/3 flex justify-center items-center text-lg">
           {/* <FaRupeeSign className="font-roboto font-medium text-sm" /> */}
-          {formatAmount(
-            product?.quantity * product?.price || product?.sellingPrice
+          {formatNumber(
+            (product?.price || product?.mrpPrice) * product?.quantity
           )}
         </span>
       </div>

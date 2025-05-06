@@ -7,12 +7,14 @@ import { FaEyeSlash, FaEye } from "react-icons/fa";
 import { swalWithCustomConfiguration } from "../../utility/constant";
 import axios from "axios";
 import { BiLoaderAlt } from "react-icons/bi";
-const RegisterPage = ({ authToken, setAuthToken, userDetail }) => {
+import { useAuth } from "../../Context/authContext";
+const RegisterPage = ({ userDetail }) => {
   const SERVER_URL = process.env.REACT_APP_SERVER_URL;
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   const navigate = useNavigate();
   const location = useLocation();
   const { theme, toggleTheme } = useTheme();
+  const { authToken, setAuthToken } = useAuth();
   const [isProcessing, setIsProcessing] = useState(false);
   const [formData, setFormData] = useState({
     name: "",

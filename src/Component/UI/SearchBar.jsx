@@ -56,9 +56,7 @@ const SearchBar = () => {
 
   return (
     <div
-      className={`relative hidden small-device:block h-9   items-center border transition-all duration-300 ${
-        theme === "dark" ? "border-gray-600" : "border-gray-300"
-      } rounded-lg`}
+      className={`relative  group h-9  border-0 items-center transition-all duration-300  rounded-lg`}
       ref={searchRef}
     >
       {/* Search Input */}
@@ -68,7 +66,7 @@ const SearchBar = () => {
         onChange={(e) => setSearchQuery(e.target.value)}
         onFocus={() => setShowDropdown(true)} // Show dropdown on focus
         value={searchQuery}
-        className={`p-2 pl-4 pr-10 w-full min-w-40 h-full  ${
+        className={` mobile:group-focus-within:block mobile:absolute mobile:hidden small-device:block small-device:relative  mobile:right-2 mobile:top-1/2 mobile:-translate-y-1/2  small-device:right-0 small-device:top-0 small-device:-translate-y-0 p-2 pl-4 pr-10 w-full min-w-40 h-full  ${
           theme === "dark" ? "bg-gray-700 text-white" : "bg-white text-gray-900"
         } rounded-lg `}
         onKeyDown={(e) => e.key === "Enter" && handleSearch()}
@@ -76,7 +74,7 @@ const SearchBar = () => {
 
       {/* Search Button */}
       <Button
-        className={`absolute right-2 top-1/2 -translate-y-1/2 hover:text-indigo-600 ${
+        className={`absolute focus-within:mobile:right-3 mobile:right-0 small-device:right-2 top-1/2 -translate-y-1/2 hover:text-indigo-600 ${
           theme === "dark" ? "text-gray-300" : "text-gray-600"
         }`}
         icon={<FaSearch />}
@@ -86,7 +84,7 @@ const SearchBar = () => {
       {/* Dropdown for previous searches */}
       {showDropdown && searchHistory.length > 0 && (
         <div
-          className={`absolute w-full border rounded shadow-md mt-1 max-h-40 overflow-y-auto ${
+          className={`absolute mobile:right-2 mobile:top-1/3 mobile:translate-y-1/3 small-device:right-0 small-device:translate-y-0 small-device:top-full w-full min-w-40 border rounded shadow-md mt-1 max-h-40 overflow-y-auto ${
             theme === "dark"
               ? "border-gray-600 bg-gray-800"
               : "border-gray-300 bg-gray-200"

@@ -9,10 +9,12 @@ import {
 import { Button, Input } from "../UI";
 import axios from "axios";
 import { useTheme } from "../../Context/themeContext";
+import { useAuth } from "../../Context/authContext";
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
-const SellerRegistrationPage = ({ authToken, userDetail }) => {
+const SellerRegistrationPage = ({ userDetail }) => {
   const [sellerDetail, setSellerDetail] = useState(initialSellerDetails);
   const { theme } = useTheme();
+  const { authToken } = useAuth();
   const [isDataSending, setIsDataSending] = useState(false);
   const [isSubmit, setIsSubmit] = useState(false);
   const [error, setError] = useState(null);
@@ -100,9 +102,6 @@ const SellerRegistrationPage = ({ authToken, userDetail }) => {
   useEffect(() => {
     if (!authToken) {
       navigate("/login");
-    } else if (userDetail?.userType === "seller") {
-      navigate("/");
-      // navigate("/seller/dashboard");
     }
     return () => {
       setSellerDetail(initialSellerDetails);

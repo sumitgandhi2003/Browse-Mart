@@ -1,30 +1,27 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import Input from "../UI/Input";
-import { useNavigate } from "react-router-dom";
 import {
-  formatAmount,
+  formatNumber,
   swalWithCustomConfiguration,
-} from "../../utility/constant";
-import Button from "../UI/Button";
-import "./style.css";
-import {
-  getAllCountry,
+  addressInputField,
+  paymentMethods,
   generateFutureYearsForExpiryDate,
   months,
 } from "../../utility/constant";
+import "./style.css";
 import { useTheme } from "../../Context/themeContext";
-import { Loader } from "../UI";
-import { paymentMethods, addressInputField } from "../../utility/constant";
+import { Loader, Button, Input } from "../UI";
+import { useAuth } from "../../Context/authContext";
 // import { FaRupeeSign } from "react-icons/fa";
-const LOCATION_SERVER_URL = process.env.REACT_APP_LOCATION_FETCHING_SERVER_URL;
-const LOCATION_API = process.env.REACT_APP_LOCATION_FETCHING_API_KEY;
+// const LOCATION_SERVER_URL = process.env.REACT_APP_LOCATION_FETCHING_SERVER_URL;
+// const LOCATION_API = process.env.REACT_APP_LOCATION_FETCHING_API_KEY;
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
-const BuyNow = ({ authToken, userDetail }) => {
+const BuyNow = ({ userDetail }) => {
   const navigate = useNavigate();
   const { theme } = useTheme();
+  const { authToken } = useAuth();
   const { productId } = useParams();
   const [isorderSubmitting, setIsOrderSubmitting] = useState(false);
   const [productArr, setProductArr] = useState([]);
@@ -256,6 +253,14 @@ const BuyNow = ({ authToken, userDetail }) => {
   const handleShippingAddressChange = (e) => {
     const name = e.target.name;
     const value = e.target?.value?.toLowerCase();
+    if (value) {
+      setErrors((prev) => {
+        return {
+          ...prev,
+          [name]: "",
+        };
+      });
+    }
     if (name === "pinCode") {
       if (value.length <= 6) {
         setShippingAddress((prev) => {
@@ -700,12 +705,12 @@ const BuyNow = ({ authToken, userDetail }) => {
                           <span className="text-gray-400">
                             {" "}
                             x{" "}
-                            {formatAmount(product?.price || product?.mrpPrice)}
+                            {formatNumber(product?.price || product?.mrpPrice)}
                           </span>
                         </div>
                         <span className="flex w-full items-center ">
                           Subtotal:{" "}
-                          {formatAmount(
+                          {formatNumber(
                             (product?.price || product?.mrpPrice) *
                               product?.quantity
                           )}
@@ -724,7 +729,7 @@ const BuyNow = ({ authToken, userDetail }) => {
                     <span className="text-lg font-roboto w-full">Total</span>
                     <span className="flex items-center">
                       <span className="text-lg font-semibold font-roboto">
-                        {formatAmount(
+                        {formatNumber(
                           productArr?.reduce((total, product) => {
                             return (
                               total +
@@ -742,7 +747,7 @@ const BuyNow = ({ authToken, userDetail }) => {
                     <span className="text-lg font-roboto w-full">Discount</span>
                     <span className="flex items-center">
                       <span className="text-lg font-semibold font-roboto">
-                        {formatAmount(
+                        {formatNumber(
                           productArr?.reduce((total, product) => {
                             return (
                               total +
@@ -761,7 +766,7 @@ const BuyNow = ({ authToken, userDetail }) => {
                       </span>
                       <span className="flex items-center">
                         <span className="text-lg font-semibold font-roboto">
-                          {formatAmount(shippingCharges)}
+                          {formatNumber(shippingCharges)}
                         </span>
                       </span>
                     </div>
@@ -774,7 +779,7 @@ const BuyNow = ({ authToken, userDetail }) => {
                     </span>
                     <span className="flex items-center">
                       <span className="text-lg font-semibold font-roboto">
-                        {formatAmount(totalPrice + shippingCharges)}
+                        {formatNumber(totalPrice + shippingCharges)}
                       </span>
                     </span>
                   </div>

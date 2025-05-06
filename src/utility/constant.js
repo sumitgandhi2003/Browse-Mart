@@ -492,10 +492,10 @@ export const productBrands = [
   { id: 22, name: "Others", value: "others" },
 ];
 
-export const formatAmount = (amount) => {
+export const formatNumber = (amount, icon = "₹") => {
   const amountString = amount?.toString();
   return amount
-    ? "₹" + amountString?.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+    ? icon + amountString?.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
     : "";
 };
 
@@ -557,7 +557,7 @@ export const Toast = Swal.mixin({
   },
 });
 
-export const customToast = (theme) => {
+export const customToast = (theme = "light") => {
   return Swal.mixin({
     toast: true,
     position: "top-end",
@@ -565,19 +565,34 @@ export const customToast = (theme) => {
     timer: 2000,
     timerProgressBar: true,
     didOpen: (toast) => {
-      // Apply Tailwind classes manually
-      toast.classList.add("rounded-lg", "shadow-lg", "p-3", "font-medium");
-      if (theme === "dark") {
-        toast.classList.add("bg-gray-800", "text-white");
-      } else {
-        toast.classList.add("bg-white", "text-gray-900");
-      }
+      // Base Tailwind classes
+      const baseClasses = [
+        "rounded-lg",
+        "shadow-lg",
+        "p-3",
+        "font-medium",
+        "text-sm",
+        "transition-all",
+        "duration-300",
+        "border",
+      ];
 
-      // Apply styles to the progress bar
+      // Theme specific classes
+      const darkClasses = ["bg-gray-800", "text-white", "border-gray-700"];
+      const lightClasses = ["bg-white", "text-gray-900", "border-gray-200"];
+
+      // Add classes based on your custom theme variable
+      toast.classList.add(
+        ...baseClasses,
+        ...(theme === "dark" ? darkClasses : lightClasses)
+      );
+
+      // Style progress bar
       const progressBar = toast.querySelector(".swal2-progress-bar");
       if (progressBar) {
         progressBar.style.backgroundColor =
-          theme === "dark" ? "#2563EB" : "#3B82F6"; // Equivalent to Tailwind blue-600/blue-400
+          theme === "dark" ? "#2563EB" : "#3B82F6";
+        progressBar.style.borderRadius = "0 0 0.5rem 0.5rem";
       }
 
       // Pause timer on hover
@@ -586,6 +601,36 @@ export const customToast = (theme) => {
     },
   });
 };
+
+// export const customToast = (theme) => {
+//   return Swal.mixin({
+//     toast: true,
+//     position: "top-end",
+//     showConfirmButton: false,
+//     timer: 2000,
+//     timerProgressBar: true,
+//     didOpen: (toast) => {
+//       // Apply Tailwind classes manually
+//       toast.classList.add("rounded-lg", "shadow-lg", "p-3", "font-medium");
+//       if (theme === "dark") {
+//         toast.classList.add("bg-gray-800", "text-white");
+//       } else {
+//         toast.classList.add("bg-white", "text-gray-900");
+//       }
+
+//       // Apply styles to the progress bar
+//       const progressBar = toast.querySelector(".swal2-progress-bar");
+//       if (progressBar) {
+//         progressBar.style.backgroundColor =
+//           theme === "dark" ? "#2563EB" : "#3B82F6"; // Equivalent to Tailwind blue-600/blue-400
+//       }
+
+//       // Pause timer on hover
+//       toast.onmouseenter = Swal.stopTimer;
+//       toast.onmouseleave = Swal.resumeTimer;
+//     },
+//   });
+// };
 
 export const paymentMethods = [
   {
@@ -729,3 +774,47 @@ export const swalCustomConfiguration = (theme) => {
 //     buttonsStyling: false, // Disable default styling to apply Tailwind classes
 //   });
 // };
+
+export const toCapitalizeCase = (str) => {
+  if (!str) return null;
+  return str
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+};
+
+export const checkValidation = (data = {}, requireData) => {
+  const errors = {};
+  const requiredKeys =
+    Array.isArray(requireData) && requireData?.length > 0
+      ? requireData
+      : Object.keys(data);
+
+  if (requiredKeys.length < 1) return null;
+  // console.log(Object.entries(data));
+  Object.entries(data).forEach(([key, value]) => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const isRequired = requiredKeys.includes(key);
+    if (isRequired) {
+      if (
+        value?.trim() === undefined ||
+        value?.trim() === null ||
+        value?.trim() === "" ||
+        (Array.isArray(value) && value.length === 0)
+      ) {
+        errors[key] = `${toCapitalizeCase(key)} is required!`;
+        return;
+      }
+
+      if (key.toLowerCase() === "email" && typeof value === "string") {
+        if (!emailRegex.test(value)) {
+          errors[key] = `Invalid email format`;
+        }
+      }
+      if (key.toLowerCase() === "password" && value.length < 6) {
+        errors[key] = `Password must be minimun six charactors`;
+      }
+    }
+  });
+  return Object.keys(errors).length > 0 ? errors : false;
+};

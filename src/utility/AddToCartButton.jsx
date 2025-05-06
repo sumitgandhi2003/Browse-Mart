@@ -91,7 +91,7 @@ const AddToCartButton = ({ userDetail, productId, authToken, className }) => {
     <Button
       btntext={`${isProductAdding ? "Adding..." : "Add to Cart"}`}
       className={className || "btn btn-primary"}
-      disabled={false}
+      disabled={isProductAdding}
       //   loading={isProductAdding}
       onClick={addToCart}
     />

@@ -1,6 +1,6 @@
 import Button from "../UI/Button";
 import React, { useState } from "react";
-import { formatAmount } from "../../utility/constant";
+import { formatNumber } from "../../utility/constant";
 // import { FaRegHeart } from "react-icons/fa";
 // import { FaHeart } from "react-icons/fa";
 import {
@@ -43,7 +43,7 @@ import { useTheme } from "../../Context/themeContext";
 //         <div className="flex gap-1 items-center justify-between my-1">
 //           <div className="product-price font-bold text-xl flex justify-center items-center mobile:text-lg tablet:text-xl font-roboto my-1 ">
 //             {/* ₹{(price * 83.71)?.toFixed(2)} */}
-//             {formatAmount(price || sellingPrice)}
+//             {formatNumber(price || sellingPrice)}
 //           </div>
 //           {rating && rating !== null && (
 //             <div className="hidden tablet:flex">
@@ -222,10 +222,10 @@ const ProductCard = ({ product, userDetail, authToken }) => {
         </div> */}
           <div className="flex items-center mt-2">
             <span className="text-xl font-bold">
-              {formatAmount(price || sellingPrice)}
+              {formatNumber(price || sellingPrice)}
             </span>
             <span className="text-gray-400 line-through ml-2">
-              {formatAmount(mrpPrice)}
+              {formatNumber(mrpPrice)}
             </span>
           </div>
           {/* <Button
@@ -264,7 +264,7 @@ const ProductCard = ({ product, userDetail, authToken }) => {
       </div>
 
       {sellingPrice < mrpPrice && (
-        <span className="p-1 bg-green-500 absolute min-w-20 text-center text-white font-semibold text-lg top-0 left-0">
+        <span className="py-1  px-2 bg-green-500 absolute min-w-20 text-center text-white font-semibold text-lg top-0 left-0 rounded-br-2xl">
           {(((mrpPrice - sellingPrice) / mrpPrice) * 100).toFixed(0)}% OFF
         </span>
       )}

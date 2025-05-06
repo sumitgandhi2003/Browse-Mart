@@ -21,18 +21,19 @@ const Input = forwardRef(
       maxLength,
       onKeyDown,
       onBlur,
+      onSubmit,
       // Add any other props you need here
     },
     ref
   ) => {
     const { theme } = useTheme();
-    const defaultOnChange = () => {};
+    const defaultFunction = () => {};
 
     return (
       <input
         type={type}
         placeholder={placeholder}
-        onChange={onChange || defaultOnChange}
+        onChange={onChange || defaultFunction}
         value={value || ""}
         name={name}
         id={id}
@@ -51,6 +52,7 @@ const Input = forwardRef(
         maxLength={maxLength}
         onKeyDown={onKeyDown}
         onBlur={onBlur}
+        onSubmit={onSubmit || defaultFunction}
         ref={ref} // ✅ Now ref is correctly passed
       />
     );

@@ -2,17 +2,24 @@ import React, { useEffect, useState } from "react";
 import { FaGoogle, FaFacebook, FaEyeSlash, FaEye } from "react-icons/fa";
 import { useTheme } from "../../Context/themeContext";
 import { Button, Input, OTPInput } from "../UI";
-import { customToast, swalCustomConfiguration } from "../../utility/constant";
+import {
+  customToast,
+  swalCustomConfiguration,
+  Toast,
+} from "../../utility/constant";
 import axios from "axios";
 import { useNavigate, useLocation, Navigate, Link } from "react-router-dom";
 import { FaMoon, FaSun } from "react-icons/fa6";
 import { guestUser, sellerUser } from "../../utility/constant";
 import { BiLoaderAlt } from "react-icons/bi";
-const Login = ({ setAuthToken, authToken }) => {
+import { useAuth } from "../../Context/authContext";
+import { checkValidation } from "../../utility/constant";
+const Login = () => {
   const SERVER_URL = process.env.REACT_APP_SERVER_URL;
   const navigate = useNavigate();
   const location = useLocation();
   const { theme, toggleTheme } = useTheme();
+  const { authToken, setAuthToken } = useAuth();
   const [loginData, setLoginData] = useState({
     email: "",
     password: "",
@@ -28,15 +35,15 @@ const Login = ({ setAuthToken, authToken }) => {
   const [isPasswordShow, setIsPasswordShow] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const redirect = new URLSearchParams(location?.search)?.get("redirect");
-  const checkValidation = () => {
-    const newErrors = {};
-    if (!loginData?.email) newErrors.email = "Email is required!";
-    if (!loginData?.password) newErrors.password = "Password is required!";
-    if (loginData.email && !emailRegex?.test(loginData?.email))
-      newErrors.email = "Email is Not Valid!";
-    setError(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+  // const checkValidation = () => {
+  //   const newErrors = {};
+  //   if (!loginData?.email) newErrors.email = "Email is required!";
+  //   if (!loginData?.password) newErrors.password = "Password is required!";
+  //   if (loginData.email && !emailRegex?.test(loginData?.email))
+  //     newErrors.email = "Email is Not Valid!";
+  //   setError(newErrors);
+  //   return Object.keys(newErrors).length === 0;
+  // };
 
   const handleLogin = (formData) => {
     setError({});
@@ -53,7 +60,7 @@ const Login = ({ setAuthToken, authToken }) => {
           localStorage.setItem("AuthToken", response?.data?.AuthToken);
           setAuthToken(response?.data?.AuthToken);
           navigate(redirect ? `${redirect}` : "/");
-          customToast(theme)?.fire({
+          Toast.fire({
             icon: "success",
             title: "User Login Successfully !",
           });
@@ -126,7 +133,12 @@ const Login = ({ setAuthToken, authToken }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setErrorMessage("");
-    if (!checkValidation()) return;
+    const err = checkValidation(loginData);
+    if (err) {
+      setError({ ...err });
+      return;
+    }
+    setError({});
     handleLogin(loginData);
   };
   const handleGuestLogin = (e) => {

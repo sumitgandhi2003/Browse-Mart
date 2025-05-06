@@ -6,10 +6,16 @@ import {
   FaInstagram,
 } from "react-icons/fa";
 import { Link } from "react-router-dom";
-const Footer = () => {
+const Footer = ({ userDetail }) => {
   return (
-    <footer className="bg-gray-900 text-gray-300 py-10 px-5 sm:px-10 tablet:px-20 border-t-2">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 small-device:grid-cols-2 tablet:grid-cols-3 laptop:grid-cols-4 gap-8">
+    <footer className="bg-gray-900 text-gray-300 py-10 px-5 mobile:px-10 tablet:px-20 border-t-2">
+      <div
+        className={`max-w-7xl mx-auto grid grid-cols-1 small-device:grid-cols-2 tablet:grid-cols-3  ${
+          userDetail?.userType === "seller"
+            ? "laptop:grid-cols-5"
+            : "laptop:grid-cols-4"
+        } gap-8`}
+      >
         {/* Browse Mart Section */}
         <div>
           <h2 className="text-white text-lg font-semibold">Browse Mart</h2>
@@ -27,6 +33,9 @@ const Footer = () => {
         <div>
           <h3 className="text-white text-lg font-semibold">Quick Links</h3>
           <ul className="mt-2 space-y-2 text-sm">
+            <li className="hover:text-white cursor-pointer">
+              <Link to={"/seller-registration"}>Seller Registration</Link>
+            </li>
             <li className="hover:text-white cursor-pointer">About Us</li>
             <li className="hover:text-white cursor-pointer">Contact</li>
             <li className="hover:text-white cursor-pointer">FAQs</li>
@@ -47,6 +56,19 @@ const Footer = () => {
             <li className="hover:text-white cursor-pointer">Wishlist</li>
           </ul>
         </div>
+        {userDetail?.userType === "seller" && (
+          <div>
+            <h3 className="text-white text-lg font-semibold">Seller Service</h3>
+            <ul className="mt-2 space-y-2 text-sm">
+              <li className="hover:text-white cursor-pointer">
+                <Link to={"/seller-dashboard"}>Seller DashBoard</Link>
+              </li>
+              <li className="hover:text-white cursor-pointer">Track Order</li>
+              <li className="hover:text-white cursor-pointer">Returns</li>
+              <li className="hover:text-white cursor-pointer">Wishlist</li>
+            </ul>
+          </div>
+        )}
 
         {/* Newsletter */}
         <div>

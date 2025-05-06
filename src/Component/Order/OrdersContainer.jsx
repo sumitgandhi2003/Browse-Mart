@@ -4,8 +4,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Loader, ServerError } from "../UI";
 import OrderCard from "./OrderCard";
 import { useTheme } from "../../Context/themeContext";
+import { useAuth } from "../../Context/authContext";
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
-const OrdersContainer = ({ userDetail, authToken }) => {
+const OrdersContainer = ({ userDetail }) => {
   const [ordersArr, setOrdersArr] = useState([]);
   const [filtertedOrdersArr, setFiltertedOrdersArr] = useState([]);
   const [isOrdersFetching, setIsOrdersFetching] = useState(false);
@@ -13,7 +14,7 @@ const OrdersContainer = ({ userDetail, authToken }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { theme } = useTheme();
-
+  const { authToken } = useAuth();
   const getAllOrders = () => {
     setIsOrdersFetching(true);
     axios({
@@ -75,7 +76,7 @@ const OrdersContainer = ({ userDetail, authToken }) => {
   }, [ordersArr]);
   useEffect(() => {
     window.scrollTo(0, 0); // Scroll to the top on component mount
-  });
+  }, []);
 
   if (isOrdersFetching) {
     return <Loader />;

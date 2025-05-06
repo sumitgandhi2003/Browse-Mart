@@ -1,20 +1,18 @@
 import { useState, useContext } from "react";
-//import components
 import Hamburger from "../UI/Hamburger";
-import { BsCart2 } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import ProfileSlider from "../Profile/ProfileSlider";
-import { themeContext } from "../../Context/themeContext";
+import { useTheme } from "../../Context/themeContext";
 import { useCart } from "../../Context/cartContext";
 import { FaSun, FaMoon, FaShoppingCart, FaUser } from "react-icons/fa";
 import { Button, SearchBar } from "../UI";
+import { useAuth } from "../../Context/authContext";
 
 const maleProfileIcon = require("../../assets/images/maleprofileicon.jpg");
-const Navbar = ({ authToken, setAuthToken, userDetail, setUserDetail }) => {
-  const [isShow, SetIsShow] = useState(false);
+const Navbar = ({ userDetail, setUserDetail }) => {
   const [showProfileSlider, setShowProfileSlider] = useState(false);
-  const { theme, toggleTheme } = useContext(themeContext);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { theme, toggleTheme } = useTheme();
+  const { authToken } = useAuth();
   const { cartCount } = useCart();
   const themeClass =
     theme === "dark" ? "bg-gray-800 text-white" : "bg-gray-200 text-gray-900";
@@ -48,17 +46,25 @@ const Navbar = ({ authToken, setAuthToken, userDetail, setUserDetail }) => {
               <Link to={"/cart"}>
                 <span className="relative">
                   <FaShoppingCart
-                    className="text-lg cursor-pointer hover:text-indigo-600 dark:hover:text-indigo-400"
+                    className={`text-lg cursor-pointer  ${
+                      theme === "dark"
+                        ? "hover:text-indigo-400"
+                        : "hover:text-indigo-600"
+                    }`}
                     aria-label="Cart"
                   />
-                  <span className="absolute bg-white rounded-full flex justify-center items-center font-semibold  h-3 w-3 -top-1 -right-1 text-black text-[10px]   ">
+                  <span className="absolute bg-white rounded-full flex justify-center items-center font-semibold  h-4 w-4 -top-2 -right-2 text-black text-[12px]   ">
                     {cartCount}
                   </span>
                 </span>
               </Link>
               {/* <Link to={""}> */}
               <FaUser
-                className="text-lg cursor-pointer hover:text-indigo-600 dark:hover:text-indigo-400 "
+                className={`text-lg cursor-pointer  ${
+                  theme === "dark"
+                    ? "hover:text-indigo-400"
+                    : "hover:text-indigo-600"
+                }`}
                 aria-label="User Profile"
                 onClick={() => setShowProfileSlider((prev) => !prev)}
               />
@@ -67,7 +73,6 @@ const Navbar = ({ authToken, setAuthToken, userDetail, setUserDetail }) => {
           ) : (
             <Link to={"/login"}>
               <Button
-                onClick={() => setIsLoggedIn(true)}
                 className="px-4 py-2 bg-indigo-600 text-white rounded-lg shadow-lg hover:bg-indigo-700 "
                 aria-label="Login"
                 btntext="Login"
@@ -82,8 +87,6 @@ const Navbar = ({ authToken, setAuthToken, userDetail, setUserDetail }) => {
             setShowProfileSlider={setShowProfileSlider}
             userDetail={userDetail}
             setUserDetail={setUserDetail}
-            authToken={authToken}
-            setAuthToken={setAuthToken}
           />
         )}
       </nav>

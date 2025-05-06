@@ -4,9 +4,11 @@ import { useTheme } from "../../Context/themeContext";
 import { Link, useNavigate } from "react-router-dom";
 import { productCategory } from "../../utility/constant";
 import ProductCard from "../Product/ProductCard";
+import { useAuth } from "../../Context/authContext";
 
-const HomePage = ({ authToken, userDetail }) => {
+const HomePage = ({ userDetail }) => {
   const { theme } = useTheme();
+  const { authToken } = useAuth();
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const themeClass =

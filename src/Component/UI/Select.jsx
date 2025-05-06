@@ -16,7 +16,7 @@ const Select = ({
     theme === "dark"
       ? "bg-gray-700 text-white border-gray-600 focus:border-gray-300"
       : "text-gray-900 bg-gray-100 border-gray-300 focus:border-gray-600";
-  const sortedItemArray = itemArray.sort((a, b) =>
+  const sortedItemArray = itemArray?.sort((a, b) =>
     a.value.localeCompare(b.value)
   );
 
@@ -29,7 +29,8 @@ const Select = ({
       value={value}
       disabled={disabled}
     >
-      <option value="">{displayName}</option>
+      {displayName && <option value="">{displayName?.toCapitalize()}</option>}
+
       {sortedItemArray?.map((item) => {
         return (
           <option

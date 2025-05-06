@@ -18,23 +18,24 @@ const SuccessPage = () => {
       return;
     }
   });
+  useEffect(() => {
+    window.scrollTo(0, 100);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  });
   return (
     orderIds && (
       <div
-        className={`${themeClass} p-6 flex justify-center items-center min-h-screen`}
+        className={`${themeClass} p-6 flex justify-center  items-center min-h-screen transition-all duration-300 `}
       >
         <div
-          className={` p-3 ${
+          className={` p-3 transition-all duration-300 ${
             theme === "dark" ? "bg-gray-800" : ""
           }  rounded-lg shadow-2xl min-h-[400px] min-w-[600px] flex justify-center items-center mobile:w-full mobile:min-h-0 mobile:min-w-0 tablet:w-max tablet:min-h-[400px] tablet:min-w-[600px] `}
         >
-          <div className="w-full flex flex-col justify-center items-center">
-            {/* <h2 className="text-2xl font-bold mb-4">
-            Order Placed Successfully!
-          </h2>
-          <p>
-            Your order ID is <span className="font-semibold">{orderId}</span>
-          </p> */}
+          <div className="w-full flex flex-col justify-center items-center ">
             <img
               src={orderPlacedSuccessImage}
               className=" h-[200px] w-full object-contain"

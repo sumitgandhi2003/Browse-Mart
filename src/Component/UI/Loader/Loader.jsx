@@ -12,7 +12,7 @@ export const Loader = () => {
   });
   return (
     <div
-      className={` h-screen w-full flex justify-center items-center transition-all duration-300  ${
+      className={` h-screen w-full flex justify-center items-center transition-all duration-300 ${
         theme === "dark" ? "bg-gray-800" : "bg-gray-200"
       } `}
     >
