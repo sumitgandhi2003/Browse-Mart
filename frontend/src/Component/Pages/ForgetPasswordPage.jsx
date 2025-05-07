@@ -10,7 +10,7 @@ import { BiLoaderAlt } from "react-icons/bi";
 import { FaMoon, FaSun } from "react-icons/fa6";
 import { useAuth } from "../../Context/authContext";
 // import { BiLoaderAlt } from "react-icons/bi";
-const ForgetPasswordPage = ({ userDetail }) => {
+const ForgetPasswordPage = () => {
   const SERVER_URL = import.meta.env.VITE_SERVER_URL;
   const navigate = useNavigate();
 
@@ -147,7 +147,7 @@ const ForgetPasswordPage = ({ userDetail }) => {
       });
   };
   useEffect(() => {
-    if (userDetail || authToken) {
+    if (authToken) {
       navigate("/");
     }
   });

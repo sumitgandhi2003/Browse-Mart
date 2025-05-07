@@ -129,8 +129,10 @@ import { useTheme } from "../../Context/themeContext";
 // import { useState } from "react";
 // import { Heart } from "lucide-react";
 import { FaHeart } from "react-icons/fa";
+import { useAuth } from "../../Context/authContext";
+import { useUser } from "../../Context/userContext";
 
-const ProductCard = ({ product, userDetail, authToken }) => {
+const ProductCard = ({ product }) => {
   const {
     image,
     name,
@@ -144,7 +146,9 @@ const ProductCard = ({ product, userDetail, authToken }) => {
     ratingNumber,
   } = product;
   const { theme } = useTheme();
-  const [isFavorite, setIsFavorite] = useState(false);
+  // const [isFavorite, setIsFavorite] = useState(false);
+  const { authToken } = useAuth();
+  const { userDetail } = useUser();
 
   return (
     <div

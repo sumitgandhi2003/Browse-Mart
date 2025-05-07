@@ -145,7 +145,7 @@ const App = () => {
     },
     {
       path: "/forget-password",
-      element: <ForgetPasswordPage userDetail={userDetail} />,
+      element: <ForgetPasswordPage />,
     },
     {
       path: "/",
@@ -153,27 +153,27 @@ const App = () => {
       children: [
         {
           path: "/",
-          element: <HomePage userDetail={userDetail} />,
+          element: <HomePage />,
         },
         {
           path: "/products",
-          element: <ProductsContainer userDetail={userDetail} />,
+          element: <ProductsContainer />,
         },
         {
           path: "/product/:productId",
-          element: <ProductPage userDetail={userDetail} />,
+          element: <ProductPage />,
         },
         {
           path: "/cart",
-          element: <Cart userDetail={userDetail} />,
+          element: <Cart />,
         },
         {
           path: "/product/buy/:productId",
-          element: <BuyNow userDetail={userDetail} />,
+          element: <BuyNow />,
         },
         {
           path: "/checkout",
-          element: <BuyNow userDetail={userDetail} />,
+          element: <BuyNow />,
         },
         {
           path: "/order-success",
@@ -181,17 +181,16 @@ const App = () => {
         },
         {
           path: "/orders",
-          element: <OrdersContainer userDetail={userDetail} />,
+          element: <OrdersContainer />,
         },
         {
           path: "/order/:orderId",
-          element: <OrderPage userDetail={userDetail} />,
+          element: <OrderPage />,
         },
         {
           path: "/seller-registration",
           element: (
             <ProtectedRoute
-              user={userDetail}
               requiredRole={"consumer"}
               redirectPath={"/seller-dashboard"}
             >
@@ -203,7 +202,6 @@ const App = () => {
           path: "/seller-dashboard",
           element: (
             <ProtectedRoute
-              user={userDetail}
               requiredRole={"seller"}
               redirectPath={"/seller-registration"}
             >

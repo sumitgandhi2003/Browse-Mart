@@ -5,8 +5,9 @@ import { Loader, ServerError } from "../../LIBS";
 import OrderCard from "./OrderCard";
 import { useTheme } from "../../Context/themeContext";
 import { useAuth } from "../../Context/authContext";
+import { useUser } from "../../Context/userContext";
 const SERVER_URL = import.meta.env.VITE_SERVER_URL;
-const OrdersContainer = ({ userDetail }) => {
+const OrdersContainer = () => {
   const [ordersArr, setOrdersArr] = useState([]);
   const [filtertedOrdersArr, setFiltertedOrdersArr] = useState([]);
   const [isOrdersFetching, setIsOrdersFetching] = useState(false);
@@ -15,6 +16,7 @@ const OrdersContainer = ({ userDetail }) => {
   const location = useLocation();
   const { theme } = useTheme();
   const { authToken } = useAuth();
+  const { userDetail } = useUser();
   const getAllOrders = () => {
     setIsOrdersFetching(true);
     axios({

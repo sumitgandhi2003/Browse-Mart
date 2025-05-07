@@ -12,9 +12,10 @@ import { useTheme } from "../../Context/themeContext";
 import { useAuth } from "../../Context/authContext";
 // import { SERVER_URL } from "../../config";
 import pageNotFind from "../../assets/images/pageNotFind.jpg";
+import { useUser } from "../../Context/userContext";
 const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 
-const ProductPage = ({ userDetail }) => {
+const ProductPage = () => {
   const currentURL = window.location.href;
   const { productId } = useParams();
   const [productData, setProductData] = useState({});
@@ -30,6 +31,7 @@ const ProductPage = ({ userDetail }) => {
   const navigate = useNavigate();
   const { theme } = useTheme();
   const { authToken } = useAuth();
+  const { userDetail } = useUser();
   const handleClick = () => {
     setIsReviewClicked((isReview) => !isReview);
   };
@@ -82,28 +84,6 @@ const ProductPage = ({ userDetail }) => {
       sellingPrice: product?.sellingPrice,
       isAddedToWislist: false,
     };
-
-    //   {
-    //     "_id": "670c1b01dc874450c9d49325",
-    //     "name": "BENYAR Stylish Mens Watch",
-    //     "price": 1985,
-    //     "description": "BENYAR Stylish Mens Watch Chronograph Quartz Movement Business Sport Design 3ATM Waterproof Elegant Gift for Men",
-    //     "image": [
-    //         "https://res.cloudinary.com/dxt1wnzba/image/upload/v1728846593/eoaoaxsme18to7pkfrhj.jpg",
-    //         "https://res.cloudinary.com/dxt1wnzba/image/upload/v1728846593/uadypaxwkajbw4g9ca6s.jpg",
-    //         "https://res.cloudinary.com/dxt1wnzba/image/upload/v1728846593/uqkxw8mfrnwiyujomyyg.jpg",
-    //         "https://res.cloudinary.com/dxt1wnzba/image/upload/v1728846593/qqcf7asealfgezlnvwmw.jpg",
-    //         "https://res.cloudinary.com/dxt1wnzba/image/upload/v1728846594/y9yhfutimqq2ug2i6qnv.jpg"
-    //     ],
-    //     "category": "fashion",
-    //     "stock": 47,
-    //     "review": [],
-    //     "__v": 0,
-    //     "isHide": false,
-    //     "mrpPrice": null,
-    //     "sellingPrice": null,
-    //     "sellerId": "679cb65479bc3c35dc3b5804"
-    // }
 
     recentlyViewed = recentlyViewed.filter(
       (p) => (p.id || p._id) !== modifiedProduct.id

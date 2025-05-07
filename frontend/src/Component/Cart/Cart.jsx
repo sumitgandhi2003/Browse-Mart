@@ -7,11 +7,13 @@ import EmptyCart from "./EmptyCart";
 import { formatNumber } from "../../utility/constant";
 import { useTheme } from "../../Context/themeContext";
 import { useAuth } from "../../Context/authContext";
+import { useUser } from "../../Context/userContext";
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL;
-const Cart = ({ userDetail }) => {
+const Cart = () => {
   const { theme } = useTheme();
   const { authToken } = useAuth();
+  const { userDetail } = useUser();
   const navigate = useNavigate();
   const [cartItem, setCartItem] = useState([]);
   const [isDataFetching, setIsDataFetching] = useState(false);

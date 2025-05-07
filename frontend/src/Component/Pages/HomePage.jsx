@@ -6,9 +6,8 @@ import { productCategory } from "../../utility/constant";
 import ProductCard from "../Product/ProductCard";
 import { useAuth } from "../../Context/authContext";
 
-const HomePage = ({ userDetail }) => {
+const HomePage = () => {
   const { theme } = useTheme();
-  const { authToken } = useAuth();
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const themeClass =
@@ -141,11 +140,7 @@ const HomePage = ({ userDetail }) => {
                 className="w-full h-full "
                 key={item?.id || item?._id}
               >
-                <ProductCard
-                  product={item}
-                  authToken={authToken}
-                  userDetail={userDetail}
-                />
+                <ProductCard product={item} />
               </Link>
             ))}
           </div>

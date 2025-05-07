@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   FaUser,
   FaBox,
@@ -9,9 +9,20 @@ import {
   FaTrash,
 } from "react-icons/fa";
 import { useTheme } from "../../Context/themeContext";
+import { useAuth } from "../../Context/authContext";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Profile1 = () => {
   const { theme } = useTheme();
+  const { authToken } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const redirect = `/login?redirect=${encodeURIComponent(location?.pathname)}`;
+  useEffect(() => {
+    if (!authToken) {
+      navigate(redirect);
+    }
+  }, [authToken]);
   return (
     <div
       className={`flex min-h-screen  ${

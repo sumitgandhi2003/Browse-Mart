@@ -13,16 +13,18 @@ import "./style.css";
 import { useTheme } from "../../Context/themeContext";
 import { Loader, Button, Input } from "../../LIBS";
 import { useAuth } from "../../Context/authContext";
+import { useUser } from "../../Context/userContext";
 // import { FaRupeeSign } from "react-icons/fa";
 // const LOCATION_SERVER_URL = import.meta.env.VITE_LOCATION_FETCHING_SERVER_URL;
 // const LOCATION_API = import.meta.env.VITE_LOCATION_FETCHING_API_KEY;
 const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 
-const BuyNow = ({ userDetail }) => {
+const BuyNow = () => {
   const navigate = useNavigate();
   const { theme } = useTheme();
   const { authToken } = useAuth();
   const { productId } = useParams();
+  const { userDetail } = useUser();
   const [isorderSubmitting, setIsOrderSubmitting] = useState(false);
   const [productArr, setProductArr] = useState([]);
   const [isDataFetching, setIsDataFetching] = useState(false);

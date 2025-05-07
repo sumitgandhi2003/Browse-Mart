@@ -8,7 +8,7 @@ import { useTheme } from "../../Context/themeContext";
 import { useAuth } from "../../Context/authContext";
 const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 
-const Orderpage = ({ userDetail }) => {
+const Orderpage = () => {
   const navigate = useNavigate();
   const { orderId } = useParams();
   const [isOrderDataFetching, setIsOrderDataFetching] = useState(true);

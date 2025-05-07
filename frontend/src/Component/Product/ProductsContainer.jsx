@@ -6,14 +6,16 @@ import { Loader, ServerError } from "../../LIBS";
 import { useTheme } from "../../Context/themeContext";
 import { useAuth } from "../../Context/authContext";
 import noResultImage from "../../assets/images/noResult.png";
+import { useUser } from "../../Context/userContext";
 // import { SERVER_URL } from "../../config";
 const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 
 console.log(SERVER_URL);
-const ProductsContainer = ({ userDetail }) => {
+const ProductsContainer = () => {
   const location = useLocation();
   const { theme } = useTheme();
   const { authToken } = useAuth();
+  const { userDetail } = useUser();
   const [allProduct, SetAllProduct] = useState();
   const [allCategories, SetAllCategories] = useState();
   const [filteredProduct, SetFilteredProduct] = useState();
