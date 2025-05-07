@@ -9,16 +9,16 @@ export default defineConfig(({ mode }) => {
       outDir: "dist",
     },
     plugins: [react()],
-    server: {
-      proxy: {
-        "/api": {
-          target: env.VITE_SERVER_URL || "http://localhost:4000",
-          changeOrigin: true,
-          secure: false,
-          ws: true,
-        },
-      },
-    },
+    // server: {
+    //   proxy: {
+    //     "/api": {
+    //       target: env.VITE_SERVER_URL || "http://localhost:4000",
+    //       changeOrigin: true,
+    //       secure: false,
+    //       ws: true,
+    //     },
+    //   },
+    // },
   };
 });
 // export default defineConfig({
