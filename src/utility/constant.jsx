@@ -3,9 +3,9 @@ import { MdEmail } from "react-icons/md";
 import axios from "axios";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css"; // Ensure you import styles
-const LOCATION_SERVER_URL = process.env.REACT_APP_LOCATION_FETCHING_SERVER_URL;
-const LOCATION_API = process.env.REACT_APP_LOCATION_FETCHING_API_KEY;
-export const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+const LOCATION_SERVER_URL = import.meta.env.VITE_LOCATION_FETCHING_SERVER_URL;
+const LOCATION_API = import.meta.env.VITE_LOCATION_FETCHING_API_KEY;
+// export const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 export const months = [
   {
     id: 1,

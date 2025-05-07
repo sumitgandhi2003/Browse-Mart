@@ -1,4 +1,4 @@
-import Button from "../UI/Button";
+import Button from "../../LIBS/Button";
 import React, { useState } from "react";
 import { formatNumber } from "../../utility/constant";
 // import { FaRegHeart } from "react-icons/fa";
@@ -155,7 +155,7 @@ const ProductCard = ({ product, userDetail, authToken }) => {
       <div className="relative">
         {/* <img src={image} alt={name} className="w-full h-48 object-cover" /> */}
         <img
-          src={image || ""}
+          src={image || "#"}
           alt=""
           className="aspect-video object-cover h-36 w-full z-10 border-none rounded-t-2xl "
         />

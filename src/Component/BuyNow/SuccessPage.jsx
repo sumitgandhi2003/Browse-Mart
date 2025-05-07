@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { Link, useLocation, useParams, useNavigate } from "react-router-dom";
-import Button from "../UI/Button";
+import Button from "../../LIBS/Button";
 import { useTheme } from "../../Context/themeContext";
-const orderPlacedSuccessImage = require("../../assets/images/oderPlacedSuccessfully.gif");
+import orderPlacedSuccessImage from "../../assets/images/oderPlacedSuccessfully.gif";
 
 const SuccessPage = () => {
   const { orderId } = useParams();

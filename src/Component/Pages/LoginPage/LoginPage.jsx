@@ -3,12 +3,12 @@ import image from "../../../assets/images/login_panel_logo.png";
 import LoginForm from "./LoginForm";
 import SignUpForm from "./SignUpForm";
 import { useLocation, useNavigate } from "react-router-dom";
-import Button from "../../UI/Button";
+import Button from "../../../LIBS/Button";
 import axios from "axios";
 import { swalWithCustomConfiguration } from "../../../utility/constant";
 import { Toast } from "../../../utility/constant";
 import Swal from "sweetalert2";
-const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 //form direct action config
 // action={`${SERVER_URL}${isSignUpShow ? "/create-user" : ""}`}
 // method={`${isSignUpShow ? "post" : "get"}`

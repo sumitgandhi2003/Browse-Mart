@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import { FaPlus, FaMinus } from "react-icons/fa6";
 import { FaRupeeSign } from "react-icons/fa";
 import axios from "axios";
-import Button from "../UI/Button";
+import Button from "../../LIBS/Button";
 import {
   formatNumber,
   swalWithCustomConfiguration,
 } from "../../utility/constant";
 import { useCart } from "../../Context/cartContext";
 import { useTheme } from "../../Context/themeContext";
-const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 const CartCard = ({
   product,
   authToken,

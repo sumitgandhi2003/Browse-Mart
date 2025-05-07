@@ -30,11 +30,13 @@ import { OrdersContainer } from "../Order";
 import SellerDashBoard from "../Seller/SellerDashBoard";
 import { useTheme } from "../../Context/themeContext";
 import Profile1 from "../Profile/profile1";
-import { Loader } from "../UI";
+import { Loader } from "../../LIBS";
 import { useAuth } from "../../Context/authContext";
-const SERVER_URL = process.env.REACT_APP_SERVER_URL;
-const AppLayout = ({ setAuthToken, userDetail, setUserDetail }) => {
+import { useUser } from "../../Context/userContext";
+const SERVER_URL = import.meta.env.VITE_SERVER_URL;
+const AppLayout = () => {
   const { toggleTheme } = useTheme();
+  const { userDetail, setUserDetail } = useUser();
 
   useEffect(() => {
     const handleKeyPress = (e) => {
@@ -60,8 +62,9 @@ const AppLayout = ({ setAuthToken, userDetail, setUserDetail }) => {
 };
 
 const App = () => {
-  const [userDetail, setUserDetail] = useState();
-  const { setCartCount } = useCart(null);
+  // const [userDetail, setUserDetail] = useState(null);
+  const { userDetail, setUserDetail } = useUser();
+  const { setCartCount } = useCart();
   const { authToken, setAuthToken } = useAuth();
   const getUserDetail = async () => {
     try {
@@ -88,19 +91,20 @@ const App = () => {
     }
   };
 
-  const ProtectedRoute = ({ user, requiredRole, redirectPath, children }) => {
-    if (user === undefined) {
+  const ProtectedRoute = ({ requiredRole, redirectPath, children }) => {
+    const { userDetail } = useUser();
+    if (userDetail === undefined) {
       // Show loading UI or return null while fetching user data
       console.log("loading...");
       return <Loader />;
     }
-    if (!user) {
+    if (!userDetail) {
       // Redirect to login if not authenticated
-      console.log(user);
+      console.log(userDetail);
       return <Navigate to="/login" replace />;
     }
 
-    if (requiredRole && user.userType !== requiredRole) {
+    if (requiredRole && userDetail.userType !== requiredRole) {
       // Redirect if user does not have the required role
       return <Navigate to={redirectPath} replace />;
     }
@@ -125,7 +129,6 @@ const App = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authToken]);
-  console.log(userDetail);
 
   const router = createBrowserRouter([
     {
@@ -146,9 +149,7 @@ const App = () => {
     },
     {
       path: "/",
-      element: (
-        <AppLayout userDetail={userDetail} setUserDetail={setUserDetail} />
-      ),
+      element: <AppLayout />,
       children: [
         {
           path: "/",

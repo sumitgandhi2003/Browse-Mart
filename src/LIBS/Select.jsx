@@ -1,5 +1,5 @@
 import React from "react";
-import { useTheme } from "../../Context/themeContext";
+import { useTheme } from "../Context/themeContext";
 
 const Select = ({
   name = "",

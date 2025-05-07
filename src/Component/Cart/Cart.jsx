@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Loader, ServerError, Button } from "../UI";
+import { Loader, ServerError, Button } from "../../LIBS";
 import { Link, useNavigate } from "react-router-dom";
 import CartCard from "./CartCard";
 import EmptyCart from "./EmptyCart";
@@ -8,7 +8,7 @@ import { formatNumber } from "../../utility/constant";
 import { useTheme } from "../../Context/themeContext";
 import { useAuth } from "../../Context/authContext";
 
-const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 const Cart = ({ userDetail }) => {
   const { theme } = useTheme();
   const { authToken } = useAuth();

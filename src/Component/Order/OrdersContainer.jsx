@@ -1,11 +1,11 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Loader, ServerError } from "../UI";
+import { Loader, ServerError } from "../../LIBS";
 import OrderCard from "./OrderCard";
 import { useTheme } from "../../Context/themeContext";
 import { useAuth } from "../../Context/authContext";
-const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 const OrdersContainer = ({ userDetail }) => {
   const [ordersArr, setOrdersArr] = useState([]);
   const [filtertedOrdersArr, setFiltertedOrdersArr] = useState([]);

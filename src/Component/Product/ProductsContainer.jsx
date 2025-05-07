@@ -1,14 +1,13 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { API_URL } from "../../utility/constant";
 import { Link, useLocation } from "react-router-dom";
 import Productcard from "./ProductCard";
-import { Loader, ServerError } from "../UI";
+import { Loader, ServerError } from "../../LIBS";
 import { useTheme } from "../../Context/themeContext";
 import { useAuth } from "../../Context/authContext";
-const noResultImage = require("../../assets/images/noResult.png");
+import noResultImage from "../../assets/images/noResult.png";
 // import { SERVER_URL } from "../../config";
-const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 const ProductsContainer = ({ userDetail }) => {
   const location = useLocation();
   const { theme } = useTheme();
@@ -51,7 +50,7 @@ const ProductsContainer = ({ userDetail }) => {
   };
   const getAllProduct = () => {
     axios
-      .get(`${SERVER_URL}/api/product/get-all-products`, {
+      .get(`/api/product/get-all-products`, {
         params: { activeUserId: userDetail?.id, searchQuery, searchCategory },
       })
       .then((response) => {

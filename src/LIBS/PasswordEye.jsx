@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useTheme } from "../../Context/themeContext";
+import { useTheme } from "../Context/themeContext";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
 
 const PasswordEye = ({ password, error }) => {

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useTheme } from "../../Context/themeContext";
-import { Button, Input, OTPInput } from "../UI";
+import { Button, Input, OTPInput } from "../../LIBS";
 import axios from "axios";
 import { BiLoaderCircle } from "react-icons/bi";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
@@ -11,7 +11,7 @@ import { FaMoon, FaSun } from "react-icons/fa6";
 import { useAuth } from "../../Context/authContext";
 // import { BiLoaderAlt } from "react-icons/bi";
 const ForgetPasswordPage = ({ userDetail }) => {
-  const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+  const SERVER_URL = import.meta.env.VITE_SERVER_URL;
   const navigate = useNavigate();
 
   const [step, setStep] = useState(1); // 1: Email, 2: OTP, 3: New Password

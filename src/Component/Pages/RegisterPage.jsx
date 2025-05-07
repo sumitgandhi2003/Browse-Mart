@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useTheme } from "../../Context/themeContext";
 import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
-import { Button, Input, OTPInput } from "../UI";
+import { Button, Input, OTPInput } from "../../LIBS";
 import { FaMoon, FaSun } from "react-icons/fa6";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
 import { swalWithCustomConfiguration } from "../../utility/constant";
@@ -9,7 +9,7 @@ import axios from "axios";
 import { BiLoaderAlt } from "react-icons/bi";
 import { useAuth } from "../../Context/authContext";
 const RegisterPage = ({ userDetail }) => {
-  const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+  const SERVER_URL = import.meta.env.VITE_SERVER_URL;
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   const navigate = useNavigate();
   const location = useLocation();

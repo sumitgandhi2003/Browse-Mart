@@ -11,12 +11,12 @@ import {
 } from "../../utility/constant";
 import "./style.css";
 import { useTheme } from "../../Context/themeContext";
-import { Loader, Button, Input } from "../UI";
+import { Loader, Button, Input } from "../../LIBS";
 import { useAuth } from "../../Context/authContext";
 // import { FaRupeeSign } from "react-icons/fa";
-// const LOCATION_SERVER_URL = process.env.REACT_APP_LOCATION_FETCHING_SERVER_URL;
-// const LOCATION_API = process.env.REACT_APP_LOCATION_FETCHING_API_KEY;
-const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+// const LOCATION_SERVER_URL = import.meta.env.VITE_LOCATION_FETCHING_SERVER_URL;
+// const LOCATION_API = import.meta.env.VITE_LOCATION_FETCHING_API_KEY;
+const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 
 const BuyNow = ({ userDetail }) => {
   const navigate = useNavigate();

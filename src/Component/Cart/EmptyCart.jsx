@@ -1,11 +1,11 @@
 import React from "react";
-import Button from "../UI/Button";
+import Button from "../../LIBS/Button";
 import { Link } from "react-router-dom";
 import { useTheme } from "../../Context/themeContext";
-const emptyCartImage = require("../../assets/images/emptyCart.png");
+import emptyCartImage from "../../assets/images/emptyCart.png";
 
 const EmptyCart = () => {
-  const { theme, setTheme } = useTheme();
+  const { theme } = useTheme();
   return (
     <div
       // className={`flex gap-5 p-3  min-h-screen mobile:h-full mobile:flex-col tablet:flex-row ${

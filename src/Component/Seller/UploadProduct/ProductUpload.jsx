@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 // import Input from "../UI/Input";
 // import Button from "../UI/Button";
-import { Button, Input, TextArea } from "../../UI";
+import { Button, Input, TextArea } from "../../../LIBS";
 import axios from "axios";
 import { FiUpload } from "react-icons/fi";
 import { useDropzone } from "react-dropzone";
@@ -11,12 +11,12 @@ import {
   productBrands,
   swalWithCustomConfiguration,
 } from "../../../utility/constant";
-import Select from "../../UI/Select";
+import Select from "../../../LIBS/Select";
 import { useTheme } from "../../../Context/themeContext";
 // import cloudinary from "../../cloudinary.config";
-const SERVER_URL = process.env.REACT_APP_SERVER_URL;
-const API_KEY = process.env.REACT_APP_CLOUDINARY_API_KEY;
-const CLOUD_NAME = process.env.REACT_APP_CLOUDINARY_CLOUD_NAME;
+const SERVER_URL = import.meta.env.VITE_SERVER_URL;
+const API_KEY = import.meta.env.VITE_CLOUDINARY_API_KEY;
+const CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
 const ProductUpload = ({ authToken }) => {
   const [productUploading, setProductUploading] = useState(false);
   const { theme } = useTheme();

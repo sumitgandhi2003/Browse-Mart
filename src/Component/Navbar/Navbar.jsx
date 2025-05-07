@@ -1,19 +1,21 @@
 import { useState, useContext } from "react";
-import Hamburger from "../UI/Hamburger";
+import Hamburger from "../../LIBS/Hamburger";
 import { Link } from "react-router-dom";
 import ProfileSlider from "../Profile/ProfileSlider";
 import { useTheme } from "../../Context/themeContext";
 import { useCart } from "../../Context/cartContext";
 import { FaSun, FaMoon, FaShoppingCart, FaUser } from "react-icons/fa";
-import { Button, SearchBar } from "../UI";
+import { Button, SearchBar } from "../../LIBS";
 import { useAuth } from "../../Context/authContext";
+import { useUser } from "../../Context/userContext";
 
-const maleProfileIcon = require("../../assets/images/maleprofileicon.jpg");
-const Navbar = ({ userDetail, setUserDetail }) => {
+// import maleProfileIcon2 from "../../assets/images/maleprofileicon2.jpg";
+const Navbar = () => {
   const [showProfileSlider, setShowProfileSlider] = useState(false);
   const { theme, toggleTheme } = useTheme();
   const { authToken } = useAuth();
   const { cartCount } = useCart();
+  const { userDetail, setUserDetail } = useUser();
   const themeClass =
     theme === "dark" ? "bg-gray-800 text-white" : "bg-gray-200 text-gray-900";
   return (

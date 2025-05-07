@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useTheme } from "../../Context/themeContext";
+import { useTheme } from "../Context/themeContext";
 import { MdClose } from "react-icons/md";
 import { RxHamburgerMenu } from "react-icons/rx";
 

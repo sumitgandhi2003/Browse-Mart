@@ -21,7 +21,7 @@
 
 import { useNavigate } from "react-router-dom";
 import { AlertTriangle } from "lucide-react";
-import { useTheme } from "../../Context/themeContext";
+import { useTheme } from "../Context/themeContext";
 import { useEffect } from "react";
 
 const ServerError = () => {

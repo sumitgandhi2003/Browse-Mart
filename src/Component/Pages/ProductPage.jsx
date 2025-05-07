@@ -3,7 +3,7 @@ import { useParams, Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FaShare } from "react-icons/fa";
 import ProductCard from "../Product/ProductCard";
-import { Button, Loader, ServerError } from "../UI";
+import { Button, Loader, ServerError } from "../../LIBS";
 import { ReviewForm, ReviewCard } from "../Review";
 import ProductImage from "../Product/ProductImage";
 import { formatNumber, socialMedia } from "../../utility/constant";
@@ -11,8 +11,8 @@ import AddToCartButton from "../../utility/AddToCartButton";
 import { useTheme } from "../../Context/themeContext";
 import { useAuth } from "../../Context/authContext";
 // import { SERVER_URL } from "../../config";
-const pageNotFind = require("../../assets/images/pageNotFind.jpg");
-const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+import pageNotFind from "../../assets/images/pageNotFind.jpg";
+const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 
 const ProductPage = ({ userDetail }) => {
   const currentURL = window.location.href;

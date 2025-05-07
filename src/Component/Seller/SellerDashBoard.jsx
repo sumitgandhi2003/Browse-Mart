@@ -10,14 +10,14 @@ import {
   Select,
   SectionTitle,
   Button,
-} from "../UI";
+} from "../../LIBS";
 import axios from "axios";
 import { formatNumber, productCategory } from "../../utility/constant";
 import { BiLoaderAlt } from "react-icons/bi";
 import { useAuth } from "../../Context/authContext";
 import { useNavigate } from "react-router-dom";
 // import Select from "../UI/Select";
-const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 
 const SlidingButton = () => {
   const [isSliding, setIsSliding] = useState(false);

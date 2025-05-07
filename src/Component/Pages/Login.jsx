@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FaGoogle, FaFacebook, FaEyeSlash, FaEye } from "react-icons/fa";
 import { useTheme } from "../../Context/themeContext";
-import { Button, Input, OTPInput } from "../UI";
+import { Button, Input, OTPInput } from "../../LIBS";
 import {
   customToast,
   swalCustomConfiguration,
@@ -15,7 +15,7 @@ import { BiLoaderAlt } from "react-icons/bi";
 import { useAuth } from "../../Context/authContext";
 import { checkValidation } from "../../utility/constant";
 const Login = () => {
-  const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+  const SERVER_URL = import.meta.env.VITE_SERVER_URL;
   const navigate = useNavigate();
   const location = useLocation();
   const { theme, toggleTheme } = useTheme();

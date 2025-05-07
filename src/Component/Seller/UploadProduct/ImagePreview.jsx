@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Button from "../../UI/Button";
+import Button from "../../../LIBS/Button";
 const ImagePreview = ({ image }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const handlePrev = (e) => {

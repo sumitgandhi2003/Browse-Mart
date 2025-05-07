@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
-import Input from "../../UI/Input";
-import Button from "../../UI/Button";
+import Input from "../../../LIBS/Input";
+import Button from "../../../LIBS/Button";
 import axios from "axios";
 import { Navigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { swalWithCustomConfiguration } from "../../../utility/constant";
 const SignUpForm = ({ setIsSignUpShow, setAuthToken }) => {
-  const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+  const SERVER_URL = import.meta.env.VITE_SERVER_URL;
   const [initialUserDetail, setInitialUserDetail] = useState({
     email: "",
     name: "",

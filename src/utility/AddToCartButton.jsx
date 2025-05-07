@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { Button } from "../Component/UI";
+import { Button } from "../LIBS";
 import { useCart } from "../Context/cartContext";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { swalWithCustomConfiguration } from "./constant";
 import axios from "axios";
-const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 const AddToCartButton = ({ userDetail, productId, authToken, className }) => {
   const [isProductAdding, setIsProductAdding] = useState(false);
   const { setCartCount } = useCart();

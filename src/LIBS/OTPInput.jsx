@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useTheme } from "../../Context/themeContext";
+import { useTheme } from "../Context/themeContext";
 import Button from "./Button";
 import { BiLoaderAlt } from "react-icons/bi";
 import Input from "./Input";

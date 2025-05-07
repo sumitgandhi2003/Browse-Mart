@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from "react";
-import Button from "../UI/Button";
-import Input from "../UI/Input";
+import Button from "../../LIBS/Button";
+import Input from "../../LIBS/Input";
 import axios from "axios";
 import { swalWithCustomConfiguration } from "../../utility/constant";
-const defaultProileImage = require("../../assets/images/maleprofileicon.jpg");
-const SERVER_URL = process.env.REACT_APP_SERVER_URL;
-const Profile = ({ userDetail, authToken, setUserDetail }) => {
+import defaultProileImage from "../../assets/images/maleprofileicon.jpg";
+import { useAuth } from "../../Context/authContext";
+import { useUser } from "../../Context/userContext";
+const SERVER_URL = import.meta.env.VITE_SERVER_URL;
+const Profile = () => {
   const [profileDetails, setProfileDetails] = useState();
   // let profileDetails = userDetail;
   const [isEditing, setIsEditing] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
+  const { authToken } = useAuth();
+  const { userDetail, setUserDetail } = useUser();
 
   // String.prototype.toCapitalize = function () {
   //   if (this.length === 0) return "";

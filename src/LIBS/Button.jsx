@@ -17,7 +17,7 @@
 //   );
 // };
 
-import { useTheme } from "../../Context/themeContext";
+import { useTheme } from "../Context/themeContext";
 
 // Button.defaultProps = {
 //   className:

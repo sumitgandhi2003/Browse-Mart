@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import Input from "./Input";
-import { useTheme } from "../../Context/themeContext";
+import { useTheme } from "../Context/themeContext";
 import Button from "./Button";
 import { FaSearch } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";

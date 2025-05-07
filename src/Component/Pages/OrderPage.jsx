@@ -1,12 +1,12 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Loader, ServerError } from "../UI";
+import { Loader, ServerError } from "../../LIBS";
 import { formatNumber, orderStatus } from "../../utility/constant";
 import { FaCheck } from "react-icons/fa";
 import { useTheme } from "../../Context/themeContext";
 import { useAuth } from "../../Context/authContext";
-const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 
 const Orderpage = ({ userDetail }) => {
   const navigate = useNavigate();

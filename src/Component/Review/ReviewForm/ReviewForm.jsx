@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from "react";
-import Input from "../../UI/Input";
-import TextArea from "../../UI/TextArea";
-import Button from "../../UI/Button";
+import Input from "../../../LIBS/Input";
+import TextArea from "../../../LIBS/TextArea";
+import Button from "../../../LIBS/Button";
 import "./ReviewForm.css";
 import axios from "axios";
 // import component
 import ReviewStar from "./ReviewStar";
 import { swalWithCustomConfiguration } from "../../../utility/constant";
-const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 const ReviewForm = ({
   onClose,
   productId,

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import "./Loader.css";
-import { useTheme } from "../../../Context/themeContext";
+import { useTheme } from "../../Context/themeContext";
 
 export const Loader = () => {
   const { theme } = useTheme();

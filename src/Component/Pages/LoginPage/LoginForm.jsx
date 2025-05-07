@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
-import Input from "../../UI/Input";
-import Button from "../../UI/Button";
+import Input from "../../../LIBS/Input";
+import Button from "../../../LIBS/Button";
 import { useNavigate } from "react-router-dom";
 import { Toast, swalWithCustomConfiguration } from "../../../utility/constant";
 
 const LoginForm = ({ setIsSignUpShow, setAuthToken, redirect }) => {
   const navigate = useNavigate();
-  const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+  const SERVER_URL = import.meta.env.VITE_SERVER_URL;
   const [initialUserDetail, setInitialUserDetail] = useState({
     email: "",
     password: "",

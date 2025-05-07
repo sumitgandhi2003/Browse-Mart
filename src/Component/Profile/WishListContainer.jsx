@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 const WishListContainer = ({ authToken }) => {
   const [wishList, setWishList] = useState([]);
   const getAllWishList = async () => {

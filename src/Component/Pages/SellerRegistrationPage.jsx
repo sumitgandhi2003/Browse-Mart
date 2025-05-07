@@ -6,11 +6,11 @@ import {
   initialSellerDetails,
   swalWithCustomConfiguration,
 } from "../../utility/constant";
-import { Button, Input } from "../UI";
+import { Button, Input } from "../../LIBS";
 import axios from "axios";
 import { useTheme } from "../../Context/themeContext";
 import { useAuth } from "../../Context/authContext";
-const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 const SellerRegistrationPage = ({ userDetail }) => {
   const [sellerDetail, setSellerDetail] = useState(initialSellerDetails);
   const { theme } = useTheme();
