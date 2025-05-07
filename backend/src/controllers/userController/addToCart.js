@@ -1,0 +1,36 @@
+import Product from "../../model/productSchema.js";
+const addToCart = async (req, res, next) => {
+  try {
+    // const { _id } = req.user;
+    // console.log(_id);
+    // const orders = await Order.find({ userId: _id })
+    //   .populate("userId", "name email") // Populate customer data
+    //   .exec();
+    // console.log(orders);
+    const { productId, quantity } = req.body;
+    const user = req.user;
+    // console.log(user);
+    // user.cart = [];
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found." });
+    }
+    const existingProduct = user.cart.find(
+      (item) => item?.productId?.toString() === productId?.toString()
+    );
+    if (existingProduct) {
+      existingProduct.quantity += quantity;
+    } else {
+      user.cart.push({ productId, quantity });
+    }
+    await user.save();
+    await res
+      ?.status(200)
+      ?.json({ message: "Product Added!", cartCount: user?.cart?.length });
+  } catch (error) {
+    res.status(500).json({ message: "Internal Server Error" });
+    console.log(error);
+  }
+};
+
+export default addToCart;
