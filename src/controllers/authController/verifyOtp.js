@@ -1,6 +1,5 @@
-const User = require("../../model/userSchema");
-const jwt = require("jsonwebtoken");
-
+import User from "../../model/userSchema.js";
+import jwt from "jsonwebtoken";
 const verifyOtp = async (req, res) => {
   try {
     const foundedUser = req?.user;
@@ -48,4 +47,4 @@ const verifyOtp = async (req, res) => {
   }
 };
 
-module.exports = verifyOtp;
+export default verifyOtp;

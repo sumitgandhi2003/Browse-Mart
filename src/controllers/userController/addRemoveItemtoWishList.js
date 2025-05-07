@@ -1,6 +1,6 @@
-const User = require("../../model/userSchema");
-const Product = require("../../model/productSchema");
-const mongoose = require("mongoose");
+import User from "../../model/userSchema.js";
+import Product from "../../model/productSchema.js";
+import mongoose from "mongoose";
 const addRemoveItemToWishList = async (req, res) => {
   try {
     const activeUser = req?.user;
@@ -44,4 +44,4 @@ const addRemoveItemToWishList = async (req, res) => {
     });
   }
 };
-module.exports = addRemoveItemToWishList;
+export default addRemoveItemToWishList;

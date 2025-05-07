@@ -1,7 +1,6 @@
-const Order = require("../../model/orderSchema");
-const Product = require("../../model/productSchema");
-const User = require("../../model/userSchema");
-
+import Order from "../../model/orderSchema.js";
+import Product from "../../model/productSchema.js";
+import User from "../../model/userSchema.js";
 const getOrderById = async (req, res) => {
   try {
     const orderId = req?.body?.orderId;
@@ -11,12 +10,10 @@ const getOrderById = async (req, res) => {
 
     const orderDetails = await Order?.findOne({ orderId: orderId });
     if (orderDetails?.customerId !== req?.user?._id) {
-      return res
-        .status(403)
-        .json({
-          success: false,
-          message: "You are not authorized to view this order",
-        });
+      return res.status(403).json({
+        success: false,
+        message: "You are not authorized to view this order",
+      });
     }
     if (!orderDetails) {
       return res.status(404).json({ msg: "Order not found" });
@@ -57,4 +54,4 @@ const getOrderById = async (req, res) => {
   }
 };
 
-module.exports = getOrderById;
+export default getOrderById;

@@ -1,5 +1,4 @@
-const User = require("../../model/userSchema");
-
+import User from "../../model/userSchema.js";
 const verifyOTPForRegistration = async (req, res) => {
   try {
     const foundedUser = req?.user;
@@ -31,4 +30,4 @@ const verifyOTPForRegistration = async (req, res) => {
   }
 };
 
-module.exports = verifyOTPForRegistration;
+export default verifyOTPForRegistration;

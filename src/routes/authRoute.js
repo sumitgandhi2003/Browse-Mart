@@ -1,12 +1,13 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const register = require("../controllers/authController/register");
-const login = require("../controllers/authController/login");
-const forgetPassword = require("../controllers/authController/forgetPassword");
-const verifyOtp = require("../controllers/authController/verifyOtp");
-const resetPassword = require("../controllers/authController/resetPassword");
-const verifyOTPForRegistration = require("../controllers/authController/verifyOTPForRegistration");
-const otpVerification = require("../middleware/otpVerification");
+
+import register from "../controllers/authController/register.js";
+import login from "../controllers/authController/login.js";
+import forgetPassword from "../controllers/authController/forgetPassword.js";
+import verifyOtp from "../controllers/authController/verifyOtp.js";
+import resetPassword from "../controllers/authController/resetPassword.js";
+import verifyOTPForRegistration from "../controllers/authController/verifyOTPForRegistration.js";
+import otpVerification from "../middleware/otpVerification.js";
 router.route("/register").post(register);
 router
   .route("/email-verification")
@@ -15,4 +16,4 @@ router.route("/login").post(login);
 router.route("/forget-password").post(forgetPassword);
 router.route("/verify-otp").post(otpVerification, verifyOtp);
 router.route("/set-password").post(resetPassword);
-module.exports = router;
+export default router;

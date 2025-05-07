@@ -1,4 +1,4 @@
-const generateOrderId = (timeStamp) => {
+export const generateOrderId = (timeStamp) => {
   const prefix = "ORD";
   // const date = originalDate?.split("/")?.reverse()?.join("");
   const [date, time] = timeStamp
@@ -36,4 +36,3 @@ const generateOrderId = (timeStamp) => {
   )}`;
   return orderId;
 };
-module.exports = { generateOrderId };

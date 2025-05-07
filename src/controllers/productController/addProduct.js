@@ -1,5 +1,4 @@
-const Product = require("../../model/productSchema");
-
+import Product from "../../model/productSchema.js";
 const addProduct = async (req, res) => {
   try {
     const {
@@ -62,7 +61,7 @@ const addProduct = async (req, res) => {
     }); // Or a more specific message based on the error
   }
 };
-module.exports = addProduct;
+export default addProduct;
 // try {
 //     const newProduct = new product.insertOne({
 

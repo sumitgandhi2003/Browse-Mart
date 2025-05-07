@@ -1,7 +1,7 @@
-const User = require("../../model/userSchema");
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
-const sendEmail = require("../../services/emailService");
+import sendEmail from "../../services/emailService.js";
+import User from "../../model/userSchema.js";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 
 const resetPassword = async (req, res) => {
   try {
@@ -58,4 +58,4 @@ const resetPassword = async (req, res) => {
   }
 };
 
-module.exports = resetPassword;
+export default resetPassword;

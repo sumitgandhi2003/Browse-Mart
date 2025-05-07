@@ -9,4 +9,4 @@ const sellerAuthentication = (req, res, next) => {
   next();
 };
 
-module.exports = sellerAuthentication;
+export default sellerAuthentication;

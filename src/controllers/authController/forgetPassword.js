@@ -1,5 +1,5 @@
-const User = require("../../model/userSchema");
-const sendOtpEmail = require("../../services/otpService");
+import User from "../../model/userSchema.js";
+import sendOtpEmail from "../../services/otpService.js";
 const forgetPassword = async (req, res, next) => {
   try {
     const { email } = req?.body;
@@ -32,4 +32,4 @@ const forgetPassword = async (req, res, next) => {
   }
 };
 
-module.exports = forgetPassword;
+export default forgetPassword;

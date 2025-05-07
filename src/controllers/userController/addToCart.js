@@ -1,8 +1,4 @@
-const Product = require("../../model/productSchema");
-const User = require("../../model/userSchema");
-const mongoose = require("mongoose");
-const getCartItems = require("./getCartItems");
-const Order = require("../../model/orderSchema");
+import Product from "../../model/productSchema.js";
 const addToCart = async (req, res, next) => {
   try {
     // const { _id } = req.user;
@@ -37,4 +33,4 @@ const addToCart = async (req, res, next) => {
   }
 };
 
-module.exports = addToCart;
+export default addToCart;

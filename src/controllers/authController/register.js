@@ -1,6 +1,6 @@
-const User = require("../../model/userSchema");
-const bcrypt = require("bcrypt");
-const sendOtpEmail = require("../../services/otpService");
+import sendOtpEmail from "../../services/otpService.js";
+import User from "../../model/userSchema.js";
+import bcrypt from "bcrypt";
 const register = async (req, res) => {
   const { name, email, password, TandC, confirmPassword, phoneNumber } =
     req.body;
@@ -69,4 +69,4 @@ const register = async (req, res) => {
   }
 };
 
-module.exports = register;
+export default register;

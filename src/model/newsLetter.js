@@ -19,4 +19,4 @@ const newsletterSchema = new mongoose.Schema(
 
 const Newsletter = mongoose.model("Newsletter", newsletterSchema);
 
-module.exports = Newsletter;
+export default Newsletter;

@@ -1,5 +1,4 @@
-const Product = require("../../model/productSchema");
-
+import Product from "../../model/productSchema.js";
 const productVisibilityToggle = async (req, res) => {
   const productId = req?.params?.id;
   const sellerId = req?.user?.sellerId?.toString();
@@ -23,4 +22,4 @@ const productVisibilityToggle = async (req, res) => {
   });
 };
 
-module.exports = productVisibilityToggle;
+export default productVisibilityToggle;

@@ -1,4 +1,4 @@
-const sendEmail = require("./emailService");
+import sendEmail from "./emailService.js";
 
 const sendOrderConfirmationEmail = async (email, orderDetail) => {
   const htmlContent = `
@@ -58,4 +58,4 @@ const sendOrderConfirmationEmail = async (email, orderDetail) => {
   );
 };
 
-module.exports = sendOrderConfirmationEmail;
+export default sendOrderConfirmationEmail;

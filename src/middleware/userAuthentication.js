@@ -1,5 +1,5 @@
-const User = require("../model/userSchema");
-const jwt = require("jsonwebtoken");
+import User from "../model/userSchema.js";
+import jwt from "jsonwebtoken";
 
 const userAuthentication = async (req, res, next) => {
   const authHeader = req?.headers?.authorization;
@@ -33,4 +33,4 @@ const userAuthentication = async (req, res, next) => {
     res.status(401).json({ message: "Token expired" });
   }
 };
-module.exports = userAuthentication;
+export default userAuthentication;

@@ -1,6 +1,6 @@
-const Product = require("../../model/productSchema");
-const Order = require("../../model/orderSchema");
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
+import Product from "../../model/productSchema.js";
+import Order from "../../model/orderSchema.js";
 
 const getRelatedProduct = async (req, res) => {
   try {
@@ -43,4 +43,4 @@ const getRelatedProduct = async (req, res) => {
   }
 };
 
-module.exports = getRelatedProduct;
+export default getRelatedProduct;

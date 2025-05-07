@@ -4,6 +4,7 @@
   "description": "Express backend for e-commerce app",
   "author": "Sumit Gandhi",
   "main": "./src/server.js",
+  "type": "module",
   "scripts": {
     "build": "node ./src/server.js",
     "dev": "nodemon ./src/server.js"

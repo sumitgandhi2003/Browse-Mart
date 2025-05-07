@@ -1,4 +1,4 @@
-const Product = require("../../model/productSchema");
+import Product from "../../model/productSchema.js";
 const getAllWishList = async (req, res) => {
   try {
     // const activeUser = req.user;
@@ -42,4 +42,4 @@ const getAllWishList = async (req, res) => {
   }
 };
 
-module.exports = getAllWishList;
+export default getAllWishList;

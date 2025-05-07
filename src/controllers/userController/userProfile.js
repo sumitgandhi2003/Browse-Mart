@@ -1,5 +1,5 @@
-const User = require("../../model/userSchema");
-const jwt = require("jsonwebtoken");
+import User from "../../model/userSchema.js";
+import jwt from "jsonwebtoken";
 
 const userProfile = async (req, res, next) => {
   try {
@@ -22,4 +22,4 @@ const userProfile = async (req, res, next) => {
   }
 };
 
-module.exports = userProfile;
+export default userProfile;

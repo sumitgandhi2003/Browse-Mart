@@ -1,11 +1,13 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const userAuthentication = require("../middleware/userAuthentication");
-const sellerRegistration = require("../controllers/sellerController/sellerRegistration");
-const dashBoard = require("../controllers/sellerController/dashBoard");
-const sellerAuthentication = require("../middleware/sellerAuthentication");
-const getAllProductUsingSellerId = require("../controllers/sellerController/getAllProductUsingSellerId");
-const productVisibilityToggle = require("../controllers/sellerController/productVisibilityToggle");
+
+import userAuthentication from "../middleware/userAuthentication.js";
+import sellerAuthentication from "../middleware/sellerAuthentication.js";
+
+import sellerRegistration from "../controllers/sellerController/sellerRegistration.js";
+import dashBoard from "../controllers/sellerController/dashBoard.js";
+import getAllProductUsingSellerId from "../controllers/sellerController/getAllProductUsingSellerId.js";
+import productVisibilityToggle from "../controllers/sellerController/productVisibilityToggle.js";
 
 router.route("/register").post(userAuthentication, sellerRegistration);
 router
@@ -21,4 +23,4 @@ router.patch(
   productVisibilityToggle
 );
 
-module.exports = router;
+export default router;

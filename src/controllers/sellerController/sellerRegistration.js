@@ -1,5 +1,5 @@
-const SellerUser = require("../../model/sellerUserSchema");
-const User = require("../../model/userSchema");
+import SellerUser from "../../model/sellerUserSchema.js";
+import User from "../../model/userSchema.js";
 const sellerRegistration = async (req, res) => {
   try {
     const activeUser = req?.user;
@@ -79,4 +79,4 @@ const sellerRegistration = async (req, res) => {
     console.log(error);
   }
 };
-module.exports = sellerRegistration;
+export default sellerRegistration;

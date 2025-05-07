@@ -1,4 +1,4 @@
-const Product = require("../../model/productSchema");
+import Product from "../../model/productSchema.js";
 const getCartItems = async (req, res, next) => {
   try {
     const cartProduct = [];
@@ -43,4 +43,4 @@ const getCartItems = async (req, res, next) => {
   }
 };
 
-module.exports = getCartItems;
+export default getCartItems;

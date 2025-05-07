@@ -1,11 +1,12 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const cors = require("cors");
-const productRoutes = require("./routes/productRoutes");
-const userRoutes = require("./routes/userRoutes");
-const orderRoutes = require("./routes/orderRoutes");
-const sellerRoutes = require("./routes/sellerRoutes");
-const authRoutes = require("./routes/authRoute");
+import express from "express";
+import bodyParser from "body-parser";
+import cors from "cors";
+
+import productRoutes from "./routes/productRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
+import orderRoutes from "./routes/orderRoutes.js";
+import sellerRoutes from "./routes/sellerRoutes.js";
+import authRoutes from "./routes/authRoute.js";
 const app = express();
 const CORS_ORIGIN_URL = process.env.CORS_ORIGIN_URL || "*";
 app.use(
@@ -29,4 +30,4 @@ app.get("/", function (req, res) {
   res.send("Hello, bro");
 });
 
-module.exports = app;
+export default app;

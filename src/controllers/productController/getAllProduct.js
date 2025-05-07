@@ -1,5 +1,5 @@
-const Product = require("../../model/productSchema");
-const User = require("../../model/userSchema");
+import Product from "../../model/productSchema.js";
+import User from "../../model/userSchema.js";
 const getAllProduct = async (req, res) => {
   try {
     const { activeUserId, searchQuery, searchCategory } = req?.query;
@@ -64,16 +64,14 @@ const getAllProduct = async (req, res) => {
             : false,
         };
       });
-    return res
-      ?.status(200)
-      .json({
-        message: "data fetched",
-        sucess: true,
-        products: modifiedProducts,
-      });
+    return res?.status(200).json({
+      message: "data fetched",
+      sucess: true,
+      products: modifiedProducts,
+    });
   } catch (error) {
     res?.status(500).json({ message: "Internal Server Error" });
     console.error(error);
   }
 };
-module.exports = getAllProduct;
+export default getAllProduct;

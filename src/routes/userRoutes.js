@@ -1,14 +1,16 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const userAuthentication = require("../middleware/userAuthentication");
-const userProfile = require("../controllers/userController/userProfile");
-const changePassword = require("../controllers/userController/changePassword");
-const updateProfile = require("../controllers/userController/updateProfile");
-const addToCart = require("../controllers/userController/addToCart");
-const getCartItems = require("../controllers/userController/getCartItems");
-const updateCart = require("../controllers/userController/updateCart");
-const addRemoveItemToWishList = require("../controllers/userController/addRemoveItemtoWishList");
-const getAllWishList = require("../controllers/userController/getAllWishList");
+
+import userAuthentication from "../middleware/userAuthentication.js";
+
+import userProfile from "../controllers/userController/userProfile.js";
+import changePassword from "../controllers/userController/changePassword.js";
+import updateProfile from "../controllers/userController/updateProfile.js";
+import addToCart from "../controllers/userController/addToCart.js";
+import getCartItems from "../controllers/userController/getCartItems.js";
+import updateCart from "../controllers/userController/updateCart.js";
+import addRemoveItemToWishList from "../controllers/userController/addRemoveItemtoWishList.js";
+import getAllWishList from "../controllers/userController/getAllWishList.js";
 // User routes
 router.route("/profile").post(userAuthentication, userProfile);
 router.route("/change-password").post(changePassword);
@@ -20,4 +22,4 @@ router
   .route("/add-to-wishlist")
   .post(userAuthentication, addRemoveItemToWishList);
 router.route("/get-wishlist").post(userAuthentication, getAllWishList);
-module.exports = router;
+export default router;

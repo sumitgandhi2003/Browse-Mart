@@ -1,9 +1,10 @@
-const mongoose = require("mongoose");
-const DB_URL = process.env.DB_URL;
-const DB_NAME = process.env.DB_NAME;
-const NODE_ENV = process.env.NODE_ENV;
-const connectDB = async (count = 0) => {
-  if (count === 10) return;
+import mongoose from "mongoose";
+
+const connectDB = () => {
+  const DB_URL = process.env.DB_URL;
+  const DB_NAME = process.env.DB_NAME;
+  const NODE_ENV = process.env.NODE_ENV;
+
   if (NODE_ENV === "production") {
     console.log(`using ${NODE_ENV} database URL`);
   } else {
@@ -14,8 +15,7 @@ const connectDB = async (count = 0) => {
     .then(() => console.log("Database connected..."))
     .catch((error) => {
       console.log(error.message);
-      // connectDB(count + 1);
     });
 };
 
-module.exports = connectDB;
+export default connectDB;

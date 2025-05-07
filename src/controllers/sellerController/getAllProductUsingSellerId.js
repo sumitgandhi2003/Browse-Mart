@@ -1,5 +1,4 @@
-const { query } = require("express");
-const Product = require("../../model/productSchema");
+import Product from "../../model/productSchema.js";
 
 const getAllProductUsingSellerId = async (req, res) => {
   try {
@@ -59,4 +58,4 @@ const getAllProductUsingSellerId = async (req, res) => {
   }
 };
 
-module.exports = getAllProductUsingSellerId;
+export default getAllProductUsingSellerId;

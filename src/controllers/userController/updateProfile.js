@@ -1,5 +1,4 @@
-const User = require("../../model/productSchema");
-const jwt = require("jsonwebtoken");
+import User from "../../model/userSchema.js";
 
 const updateProfile = async (req, res, next) => {
   try {
@@ -36,4 +35,4 @@ const updateProfile = async (req, res, next) => {
   }
 };
 
-module.exports = updateProfile;
+export default updateProfile;

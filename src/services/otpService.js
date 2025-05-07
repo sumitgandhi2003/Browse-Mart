@@ -1,5 +1,5 @@
-const sendEmail = require("./emailService");
-const bcrypt = require("bcrypt");
+import sendEmail from "./emailService.js";
+import bcrypt from "bcrypt";
 
 const sendOtpEmail = async (email, subject) => {
   try {
@@ -28,4 +28,4 @@ const sendOtpEmail = async (email, subject) => {
   }
 };
 
-module.exports = sendOtpEmail;
+export default sendOtpEmail;

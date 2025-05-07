@@ -1,6 +1,5 @@
-const Order = require("../../model/orderSchema");
-const Product = require("../../model/productSchema");
-
+import Order from "../../model/orderSchema.js";
+import Product from "../../model/productSchema.js";
 const dashBoard = async (req, res) => {
   const sellerId = req?.user?.sellerId;
   // console.log(sellerId);
@@ -35,4 +34,4 @@ const dashBoard = async (req, res) => {
     topProducts,
   });
 };
-module.exports = dashBoard;
+export default dashBoard;

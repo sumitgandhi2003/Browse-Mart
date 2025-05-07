@@ -1,6 +1,5 @@
-const User = require("../../model/userSchema");
-const bcrypt = require("bcrypt");
-
+import User from "../../model/userSchema.js";
+import bcrypt from "bcrypt";
 const changePassword = async (req, res) => {
   const { email, prev_password, new_password } = req.body;
   try {
@@ -20,4 +19,4 @@ const changePassword = async (req, res) => {
   }
 };
 
-module.exports = changePassword;
+export default changePassword;

@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 const sellerSchema = new mongoose.Schema(
   {
     userId: {
@@ -35,4 +35,4 @@ const sellerSchema = new mongoose.Schema(
   { timeStampes: true }
 );
 const SellerUser = mongoose.model("Selleruser", sellerSchema);
-module.exports = SellerUser;
+export default SellerUser;

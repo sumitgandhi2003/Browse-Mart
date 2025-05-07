@@ -1,4 +1,4 @@
-const User = require("../../model/userSchema");
+import User from "../../model/userSchema.js";
 
 const updateCart = async (req, res, next) => {
   const { productId, quantity } = req.body;
@@ -22,4 +22,4 @@ const updateCart = async (req, res, next) => {
     ?.status(200)
     ?.json({ message: "data updated", cartCount: foundedUser?.cart?.length });
 };
-module.exports = updateCart;
+export default updateCart;

@@ -1,12 +1,14 @@
-const express = require("express");
+import express from "express";
 const router = express.Router();
-const addProduct = require("../controllers/productController/addProduct");
-const getAllProduct = require("../controllers/productController/getAllProduct");
-const getProductById = require("../controllers/productController/getProductById");
-const getRelatedProduct = require("../controllers/productController/getRelatedProduct");
-const submitReview = require("../controllers/reviewController/submitReview");
-const userAuthentication = require("../middleware/userAuthentication");
-const Product = require("../model/productSchema");
+
+import addProduct from "../controllers/productController/addProduct.js";
+import getAllProduct from "../controllers/productController/getAllProduct.js";
+import getProductById from "../controllers/productController/getProductById.js";
+import getRelatedProduct from "../controllers/productController/getRelatedProduct.js";
+
+import submitReview from "../controllers/reviewController/submitReview.js";
+
+import userAuthentication from "../middleware/userAuthentication.js";
 router.route("/add-product").post(userAuthentication, addProduct);
 router.route("/get-all-products").get(getAllProduct);
 router.route("/get-related-product").get(getRelatedProduct);
@@ -14,4 +16,4 @@ router.route("/:id").get(getProductById);
 
 router.route("/submit-review").post(userAuthentication, submitReview);
 
-module.exports = router;
+export default router;

@@ -1,7 +1,9 @@
-const Order = require("../../model/orderSchema");
-const Product = require("../../model/productSchema");
-const { generateOrderId } = require("../../utility/constraint");
-const sendOrderConfirmationEmail = require("../../services/sendOrderConfirmationEmail");
+import Order from "../../model/orderSchema.js";
+import Product from "../../model/productSchema.js";
+
+import { generateOrderId } from "../../utility/constraint.js";
+import sendOrderConfirmationEmail from "../../services/sendOrderConfirmationEmail.js";
+
 const submitOrder = async (req, res, next) => {
   try {
     const activeUser = req.user;
@@ -159,4 +161,4 @@ const submitOrder = async (req, res, next) => {
   }
 };
 
-module.exports = submitOrder;
+export default submitOrder;

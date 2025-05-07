@@ -1,5 +1,5 @@
-const Order = require("../../model/orderSchema");
-const Product = require("../../model/productSchema");
+import Order from "../../model/orderSchema.js";
+import Product from "../../model/productSchema.js";
 
 const getAllOrderByUserId = async (req, res, next) => {
   try {
@@ -66,4 +66,4 @@ const getAllOrderByUserId = async (req, res, next) => {
   }
 };
 
-module.exports = getAllOrderByUserId;
+export default getAllOrderByUserId;

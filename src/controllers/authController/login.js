@@ -1,6 +1,6 @@
-const User = require("../../model/userSchema");
-const bcrypt = require("bcrypt");
-const sendOtpEmail = require("../../services/otpService");
+import sendOtpEmail from "../../services/otpService.js";
+import User from "../../model/userSchema.js";
+import bcrypt from "bcrypt";
 
 const login = async (req, res, next) => {
   const { email, password } = req.body;
@@ -52,4 +52,4 @@ const login = async (req, res, next) => {
   // const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
   // res.json({ token: token });
 };
-module.exports = login;
+export default login;

@@ -1,5 +1,5 @@
-const User = require("../model/userSchema");
-const bcrypt = require("bcrypt");
+import User from "../model/userSchema.js";
+import bcrypt from "bcrypt";
 const otpVerification = async (req, res, next) => {
   const { email, otp } = req.body;
   try {
@@ -42,4 +42,4 @@ const otpVerification = async (req, res, next) => {
   }
 };
 
-module.exports = otpVerification;
+export default otpVerification;

@@ -1,6 +1,4 @@
-const { response } = require("express");
-const Product = require("../../model/productSchema");
-
+import Product from "../../model/productSchema.js";
 const submitReview = async (req, res, next) => {
   try {
     const { _id, name } = await req.user;
@@ -35,4 +33,4 @@ const submitReview = async (req, res, next) => {
   }
 };
 
-module.exports = submitReview;
+export default submitReview;
