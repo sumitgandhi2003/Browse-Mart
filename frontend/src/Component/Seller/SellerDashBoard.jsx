@@ -10,13 +10,19 @@ import {
   Select,
   SectionTitle,
   Button,
+  TextArea,
 } from "../../LIBS";
 import axios from "axios";
-import { formatNumber, productCategory } from "../../utility/constant";
+import {
+  checkValidation,
+  formatNumber,
+  initialProductDetails,
+  productBrands,
+  productCategory,
+} from "../../utility/constant";
 import { BiLoaderAlt } from "react-icons/bi";
 import { useAuth } from "../../Context/authContext";
-import { useNavigate } from "react-router-dom";
-// import Select from "../UI/Select";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 
 const SlidingButton = () => {
@@ -67,7 +73,7 @@ const ToggleSwitch = ({ visibiltyState = true, onToggle }) => {
   );
 };
 
-const DashBoard = () => {
+export const DashBoard = () => {
   const [dashBoardDetail, setDashBoardDetail] = useState(null);
   const [isDataFetching, setIsDataFetching] = useState(false);
   const [error, setError] = useState(null);
@@ -291,11 +297,290 @@ const DashBoard = () => {
   );
 };
 
-const Product = () => {
-  const [category, setCategory] = useState("");
+export const AddProductForm = () => {
+  const [productForm, setProductForm] = useState(initialProductDetails);
+  const [error, setError] = useState({});
+  const { theme } = useTheme();
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    console.log(name, value);
+    setProductForm((prev) => {
+      return {
+        ...prev,
+        [name]: value,
+      };
+    });
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(productForm);
+    const result = checkValidation(productForm);
+    console.log(result);
+    if (result) {
+      setError(result);
+    } else if (productForm?.mrpPrice < productForm?.sellingPrice) {
+      console.log("MRP Price should be greater than Selling Price");
+      setError((prev) => {
+        return {
+          ...prev,
+          mrpPrice: "MRP Price should be greater than Selling Price",
+        };
+      });
+    } else {
+      setError({});
+      // Submit the form data to the server or perform any other action
+      console.log("Form submitted successfully:", productForm);
+    }
+  };
+  return (
+    <div
+      className={`w-full rounded-lg shadow-md p-6 transition-all duration-300 ${
+        theme === "dark" ? "bg-gray-800" : "bg-white"
+      }`}
+    >
+      {/* Header */}
+      <div className="flex justify-between items-center mb-6">
+        <div>
+          <h1 className="text-2xl font-semibold">Add New Product</h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            Create and publish a new product listing
+          </p>
+        </div>
+        <div className="space-x-2">
+          <button
+            className={`px-4 py-2 border rounded-md ${
+              theme === "dark"
+                ? "border-gray-600 text-white"
+                : "border-gray-300 text-gray-700"
+            }`}
+          >
+            Save as Draft
+          </button>
+          <Button
+            className="px-4 py-2 bg-blue-600 text-white rounded-md"
+            btntext="Publish Product"
+            onClick={handleSubmit}
+          />
+        </div>
+      </div>
+
+      {/* Form */}
+      <form className="space-y-6">
+        {/* Basic Info */}
+        <div className="grid grid-cols-1 small-device:grid-cols-2 gap-4">
+          <div className=" flex flex-col gap-3">
+            <label htmlFor="name">
+              Product Name <span className="required">*</span>
+            </label>
+            <Input
+              type={"text"}
+              id={"name"}
+              name={"name"}
+              value={productForm?.name}
+              onChange={handleChange}
+              placeholder={"Product Name"}
+              className="p-2  bg-gray-100 border-2 rounded border-gray-300"
+            />
+            {error.name && <p className="required-field-error">{error.name}</p>}
+          </div>
+
+          <div className=" flex flex-col gap-3">
+            <label htmlFor="stock">
+              Brand <span className="required">*</span>
+            </label>
+            <Select
+              name="brand"
+              id="brand"
+              className="p-2 bg-gray-100 border-2 rounded border-gray-300"
+              onChange={handleChange}
+              value={productForm?.brand}
+              displayName="Select Brand"
+              itemArray={productBrands}
+            />
+            {error.brand && (
+              <p className="required-field-error">{error.brand}</p>
+            )}
+          </div>
+
+          {/* <div>
+            <label className="block font-medium mb-1">SKU</label>
+            <input
+              type="text"
+              placeholder="Enter SKU"
+              className="w-full border p-2 rounded-md"
+            />
+          </div> */}
+        </div>
+
+        {/* Media */}
+        <div>
+          <label className="block font-medium mb-1">Product Media</label>
+          <div className="w-full p-6 border-2 border-dashed rounded-md flex flex-col items-center justify-center text-center text-gray-500">
+            <span className="text-3xl">📁</span>
+            <p className="my-2">Drag and drop your product images here</p>
+            <button className="text-blue-600 underline">Browse Files</button>
+          </div>
+        </div>
+
+        {/* Pricing & Inventory */}
+        <div className="grid grid-cols-1 small-device:grid-cols-3 gap-4">
+          {/* <div>
+            <label className="block font-medium mb-1">Regular Price</label>
+            <input
+              type="number"
+              placeholder="$ 0.00"
+              className="w-full border p-2 rounded-md"
+            />
+          </div> */}
+
+          <div className=" flex flex-col gap-3">
+            <label htmlFor="mrpPrice">
+              MRP Price <span className="required">*</span>
+            </label>
+            <Input
+              type={"number"}
+              id={"mrpPrice"}
+              name={"mrpPrice"}
+              value={productForm?.mrpPrice}
+              onChange={handleChange}
+              placeholder={"MRP Price"}
+              className={"p-2 bg-gray-100 border-2 rounded border-gray-300"}
+            />
+            {error.mrpPrice && (
+              <p className="required-field-error">{error.mrpPrice}</p>
+            )}
+          </div>
+
+          <div className=" flex flex-col gap-3">
+            <label htmlFor="discountedPrice">
+              Selling Price <span className="required">*</span>
+            </label>
+            <Input
+              type={"number"}
+              id={"sellingPrice"}
+              name={"sellingPrice"}
+              value={productForm?.sellingPrice}
+              onChange={handleChange}
+              placeholder={"Selling Price"}
+              className={"p-2 bg-gray-100 border-2 rounded border-gray-300"}
+            />
+            {error.sellingPrice && (
+              <p className="required-field-error">{error.sellingPrice}</p>
+            )}
+          </div>
+
+          <div className=" flex flex-col gap-3">
+            <label htmlFor="stock">
+              Stock Quantity <span className="required">*</span>
+            </label>
+            <Input
+              type={"number"}
+              id={"stock"}
+              name={"stock"}
+              value={productForm?.stock}
+              onChange={handleChange}
+              placeholder={"Stock"}
+              className={"p-2 bg-gray-100 border-2 rounded border-gray-300"}
+            />
+            {error.stock && (
+              <p className="required-field-error">{error.stock}</p>
+            )}
+          </div>
+        </div>
+
+        {/* Description */}
+
+        <div className="w-full flex flex-col gap-3">
+          <label htmlFor="description">
+            Description <span className="required">*</span>
+          </label>
+          <TextArea
+            name="description"
+            id={"description"}
+            value={productForm?.description}
+            onChange={handleChange}
+            placeholder="Description"
+            className={`resize-none w-full min-h-[150px] p-2 border-2 outline-none rounded ${
+              theme === "dark"
+                ? "bg-gray-700 text-white border-gray-600 focus:border-gray-300"
+                : "text-gray-900 bg-gray-100 border-gray-300 focus:border-gray-600"
+            }`}
+          />
+
+          {error.description && (
+            <p className="required-field-error">{error.description}</p>
+          )}
+        </div>
+
+        {/* Categories & Tags */}
+
+        <div className="grid grid-cols-1 small-device:grid-cols-2 gap-4">
+          <div className=" flex flex-col gap-3 ">
+            <label htmlFor="category">
+              Category <span className="required">*</span>
+            </label>
+            <Select
+              name="category"
+              id="category"
+              className="p-2 bg-gray-100 border-2 rounded border-gray-300"
+              onChange={handleChange}
+              value={productForm?.category}
+              itemArray={productCategory}
+              displayName={"Select Category"}
+            />
+
+            {error.category && (
+              <p className="required-field-error">{error.category}</p>
+            )}
+          </div>
+
+          <div className="  flex flex-col gap-3">
+            <label htmlFor="subCategory">
+              Sub Category <span className="required">*</span>
+            </label>
+
+            <select
+              name="subCategory"
+              className={`p-2 bg-gray-100 border-2 rounded border-gray-300 outline-gray-400 outline-0 transition-all duration-300 ${
+                theme === "dark"
+                  ? "bg-gray-700 text-white border-gray-600 focus:border-gray-300"
+                  : "text-gray-900 bg-gray-100 border-gray-300 focus:border-gray-600"
+              }  `}
+              id="subCategory"
+              disabled={
+                productForm?.category === "others" || !productForm?.category
+              }
+              onChange={handleChange}
+              value={productForm?.subCategory}
+            >
+              <option value="">Select Sub Category</option>
+              {productCategory?.map((item) => {
+                return item.value === productForm?.category
+                  ? item.child?.map((subItem) => {
+                      return (
+                        <option key={subItem?.id} value={subItem?.value}>
+                          {subItem.toCapitalize()}
+                        </option>
+                      );
+                    })
+                  : "";
+              })}
+            </select>
+
+            {error.subCategory && (
+              <p className="required-field-error">{error.subCategory}</p>
+            )}
+          </div>
+        </div>
+      </form>
+    </div>
+  );
+};
+
+export const Product = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [productArr, setProductArr] = useState([]);
-  const [page, setPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [productCount, setProductCount] = useState(null);
   const [productRange, setProductRange] = useState({});
@@ -314,7 +599,7 @@ const Product = () => {
             "Content-Type": "application/json; charset=UTF-8",
             Authorization: `Bearer ${authToken}`,
           },
-          params: { filters, page },
+          params: { filters, page: currentPage },
         }
       );
       setProductArr(response?.data?.allProduct);
@@ -333,40 +618,21 @@ const Product = () => {
       setIsDataFetching(false);
     }
   };
-
-  const products = [
-    {
-      id: "PRD001",
-      name: "iPhone 14 Pro",
-      category: "Electronics",
-      stock: 245,
-      price: "$999.00",
-      status: "In Stock",
-      img: "📱",
-    },
-    {
-      id: "PRD002",
-      name: "Cotton T-Shirt",
-      category: "Clothing",
-      stock: 12,
-      price: "$24.99",
-      status: "Low Stock",
-      img: "👕",
-    },
-    {
-      id: "PRD003",
-      name: "Cotton T-Shirt",
-      category: "Clothing",
-      stock: 0,
-      price: "$24.99",
-      status: "Low Stock",
-      img: "👕",
-    },
-  ];
-
+  const handleFiltersChange = (e) => {
+    const { name, value } = e?.target || {};
+    console.log(name, value);
+    setFilters((prev) => {
+      return {
+        ...prev,
+        [name]: value?.toString()?.trim(),
+      };
+    });
+    setCurrentPage(1);
+  };
   useEffect(() => {
     getAllProduct();
-  }, [authToken, JSON.stringify(filters), page]);
+  }, [authToken, JSON.stringify(filters), currentPage]);
+
   return (
     <div
       className={`${
@@ -382,9 +648,12 @@ const Product = () => {
           {/* <h1 className="text-2xl font-bold">Products</h1> */}
           {/* <h2 className="text-2xl  font-semibold">Products</h2> */}
           <SectionTitle title="Products" className="text-2xl font-semibold" />
-          <button className="px-4 py-2 bg-purple-600 text-white rounded-md shadow-md hover:bg-purple-700">
-            + Add New Product
-          </button>
+          <Link to={"add"}>
+            <Button
+              className="px-4 py-2 bg-purple-600 text-white rounded-md shadow-md hover:bg-purple-700"
+              btntext="+ Add New Product"
+            />
+          </Link>
         </div>
 
         <p className="text-gray-500 mt-2">Manage your product inventory</p>
@@ -418,37 +687,17 @@ const Product = () => {
             itemArray={productCategory}
             className="p-2 bg-gray-100 border-2 rounded border-gray-300 cursor-pointer"
             displayName="all category"
-            onChange={(e) => {
-              setCategory(e?.target?.value?.toString()?.trim());
-              setFilters((prev) => {
-                return {
-                  ...prev,
-                  category: e?.target?.value?.toString()?.trim(),
-                };
-              });
-              setPage(1);
-            }}
+            onChange={handleFiltersChange}
           />
           <Select
             className="p-2 bg-gray-100 border-2 rounded border-gray-300 cursor-pointer"
-            name="status"
+            name="productStockStatus"
             itemArray={[
               { id: 1, value: "in stock" },
               { id: 2, value: "low stock" },
               { id: 3, value: "out of stock" },
             ]}
-            onChange={(e) => {
-              setPage(1);
-              setFilters((prev) => {
-                return {
-                  ...prev,
-                  productStockStatus: e?.target?.value
-                    ?.toString()
-                    ?.trim()
-                    ?.toLowerCase(),
-                };
-              });
-            }}
+            onChange={handleFiltersChange}
             displayName="status"
           />
         </div>
@@ -587,9 +836,12 @@ const Product = () => {
           </p>
           <div className="flex space-x-2">
             <Button
-              className="px-3 py-1 bg-gray-300 rounded-md"
+              className="px-3 py-1 bg-gray-300 rounded-md disabled:opacity-50"
               btntext="Previous"
-              onClick={() => setPage((prev) => (prev > 1 ? prev - 1 : prev))}
+              onClick={() =>
+                setCurrentPage((prev) => (prev > 1 ? prev - 1 : prev))
+              }
+              disabled={currentPage === 1}
             />
             {/* <button className="px-3 py-1 bg-gray-300 rounded-md">
               Previous
@@ -598,63 +850,27 @@ const Product = () => {
             {[...Array(totalPages)].map((item, index) => (
               <Button
                 className={`px-3 py-1 rounded-md ${
-                  index + 1 === page ? "bg-purple-600" : "bg-gray-300"
+                  index + 1 === currentPage
+                    ? "bg-purple-600 text-white"
+                    : "bg-gray-300"
                 } `}
                 key={index}
                 btntext={index + 1}
-                onClick={() => setPage(index + 1)}
+                onClick={() => setCurrentPage(index + 1)}
               />
             ))}
 
             <Button
-              className="px-3 py-1 bg-gray-300 rounded-md"
+              className="px-3 py-1 bg-gray-300 rounded-md disabled:opacity-50"
               btntext="Next"
               onClick={() => {
-                setPage((prev) => (prev < totalPages ? prev + 1 : prev));
+                setCurrentPage((prev) => (prev < totalPages ? prev + 1 : prev));
               }}
+              disabled={currentPage === totalPages}
             />
           </div>
         </div>
       </main>
-    </div>
-  );
-};
-
-const Orders = () => {
-  const { theme } = useTheme();
-  return (
-    <div
-      className={`${
-        theme === "dark" ? " text-white " : " text-gray-900"
-      } transition-all duration-300`}
-    >
-      <SectionTitle title="Orders" />
-    </div>
-  );
-};
-
-const Customers = () => {
-  const { theme } = useTheme();
-  return (
-    <div
-      className={`${
-        theme === "dark" ? " text-white " : " text-gray-900"
-      } transition-all duration-300`}
-    >
-      <SectionTitle title="Customer" />
-    </div>
-  );
-};
-
-const Setting = () => {
-  const { theme } = useTheme();
-  return (
-    <div
-      className={`${
-        theme === "dark" ? " text-white " : " text-gray-900"
-      } transition-all duration-300`}
-    >
-      <SectionTitle title="Setting" />
     </div>
   );
 };
@@ -669,26 +885,35 @@ const SellerDashBoard = () => {
     {
       id: 1,
       name: "Dashboard",
-      component: DashBoard,
       icon: "",
+      redirect: "dashboard",
     },
-    { id: 2, name: "Products", component: Product, icon: "" },
-    { id: 3, name: "Orders", component: Orders, icon: "" },
+    {
+      id: 2,
+      name: "Products",
+      icon: "",
+      redirect: "products",
+    },
+    {
+      id: 3,
+      name: "Orders",
+      icon: "",
+      redirect: "orders",
+    },
     {
       id: 4,
       name: "Cutomers",
-      component: Customers,
       icon: "",
+      redirect: "/",
     },
     {
       id: 5,
       name: "Setting",
-      component: Setting,
       icon: Settings,
+      redirect: "setting",
     },
   ];
-  const ActiveTabComponent = tabs[activeTab]?.component;
-  console.log(authToken);
+  // const ActiveTabComponent = tabs[activeTab]?.component;
   useEffect(() => {
     if (!authToken) {
       console.log("authToken", authToken);
@@ -711,8 +936,9 @@ const SellerDashBoard = () => {
       <SideBar activeTab={activeTab} setActiveTab={setActiveTab} tabs={tabs} />
       {/* Main Content */}
       <div className="flex-1 p-6 mobile:p-1 tablet:p-6 transition-all duration-300 h-screen overflow-y-scroll">
+        <Outlet />
         {/* Header */}
-        <ActiveTabComponent />
+        {/* <ActiveTabComponent /> */}
       </div>
     </div>
   );

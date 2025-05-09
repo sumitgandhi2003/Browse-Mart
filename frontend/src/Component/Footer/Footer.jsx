@@ -61,7 +61,7 @@ const Footer = ({ userDetail }) => {
             <h3 className="text-white text-lg font-semibold">Seller Service</h3>
             <ul className="mt-2 space-y-2 text-sm">
               <li className="hover:text-white cursor-pointer">
-                <Link to={"/seller-dashboard"}>Seller DashBoard</Link>
+                <Link to={"/seller"}>Seller DashBoard</Link>
               </li>
               <li className="hover:text-white cursor-pointer">Track Order</li>
               <li className="hover:text-white cursor-pointer">Returns</li>

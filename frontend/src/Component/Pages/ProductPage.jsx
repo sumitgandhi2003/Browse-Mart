@@ -57,6 +57,7 @@ const ProductPage = () => {
       .catch((error) => {
         const { data, status } = error?.response || {};
         if (status === 404) {
+          console.log("Product not found", data);
           setIsError({ message: data?.message, status: status });
           setIsDataFetch(true);
         } else {
@@ -135,7 +136,11 @@ const ProductPage = () => {
   if (!isDataFetch && !isReviewClicked) return <Loader />; // Loading state while data is fetched.  Replace with your own loading component.  e.g., <Loading /> or <CircularProgress /> from material-ui.  Also, add error handling here.  e.g., axios.get().catch(error => console.error(error))
   if (isError?.status === 404) {
     return (
-      <div className="w-full loader-container flex justify-center items-center">
+      <div
+        className={`w-full h-screen flex justify-center items-center  ${
+          theme === "dark" ? "bg-gray-900 text-white" : "bg-gray-100"
+        }`}
+      >
         <div className="flex flex-col gap-4 items-center">
           <img
             src={pageNotFind}
@@ -144,7 +149,7 @@ const ProductPage = () => {
           />
           <div className="font-roboto text-ellipsis text-lg">
             <p>Ohh....</p>
-            <p className="">{isError?.error}!</p>
+            <p className="">{isError?.message}!</p>
           </div>
         </div>
       </div>

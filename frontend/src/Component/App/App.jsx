@@ -27,12 +27,17 @@ import BuyNow from "../BuyNow/BuyNow";
 import SuccessPage from "../BuyNow/SuccessPage";
 import ProductsContainer from "../Product/ProductsContainer";
 import { OrdersContainer } from "../Order";
-import SellerDashBoard from "../Seller/SellerDashBoard";
+import SellerDashBoard, {
+  AddProductForm,
+  Product,
+} from "../Seller/SellerDashBoard";
 import { useTheme } from "../../Context/themeContext";
 import Profile1 from "../Profile/profile1";
 import { Loader } from "../../LIBS";
 import { useAuth } from "../../Context/authContext";
 import { useUser } from "../../Context/userContext";
+import { DashBoard } from "../Seller/SellerDashBoard";
+import Orders from "../Seller/Orders";
 const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 const AppLayout = () => {
   const { toggleTheme } = useTheme();
@@ -190,16 +195,13 @@ const App = () => {
         {
           path: "/seller-registration",
           element: (
-            <ProtectedRoute
-              requiredRole={"consumer"}
-              redirectPath={"/seller-dashboard"}
-            >
+            <ProtectedRoute requiredRole={"consumer"} redirectPath={"/seller"}>
               <SellerRegistrationPage userDetail={userDetail} />
             </ProtectedRoute>
           ),
         },
         {
-          path: "/seller-dashboard",
+          path: "/seller",
           element: (
             <ProtectedRoute
               requiredRole={"seller"}
@@ -208,6 +210,32 @@ const App = () => {
               <SellerDashBoard userDetail={userDetail} />
             </ProtectedRoute>
           ),
+          children: [
+            {
+              index: true,
+              element: <Navigate to="dashboard" />,
+            },
+            {
+              path: "dashboard",
+              element: <DashBoard />,
+            },
+            {
+              path: "products",
+              element: <Product />,
+            },
+            {
+              path: "products/add",
+              element: <AddProductForm />,
+            },
+            {
+              path: "orders",
+              element: <Orders />,
+            },
+            {
+              path: "*",
+              element: <Navigate to="dashboard" />,
+            },
+          ],
         },
         {
           path: "/profile",

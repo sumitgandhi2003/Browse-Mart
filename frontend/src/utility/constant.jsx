@@ -92,6 +92,16 @@ export const months = [
     alphabetics: "Dec",
   },
 ];
+export const initialProductDetails = {
+  name: "",
+  category: "",
+  subCategory: "",
+  description: "",
+  stock: "",
+  brand: "",
+  mrpPrice: "",
+  sellingPrice: "",
+};
 export const orderStatus = [
   "order placed",
   "order confirmed",

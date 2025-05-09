@@ -8,15 +8,15 @@ import { AuthProvider } from "./Context/authContext.jsx";
 import { UserProvider } from "./Context/userContext.jsx";
 
 createRoot(document.getElementById("root")).render(
-  // <StrictMode>
-  <ThemeProvider>
-    <AuthProvider>
-      <UserProvider>
-        <CartProvider>
-          <App />
-        </CartProvider>
-      </UserProvider>
-    </AuthProvider>
-  </ThemeProvider>
-  // </StrictMode>
+  <StrictMode>
+    <ThemeProvider>
+      <AuthProvider>
+        <UserProvider>
+          <CartProvider>
+            <App />
+          </CartProvider>
+        </UserProvider>
+      </AuthProvider>
+    </ThemeProvider>
+  </StrictMode>
 );

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useTheme } from "../Context/themeContext";
 import { MdClose } from "react-icons/md";
 import { RxHamburgerMenu } from "react-icons/rx";
+import { Link, NavLink } from "react-router-dom";
 
 const SideBar = ({ tabs, activeTab, setActiveTab }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -26,17 +27,24 @@ const SideBar = ({ tabs, activeTab, setActiveTab }) => {
             return (
               <li
                 key={index}
-                className={`p-2  flex items-center flex-row-reverse justify-end gap-4 text-blue-600 rounded-md  cursor-pointer ${
-                  activeTab === index ? "bg-blue-100" : "hover:bg-gray-200"
-                }`}
-                onClick={() => {
-                  setActiveTab(index);
-                  setSidebarOpen(false);
-                }}
+                className={` `}
+                // onClick={() => {
+                //   setActiveTab(index);
+                //   setSidebarOpen(false);
+                // }}
               >
-                {Icon && <span>{<Icon />}</span>}
+                <NavLink
+                  to={item?.redirect}
+                  className={({ isActive }) =>
+                    ` p-2  flex items-center flex-row-reverse justify-end gap-4 text-blue-600 rounded-md  cursor-pointer ${
+                      isActive ? "bg-blue-100" : "hover:bg-gray-200"
+                    } `
+                  }
+                >
+                  {Icon && <span>{<Icon />}</span>}
 
-                {item?.name}
+                  {item?.name}
+                </NavLink>
               </li>
             );
           })}
