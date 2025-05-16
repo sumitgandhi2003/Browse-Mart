@@ -1,8 +1,11 @@
 import { useTheme } from "../../Context/themeContext";
 import { SectionTitle } from "../../LIBS";
+import ComingSoon from "../ComingSoon/ComingSoon";
 
 const Setting = () => {
   const { theme } = useTheme();
+
+  return <ComingSoon theme={theme} />;
   return (
     <div
       className={`${
