@@ -9,7 +9,9 @@ const getOrderById = async (req, res) => {
     }
 
     const orderDetails = await Order?.findOne({ orderId: orderId });
-    if (orderDetails?.customerId !== req?.user?._id) {
+    console.log("orderDetails", orderDetails);
+    console.log("req.user", req?.user);
+    if (orderDetails?.customerId?.toString() !== req?.user?._id?.toString()) {
       return res.status(403).json({
         success: false,
         message: "You are not authorized to view this order",

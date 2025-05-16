@@ -4,12 +4,7 @@ import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
 import axios from "axios";
 import { Navigate } from "react-router-dom";
 import { useCart } from "../../Context/cartContext";
-//import components
-// import Signup from "./Component/Signup/Signup";
-// import Footer from "./Component/Footer/Footer";
-// import Checkout from "./Component/Checkout/Checkout";
-// import ForgotPassword from "./Component/ForgotPassword/ForgotPassword";
-// import Home from "./Component/Home/Home";
+
 import Cart from "../Cart/Cart";
 import Navbar from "../Navbar/Navbar";
 import Footer from "../Footer/Footer";
@@ -27,44 +22,51 @@ import BuyNow from "../BuyNow/BuyNow";
 import SuccessPage from "../BuyNow/SuccessPage";
 import ProductsContainer from "../Product/ProductsContainer";
 import { OrdersContainer } from "../Order";
-import SellerDashBoard, {
-  AddProductForm,
-  Product,
-} from "../Seller/SellerDashBoard";
+import SellerDashBoard from "../Seller/SellerLayout";
 import { useTheme } from "../../Context/themeContext";
 import Profile1 from "../Profile/profile1";
 import { Loader } from "../../LIBS";
 import { useAuth } from "../../Context/authContext";
 import { useUser } from "../../Context/userContext";
-import { DashBoard } from "../Seller/SellerDashBoard";
-import Orders from "../Seller/Orders";
+import { ConsumerRoutes, SellerRoutes } from "../../routes";
+import {
+  Setting,
+  Orders,
+  DashBoard,
+  ProductsPanel,
+  AddProductPanel,
+  Customers,
+  SellerLayout,
+} from "../Seller";
+import AppLayout from "../AppLayout/AppLayout";
+
 const SERVER_URL = import.meta.env.VITE_SERVER_URL;
-const AppLayout = () => {
-  const { toggleTheme } = useTheme();
-  const { userDetail, setUserDetail } = useUser();
+// const AppLayout = () => {
+//   const { toggleTheme } = useTheme();
+//   const { userDetail, setUserDetail } = useUser();
 
-  useEffect(() => {
-    const handleKeyPress = (e) => {
-      if (e.ctrlKey && e.key?.toString().toLowerCase() === "b") {
-        e.preventDefault();
-        // alert(" ctrl + B pressd");
-        toggleTheme();
-      }
-    };
+//   useEffect(() => {
+//     const handleKeyPress = (e) => {
+//       if (e.ctrlKey && e.key?.toString().toLowerCase() === "b") {
+//         e.preventDefault();
+//         // alert(" ctrl + B pressd");
+//         toggleTheme();
+//       }
+//     };
 
-    window.addEventListener("keydown", handleKeyPress);
-    return () => {
-      window.removeEventListener("keydown", handleKeyPress);
-    };
-  }, [toggleTheme]);
-  return (
-    <div className="App flex flex-col min-h-screen">
-      <Navbar userDetail={userDetail} setUserDetail={setUserDetail} />
-      <Outlet />
-      <Footer userDetail={userDetail} />
-    </div>
-  );
-};
+//     window.addEventListener("keydown", handleKeyPress);
+//     return () => {
+//       window.removeEventListener("keydown", handleKeyPress);
+//     };
+//   }, [toggleTheme]);
+//   return (
+//     <div className="App flex flex-col min-h-screen">
+//       <Navbar userDetail={userDetail} setUserDetail={setUserDetail} />
+//       <Outlet />
+//       <Footer userDetail={userDetail} />
+//     </div>
+//   );
+// };
 
 const App = () => {
   // const [userDetail, setUserDetail] = useState(null);
@@ -156,87 +158,98 @@ const App = () => {
       path: "/",
       element: <AppLayout />,
       children: [
-        {
-          path: "/",
-          element: <HomePage />,
-        },
-        {
-          path: "/products",
-          element: <ProductsContainer />,
-        },
-        {
-          path: "/product/:productId",
-          element: <ProductPage />,
-        },
-        {
-          path: "/cart",
-          element: <Cart />,
-        },
-        {
-          path: "/product/buy/:productId",
-          element: <BuyNow />,
-        },
-        {
-          path: "/checkout",
-          element: <BuyNow />,
-        },
-        {
-          path: "/order-success",
-          element: <SuccessPage />,
-        },
-        {
-          path: "/orders",
-          element: <OrdersContainer />,
-        },
-        {
-          path: "/order/:orderId",
-          element: <OrderPage />,
-        },
-        {
-          path: "/seller-registration",
-          element: (
-            <ProtectedRoute requiredRole={"consumer"} redirectPath={"/seller"}>
-              <SellerRegistrationPage userDetail={userDetail} />
-            </ProtectedRoute>
-          ),
-        },
-        {
-          path: "/seller",
-          element: (
-            <ProtectedRoute
-              requiredRole={"seller"}
-              redirectPath={"/seller-registration"}
-            >
-              <SellerDashBoard userDetail={userDetail} />
-            </ProtectedRoute>
-          ),
-          children: [
-            {
-              index: true,
-              element: <Navigate to="dashboard" />,
-            },
-            {
-              path: "dashboard",
-              element: <DashBoard />,
-            },
-            {
-              path: "products",
-              element: <Product />,
-            },
-            {
-              path: "products/add",
-              element: <AddProductForm />,
-            },
-            {
-              path: "orders",
-              element: <Orders />,
-            },
-            {
-              path: "*",
-              element: <Navigate to="dashboard" />,
-            },
-          ],
-        },
+        // {
+        //   index: true,
+        //   element: <HomePage />,
+        // },
+        // {
+        //   path: "/products",
+        //   element: <ProductsContainer />,
+        // },
+        // {
+        //   path: "/product/:productId",
+        //   element: <ProductPage />,
+        // },
+        // {
+        //   path: "/cart",
+        //   element: <Cart />,
+        // },
+        // {
+        //   path: "/product/buy/:productId",
+        //   element: <BuyNow />,
+        // },
+        // {
+        //   path: "/checkout",
+        //   element: <BuyNow />,
+        // },
+        // {
+        //   path: "/order-success",
+        //   element: <SuccessPage />,
+        // },
+        // {
+        //   path: "/orders",
+        //   element: <OrdersContainer />,
+        // },
+        // {
+        //   path: "/order/:orderId",
+        //   element: <OrderPage />,
+        // },
+        // {
+        //   path: "/seller-registration",
+        //   element: (
+        //     <ProtectedRoute requiredRole={"consumer"} redirectPath={"/seller"}>
+        //       <SellerRegistrationPage userDetail={userDetail} />
+        //     </ProtectedRoute>
+        //   ),
+        // },
+
+        ...ConsumerRoutes,
+        SellerRoutes,
+        // {
+        //   path: "/seller",
+        //   element: (
+        //     <ProtectedRoute
+        //       requiredRole={"seller"}
+        //       redirectPath={"/seller-registration"}
+        //     >
+        //       <SellerLayout userDetail={userDetail} />
+        //     </ProtectedRoute>
+        //   ),
+        //   children: [
+        //     {
+        //       index: true,
+        //       element: <Navigate to="dashboard" />,
+        //     },
+        //     {
+        //       path: "dashboard",
+        //       element: <DashBoard />,
+        //     },
+        //     {
+        //       path: "products",
+        //       element: <ProductsPanel />,
+        //     },
+        //     {
+        //       path: "products/add",
+        //       element: <AddProductPanel />,
+        //     },
+        //     {
+        //       path: "orders",
+        //       element: <Orders />,
+        //     },
+        //     {
+        //       path: "customers",
+        //       element: <Customers />,
+        //     },
+        //     {
+        //       path: "setting",
+        //       element: <Setting />,
+        //     },
+        //     {
+        //       path: "*",
+        //       element: <Navigate to="dashboard" />,
+        //     },
+        //   ],
+        // },
         {
           path: "/profile",
           element: <Profile1 />,

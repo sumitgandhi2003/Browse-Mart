@@ -34,7 +34,7 @@ const SideBar = ({ tabs, activeTab, setActiveTab }) => {
                 // }}
               >
                 <NavLink
-                  to={item?.redirect}
+                  to={item?.navigate}
                   className={({ isActive }) =>
                     ` p-2  flex items-center flex-row-reverse justify-end gap-4 text-blue-600 rounded-md  cursor-pointer ${
                       isActive ? "bg-blue-100" : "hover:bg-gray-200"

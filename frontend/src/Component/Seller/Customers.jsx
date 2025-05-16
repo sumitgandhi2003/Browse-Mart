@@ -1,7 +1,7 @@
 import { useTheme } from "../../Context/themeContext";
 import { SectionTitle } from "../../LIBS";
 
-const Setting = () => {
+const Customers = () => {
   const { theme } = useTheme();
   return (
     <div
@@ -9,8 +9,8 @@ const Setting = () => {
         theme === "dark" ? " text-white " : " text-gray-900"
       } transition-all duration-300`}
     >
-      <SectionTitle title="Setting" />
+      <SectionTitle title="Customers" />
     </div>
   );
 };
-export default Setting;
+export default Customers;
