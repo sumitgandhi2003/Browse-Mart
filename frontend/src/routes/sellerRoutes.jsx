@@ -1,16 +1,39 @@
 // src/routes/sellerRoutes.jsx
+import { lazy } from "react";
 import { Navigate } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 
-import {
-  Setting,
-  Orders,
-  DashBoard,
-  ProductsPanel,
-  AddProductPanel,
-  Customers,
-  SellerLayout,
-} from "../Component/Seller";
+const Setting = lazy(() =>
+  import("../Component/Seller").then((module) => ({ default: module.Setting })),
+);
+const Orders = lazy(() =>
+  import("../Component/Seller").then((module) => ({ default: module.Orders })),
+);
+const DashBoard = lazy(() =>
+  import("../Component/Seller").then((module) => ({
+    default: module.DashBoard,
+  })),
+);
+const ProductsPanel = lazy(() =>
+  import("../Component/Seller").then((module) => ({
+    default: module.ProductsPanel,
+  })),
+);
+const AddProductPanel = lazy(() =>
+  import("../Component/Seller").then((module) => ({
+    default: module.AddProductPanel,
+  })),
+);
+const Customers = lazy(() =>
+  import("../Component/Seller").then((module) => ({
+    default: module.Customers,
+  })),
+);
+const SellerLayout = lazy(() =>
+  import("../Component/Seller").then((module) => ({
+    default: module.SellerLayout,
+  })),
+);
 
 const SellerRoutes = {
   path: "/seller",

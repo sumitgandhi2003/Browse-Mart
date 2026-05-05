@@ -1,0 +1,50 @@
+.pwa-manager {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 60;
+  display: flex;
+  max-width: min(24rem, calc(100vw - 2rem));
+  flex-direction: column;
+  gap: 0.75rem;
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  border-radius: 0.75rem;
+  background: rgba(15, 23, 42, 0.94);
+  color: #ffffff;
+  padding: 0.9rem;
+  box-shadow: 0 18px 42px rgba(15, 23, 42, 0.28);
+}
+
+.pwa-manager__message {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.pwa-manager__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.pwa-manager__actions button {
+  border: 0;
+  border-radius: 0.5rem;
+  background: #2563eb;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 0.55rem 0.75rem;
+}
+
+.pwa-manager__actions button:hover {
+  background: #1d4ed8;
+}
+
+@media (max-width: 640px) {
+  .pwa-manager {
+    right: 0.75rem;
+    bottom: 0.75rem;
+  }
+}

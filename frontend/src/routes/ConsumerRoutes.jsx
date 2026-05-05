@@ -1,15 +1,23 @@
-import BuyNow from "../Component/BuyNow/BuyNow";
-import SuccessPage from "../Component/BuyNow/SuccessPage";
-import Cart from "../Component/Cart/Cart";
-import { OrdersContainer } from "../Component/Order";
-import {
-  HomePage,
-  OrderPage,
-  ProductPage,
-  SellerRegistrationPage,
-} from "../Component/Pages";
-import ProductsContainer from "../Component/Product/ProductsContainer";
+import { lazy } from "react";
 import ProtectedRoute from "./ProtectedRoute";
+
+const BuyNow = lazy(() => import("../Component/BuyNow/BuyNow"));
+const SuccessPage = lazy(() => import("../Component/BuyNow/SuccessPage"));
+const Cart = lazy(() => import("../Component/Cart/Cart"));
+const OrdersContainer = lazy(() =>
+  import("../Component/Order").then((module) => ({
+    default: module.OrdersContainer,
+  })),
+);
+const HomePage = lazy(() => import("../Component/Pages/HomePage"));
+const OrderPage = lazy(() => import("../Component/Pages/OrderPage"));
+const ProductPage = lazy(() => import("../Component/Pages/ProductPage"));
+const SellerRegistrationPage = lazy(() =>
+  import("../Component/Pages/SellerRegistrationPage"),
+);
+const ProductsContainer = lazy(() =>
+  import("../Component/Product/ProductsContainer"),
+);
 
 const ConsumerRoutes = [
   {

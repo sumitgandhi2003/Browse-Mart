@@ -1,12 +1,21 @@
+import { lazy } from "react";
 import { Navigate } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 import { useUser } from "../Context/userContext";
-import AdminLayout from "../Component/Admin/AdminLayout";
-import AdminDashboard from "../Component/Admin/Dashboard/AdminDashboard";
-import UserManagement from "../Component/Admin/UserManagement/UserManagement";
-import AdminProductList from "../Component/Admin/ProductManagement/AdminProductList";
 
-import CategoryManagement from "../Component/Admin/CategoryManagement/CategoryManagement";
+const AdminLayout = lazy(() => import("../Component/Admin/AdminLayout"));
+const AdminDashboard = lazy(() =>
+  import("../Component/Admin/Dashboard/AdminDashboard"),
+);
+const UserManagement = lazy(() =>
+  import("../Component/Admin/UserManagement/UserManagement"),
+);
+const AdminProductList = lazy(() =>
+  import("../Component/Admin/ProductManagement/AdminProductList"),
+);
+const CategoryManagement = lazy(() =>
+  import("../Component/Admin/CategoryManagement/CategoryManagement"),
+);
 
 const AdminOnly = ({ children }) => {
   const { userDetail } = useUser();
