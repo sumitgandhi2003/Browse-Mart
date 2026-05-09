@@ -1,17 +1,18 @@
 import { google } from "googleapis";
 
-const oauth2Client = new google.auth.OAuth2(
-  process.env.GOOGLE_CLIENT_ID,
-  process.env.GOOGLE_CLIENT_SECRET,
-  process.env.GOOGLE_CALLBACK_URL
-);
-
 /**
  * GET /api/auth/google
- * Returns the Google OAuth authorization URL for the frontend to redirect to.
+ * Creates a fresh oauth2Client per request and returns the Google OAuth URL.
  */
 const googleAuth = (req, res) => {
   try {
+    // ✅ New client per request — safe for serverless
+    const oauth2Client = new google.auth.OAuth2(
+      process.env.GOOGLE_CLIENT_ID,
+      process.env.GOOGLE_CLIENT_SECRET,
+      process.env.GOOGLE_CALLBACK_URL
+    );
+
     const scopes = [
       "https://www.googleapis.com/auth/userinfo.profile",
       "https://www.googleapis.com/auth/userinfo.email",
@@ -20,7 +21,7 @@ const googleAuth = (req, res) => {
     const authUrl = oauth2Client.generateAuthUrl({
       access_type: "offline",
       scope: scopes,
-      prompt: "select_account", // Always show account picker
+      prompt: "select_account",
     });
 
     return res.status(200).json({ success: true, url: authUrl });
@@ -32,5 +33,4 @@ const googleAuth = (req, res) => {
   }
 };
 
-export { oauth2Client };
 export default googleAuth;

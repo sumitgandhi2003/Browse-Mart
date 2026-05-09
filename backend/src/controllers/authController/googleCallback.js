@@ -1,11 +1,10 @@
 import { google } from "googleapis";
 import User from "../../model/userSchema.js";
-import { oauth2Client } from "./googleAuth.js";
 
 /**
  * POST /api/auth/google/callback
- * Exchanges the authorization code from Google for user info,
- * then finds or creates a user in the DB and returns a JWT.
+ * Creates a FRESH oauth2Client per request to avoid shared-state
+ * issues on Vercel serverless cold starts.
  */
 const googleCallback = async (req, res) => {
   const { code } = req.body;
@@ -17,6 +16,13 @@ const googleCallback = async (req, res) => {
   }
 
   try {
+    // ✅ New client per request — safe for serverless
+    const oauth2Client = new google.auth.OAuth2(
+      process.env.GOOGLE_CLIENT_ID,
+      process.env.GOOGLE_CLIENT_SECRET,
+      process.env.GOOGLE_CALLBACK_URL
+    );
+
     // 1. Exchange code for tokens
     const { tokens } = await oauth2Client.getToken(code);
     oauth2Client.setCredentials(tokens);
@@ -52,14 +58,14 @@ const googleCallback = async (req, res) => {
         await user.save();
       }
     } else {
-      // ── New user — register them via Google ──
+      // ── New user — register via Google ──
       user = new User({
         name: name || email.split("@")[0],
         email: email.trim().toLowerCase(),
         googleId,
         profilePic: picture || null,
-        isVerified: true,   // Google already verified their email
-        hasPassword: false, // No password set yet
+        isVerified: true,
+        hasPassword: false,
         TandC: true,
       });
       await user.save();
