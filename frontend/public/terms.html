@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terms of Service — BrowseMart</title>
+  <link rel="icon" type="image/png" href="/browsemart-icon.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f8fafc;
+      color: #1e293b;
+      line-height: 1.7;
+    }
+
+    header {
+      background: linear-gradient(135deg, #7C3AED 0%, #4F46E5 100%);
+      padding: 20px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 20px rgba(124,58,237,0.3);
+    }
+    .header-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo-mark {
+      width: 36px; height: 36px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+    }
+    .logo-text { color: #fff; font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
+    .logo-text span { opacity: 0.8; font-weight: 400; }
+
+    .hero {
+      background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+      padding: 60px 24px 80px;
+      text-align: center;
+      color: #fff;
+    }
+    .hero h1 { font-size: clamp(28px, 5vw, 42px); font-weight: 700; margin-bottom: 12px; }
+    .hero p { font-size: 16px; opacity: 0.85; max-width: 500px; margin: 0 auto 20px; }
+    .badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-size: 13px;
+      backdrop-filter: blur(4px);
+    }
+
+    .container {
+      max-width: 900px;
+      margin: -40px auto 60px;
+      padding: 0 24px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 4px 40px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+    .toc {
+      background: linear-gradient(135deg, #f0f4ff, #f8f0ff);
+      border-bottom: 1px solid #e8e4f0;
+      padding: 28px 36px;
+    }
+    .toc h2 { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: #7C3AED; margin-bottom: 12px; }
+    .toc ol { padding-left: 20px; }
+    .toc li { margin: 6px 0; }
+    .toc a { color: #4F46E5; text-decoration: none; font-size: 14px; font-weight: 500; }
+    .toc a:hover { text-decoration: underline; }
+
+    .content { padding: 40px 36px; }
+
+    section { margin-bottom: 44px; }
+    section:last-child { margin-bottom: 0; }
+
+    h2 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #f0edff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    h2 .icon {
+      width: 32px; height: 32px;
+      background: linear-gradient(135deg, #4F46E5, #7C3AED);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+
+    p { color: #475569; margin-bottom: 12px; font-size: 15px; }
+    ul { padding-left: 0; list-style: none; margin: 12px 0; }
+    ul li {
+      color: #475569;
+      font-size: 15px;
+      padding: 6px 0 6px 24px;
+      position: relative;
+    }
+    ul li::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 14px;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #4F46E5, #7C3AED);
+    }
+
+    .highlight-box {
+      background: linear-gradient(135deg, #f0f4ff, #f8f0ff);
+      border-left: 4px solid #4F46E5;
+      border-radius: 0 12px 12px 0;
+      padding: 16px 20px;
+      margin: 16px 0;
+      font-size: 14px;
+      color: #4F46E5;
+      font-weight: 500;
+    }
+
+    .role-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .role-card {
+      border: 2px solid #f0edff;
+      border-radius: 14px;
+      padding: 20px;
+      transition: border-color 0.2s;
+    }
+    .role-card:hover { border-color: #7C3AED; }
+    .role-card .role-icon { font-size: 28px; margin-bottom: 10px; }
+    .role-card h3 { font-size: 15px; font-weight: 700; color: #1e293b; margin-bottom: 6px; }
+    .role-card p { font-size: 13px; margin: 0; }
+
+    .contact-card {
+      background: linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%);
+      border-radius: 16px;
+      padding: 28px;
+      color: #fff;
+      margin-top: 40px;
+      text-align: center;
+    }
+    .contact-card h3 { font-size: 18px; margin-bottom: 8px; }
+    .contact-card p { color: rgba(255,255,255,0.8); font-size: 14px; margin-bottom: 16px; }
+    .contact-card a {
+      display: inline-block;
+      background: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.4);
+      color: #fff;
+      padding: 10px 24px;
+      border-radius: 100px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .contact-card a:hover { background: rgba(255,255,255,0.3); }
+
+    footer {
+      text-align: center;
+      padding: 32px 24px;
+      color: #94a3b8;
+      font-size: 13px;
+    }
+    footer a { color: #7C3AED; text-decoration: none; }
+
+    @media (max-width: 600px) {
+      .content, .toc { padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <div class="logo-mark">🛍️</div>
+      <div class="logo-text">Browse<span>Mart</span></div>
+    </div>
+  </header>
+
+  <div class="hero">
+    <h1>Terms of Service</h1>
+    <p>The rules and guidelines for using the BrowseMart marketplace platform</p>
+    <span class="badge">Last updated: May 10, 2025</span>
+  </div>
+
+  <div class="container">
+    <div class="card">
+
+      <div class="toc">
+        <h2>Table of Contents</h2>
+        <ol>
+          <li><a href="#acceptance">Acceptance of Terms</a></li>
+          <li><a href="#platform">About BrowseMart</a></li>
+          <li><a href="#accounts">User Accounts</a></li>
+          <li><a href="#buyers">Buyer Responsibilities</a></li>
+          <li><a href="#sellers">Seller Responsibilities</a></li>
+          <li><a href="#prohibited">Prohibited Activities</a></li>
+          <li><a href="#intellectual">Intellectual Property</a></li>
+          <li><a href="#liability">Limitation of Liability</a></li>
+          <li><a href="#termination">Termination</a></li>
+          <li><a href="#contact">Contact Us</a></li>
+        </ol>
+      </div>
+
+      <div class="content">
+
+        <div class="highlight-box">
+          📌 Please read these Terms carefully before using BrowseMart. By accessing or using our platform, you agree to be bound by these Terms of Service.
+        </div>
+
+        <section id="acceptance">
+          <h2><span class="icon">✅</span>1. Acceptance of Terms</h2>
+          <p>By creating an account or using BrowseMart in any way, you confirm that you:</p>
+          <ul>
+            <li>Are at least 13 years of age</li>
+            <li>Have read and understood these Terms of Service</li>
+            <li>Agree to comply with all applicable laws and regulations</li>
+            <li>Accept our Privacy Policy, which is incorporated into these Terms</li>
+          </ul>
+          <p>If you do not agree to these terms, please do not use the platform.</p>
+        </section>
+
+        <section id="platform">
+          <h2><span class="icon">🏪</span>2. About BrowseMart</h2>
+          <p>BrowseMart is a multi-role e-commerce marketplace platform that connects:</p>
+          <div class="role-grid">
+            <div class="role-card">
+              <div class="role-icon">🛒</div>
+              <h3>Consumers / Buyers</h3>
+              <p>Browse products, add to cart or wishlist, and place orders from verified sellers.</p>
+            </div>
+            <div class="role-card">
+              <div class="role-icon">🏷️</div>
+              <h3>Sellers</h3>
+              <p>List products, manage inventory, track sales, and fulfill orders through a dedicated dashboard.</p>
+            </div>
+            <div class="role-card">
+              <div class="role-icon">⚙️</div>
+              <h3>Administrators</h3>
+              <p>Oversee platform operations, manage users, and ensure marketplace integrity.</p>
+            </div>
+          </div>
+          <p>BrowseMart acts as a marketplace platform and is not directly responsible for transactions between buyers and sellers.</p>
+        </section>
+
+        <section id="accounts">
+          <h2><span class="icon">👤</span>3. User Accounts</h2>
+          <p>When you create an account on BrowseMart:</p>
+          <ul>
+            <li>You must provide accurate, complete, and current information</li>
+            <li>You are responsible for maintaining the confidentiality of your password</li>
+            <li>You are responsible for all activities that occur under your account</li>
+            <li>You must notify us immediately of any unauthorized account use</li>
+            <li>One person may not maintain more than one account</li>
+            <li>Accounts created via Google OAuth are subject to Google's Terms of Service in addition to ours</li>
+          </ul>
+          <div class="highlight-box">
+            🔐 We support Google Sign-In for your convenience. Your Google credentials are never stored on our servers.
+          </div>
+        </section>
+
+        <section id="buyers">
+          <h2><span class="icon">🛍️</span>4. Buyer Responsibilities</h2>
+          <p>As a buyer on BrowseMart, you agree to:</p>
+          <ul>
+            <li>Provide accurate shipping addresses for order delivery</li>
+            <li>Pay for items you order in full</li>
+            <li>Not abuse return or refund processes</li>
+            <li>Not engage in fraudulent orders or chargebacks</li>
+            <li>Contact sellers directly for product-related queries before raising disputes</li>
+          </ul>
+        </section>
+
+        <section id="sellers">
+          <h2><span class="icon">🏷️</span>5. Seller Responsibilities</h2>
+          <p>As a seller on BrowseMart, you agree to:</p>
+          <ul>
+            <li>List only products you have the right to sell</li>
+            <li>Provide accurate product descriptions, images, and pricing</li>
+            <li>Maintain sufficient inventory for listed products</li>
+            <li>Fulfill orders promptly and in good faith</li>
+            <li>Not list counterfeit, illegal, or prohibited items</li>
+            <li>Comply with all applicable tax and business regulations in your jurisdiction</li>
+            <li>Not engage in price manipulation or misleading promotions</li>
+          </ul>
+        </section>
+
+        <section id="prohibited">
+          <h2><span class="icon">🚫</span>6. Prohibited Activities</h2>
+          <p>The following activities are strictly prohibited on BrowseMart:</p>
+          <ul>
+            <li>Creating fake accounts or impersonating other users</li>
+            <li>Attempting to hack, scrape, or disrupt the platform</li>
+            <li>Posting false, misleading, or defamatory content</li>
+            <li>Engaging in any form of harassment or abuse</li>
+            <li>Using the platform for money laundering or fraudulent transactions</li>
+            <li>Uploading malware or malicious code</li>
+            <li>Circumventing platform fees or payment systems</li>
+          </ul>
+          <p>Violation of these rules may result in immediate account suspension or termination.</p>
+        </section>
+
+        <section id="intellectual">
+          <h2><span class="icon">©️</span>7. Intellectual Property</h2>
+          <p>All content on the BrowseMart platform, including logos, design, code, and text, is the property of BrowseMart and is protected by applicable intellectual property laws.</p>
+          <ul>
+            <li>You may not copy, reproduce, or distribute our platform content without permission</li>
+            <li>Sellers retain ownership of their product images and descriptions</li>
+            <li>By uploading content, sellers grant BrowseMart a license to display it on the platform</li>
+          </ul>
+        </section>
+
+        <section id="liability">
+          <h2><span class="icon">⚖️</span>8. Limitation of Liability</h2>
+          <p>BrowseMart provides the platform "as is" without warranties of any kind. To the maximum extent permitted by law:</p>
+          <ul>
+            <li>We are not liable for disputes between buyers and sellers</li>
+            <li>We are not responsible for product quality, delivery delays, or seller conduct</li>
+            <li>We are not liable for indirect, incidental, or consequential damages</li>
+            <li>Our total liability in any matter is limited to the amount you paid for the transaction in question</li>
+          </ul>
+        </section>
+
+        <section id="termination">
+          <h2><span class="icon">🔒</span>9. Termination</h2>
+          <p>BrowseMart reserves the right to suspend or terminate your account at our discretion if you:</p>
+          <ul>
+            <li>Violate these Terms of Service</li>
+            <li>Engage in fraudulent or harmful behavior</li>
+            <li>Repeatedly receive negative feedback from other users</li>
+          </ul>
+          <p>You may also delete your account at any time by contacting us. Upon termination, your right to use the platform ceases immediately.</p>
+        </section>
+
+        <section id="contact">
+          <h2><span class="icon">📬</span>10. Contact Us</h2>
+          <p>If you have questions about these Terms of Service or need to report a violation, please reach out to our team:</p>
+        </section>
+
+        <div class="contact-card">
+          <h3>Questions about our Terms?</h3>
+          <p>Our team is happy to clarify anything. We typically respond within 48 hours.</p>
+          <a href="mailto:itssumitgandhi@gmail.com">Contact Support</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 BrowseMart. All rights reserved. &nbsp;|&nbsp; <a href="/privacy.html">Privacy Policy</a> &nbsp;|&nbsp; <a href="/">Back to BrowseMart</a></p>
+  </footer>
+
+</body>
+</html>

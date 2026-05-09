@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy — BrowseMart</title>
+  <link rel="icon" type="image/png" href="/browsemart-icon.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f8fafc;
+      color: #1e293b;
+      line-height: 1.7;
+    }
+
+    /* ── Header ── */
+    header {
+      background: linear-gradient(135deg, #7C3AED 0%, #4F46E5 100%);
+      padding: 20px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 20px rgba(124,58,237,0.3);
+    }
+    .header-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo-mark {
+      width: 36px; height: 36px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+    }
+    .logo-text { color: #fff; font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
+    .logo-text span { opacity: 0.8; font-weight: 400; }
+
+    /* ── Hero ── */
+    .hero {
+      background: linear-gradient(135deg, #7C3AED 0%, #4F46E5 100%);
+      padding: 60px 24px 80px;
+      text-align: center;
+      color: #fff;
+    }
+    .hero h1 { font-size: clamp(28px, 5vw, 42px); font-weight: 700; margin-bottom: 12px; }
+    .hero p { font-size: 16px; opacity: 0.85; max-width: 500px; margin: 0 auto 20px; }
+    .badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 100px;
+      padding: 6px 16px;
+      font-size: 13px;
+      backdrop-filter: blur(4px);
+    }
+
+    /* ── Content ── */
+    .container {
+      max-width: 900px;
+      margin: -40px auto 60px;
+      padding: 0 24px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 4px 40px rgba(0,0,0,0.08);
+      overflow: hidden;
+    }
+    .toc {
+      background: linear-gradient(135deg, #f0f4ff, #f8f0ff);
+      border-bottom: 1px solid #e8e4f0;
+      padding: 28px 36px;
+    }
+    .toc h2 { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: #7C3AED; margin-bottom: 12px; }
+    .toc ol { padding-left: 20px; }
+    .toc li { margin: 6px 0; }
+    .toc a { color: #4F46E5; text-decoration: none; font-size: 14px; font-weight: 500; }
+    .toc a:hover { text-decoration: underline; }
+
+    .content { padding: 40px 36px; }
+
+    section { margin-bottom: 44px; }
+    section:last-child { margin-bottom: 0; }
+
+    h2 {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1e293b;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #f0edff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    h2 .icon {
+      width: 32px; height: 32px;
+      background: linear-gradient(135deg, #7C3AED, #4F46E5);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+
+    p { color: #475569; margin-bottom: 12px; font-size: 15px; }
+    ul { padding-left: 0; list-style: none; margin: 12px 0; }
+    ul li {
+      color: #475569;
+      font-size: 15px;
+      padding: 6px 0 6px 24px;
+      position: relative;
+    }
+    ul li::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 14px;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #7C3AED, #4F46E5);
+    }
+
+    .highlight-box {
+      background: linear-gradient(135deg, #f0f4ff, #f8f0ff);
+      border-left: 4px solid #7C3AED;
+      border-radius: 0 12px 12px 0;
+      padding: 16px 20px;
+      margin: 16px 0;
+      font-size: 14px;
+      color: #4F46E5;
+      font-weight: 500;
+    }
+
+    /* ── Contact card ── */
+    .contact-card {
+      background: linear-gradient(135deg, #7C3AED 0%, #4F46E5 100%);
+      border-radius: 16px;
+      padding: 28px;
+      color: #fff;
+      margin-top: 40px;
+      text-align: center;
+    }
+    .contact-card h3 { font-size: 18px; margin-bottom: 8px; }
+    .contact-card p { color: rgba(255,255,255,0.8); font-size: 14px; margin-bottom: 16px; }
+    .contact-card a {
+      display: inline-block;
+      background: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.4);
+      color: #fff;
+      padding: 10px 24px;
+      border-radius: 100px;
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .contact-card a:hover { background: rgba(255,255,255,0.3); }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 32px 24px;
+      color: #94a3b8;
+      font-size: 13px;
+    }
+    footer a { color: #7C3AED; text-decoration: none; }
+
+    @media (max-width: 600px) {
+      .content, .toc { padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <div class="logo-mark">🛍️</div>
+      <div class="logo-text">Browse<span>Mart</span></div>
+    </div>
+  </header>
+
+  <div class="hero">
+    <h1>Privacy Policy</h1>
+    <p>How we collect, use, and protect your personal information</p>
+    <span class="badge">Last updated: May 10, 2025</span>
+  </div>
+
+  <div class="container">
+    <div class="card">
+
+      <div class="toc">
+        <h2>Table of Contents</h2>
+        <ol>
+          <li><a href="#information">Information We Collect</a></li>
+          <li><a href="#usage">How We Use Your Information</a></li>
+          <li><a href="#sharing">Information Sharing</a></li>
+          <li><a href="#google">Google OAuth</a></li>
+          <li><a href="#cookies">Cookies & Tracking</a></li>
+          <li><a href="#security">Data Security</a></li>
+          <li><a href="#rights">Your Rights</a></li>
+          <li><a href="#contact">Contact Us</a></li>
+        </ol>
+      </div>
+
+      <div class="content">
+
+        <div class="highlight-box">
+          📋 By using BrowseMart, you agree to the collection and use of information in accordance with this policy. We are committed to protecting your privacy.
+        </div>
+
+        <section id="information">
+          <h2><span class="icon">📋</span>1. Information We Collect</h2>
+          <p>We collect information you provide directly to us when you create an account, make a purchase, or contact us:</p>
+          <ul>
+            <li><strong>Account Information:</strong> Name, email address, phone number, and password</li>
+            <li><strong>Profile Information:</strong> Profile picture, address, and shipping details</li>
+            <li><strong>Transaction Data:</strong> Purchase history, order details, and payment information</li>
+            <li><strong>Usage Data:</strong> Pages visited, products viewed, wishlist and cart interactions</li>
+            <li><strong>Device Information:</strong> Browser type, IP address, and operating system</li>
+          </ul>
+        </section>
+
+        <section id="usage">
+          <h2><span class="icon">⚙️</span>2. How We Use Your Information</h2>
+          <p>BrowseMart uses the collected information for the following purposes:</p>
+          <ul>
+            <li>To create and manage your account</li>
+            <li>To process orders and send order confirmations</li>
+            <li>To personalize your shopping experience</li>
+            <li>To communicate updates, promotions, and support responses</li>
+            <li>To improve the platform's features and performance</li>
+            <li>To detect and prevent fraudulent activity</li>
+            <li>To comply with legal obligations</li>
+          </ul>
+        </section>
+
+        <section id="sharing">
+          <h2><span class="icon">🤝</span>3. Information Sharing</h2>
+          <p>We do <strong>not</strong> sell your personal information. We may share your data only in the following circumstances:</p>
+          <ul>
+            <li><strong>Sellers:</strong> Your shipping address is shared with the seller to fulfill your order</li>
+            <li><strong>Service Providers:</strong> Trusted third parties that help operate our platform (hosting, email, payments)</li>
+            <li><strong>Legal Requirements:</strong> When required by law or to protect our legal rights</li>
+            <li><strong>Business Transfers:</strong> In case of a merger, acquisition, or sale of assets</li>
+          </ul>
+        </section>
+
+        <section id="google">
+          <h2><span class="icon">🔐</span>4. Google OAuth</h2>
+          <p>BrowseMart offers "Sign in with Google" for your convenience. When you use this feature:</p>
+          <ul>
+            <li>We receive your name, email address, and profile picture from Google</li>
+            <li>We do <strong>not</strong> receive your Google password</li>
+            <li>We only request the minimum permissions needed (profile + email)</li>
+            <li>You can revoke BrowseMart's access anytime from your <a href="https://myaccount.google.com/permissions" target="_blank" style="color:#7C3AED;">Google Account settings</a></li>
+          </ul>
+          <div class="highlight-box">
+            🔒 Google OAuth data is used solely for account creation and authentication. We do not use it for advertising or share it with third parties.
+          </div>
+        </section>
+
+        <section id="cookies">
+          <h2><span class="icon">🍪</span>5. Cookies & Tracking</h2>
+          <p>We use cookies and similar technologies to:</p>
+          <ul>
+            <li>Keep you logged in across browser sessions</li>
+            <li>Remember your cart and preferences</li>
+            <li>Analyze platform usage to improve performance</li>
+          </ul>
+          <p>You can control cookie behavior through your browser settings.</p>
+        </section>
+
+        <section id="security">
+          <h2><span class="icon">🛡️</span>6. Data Security</h2>
+          <p>We take the security of your data seriously and implement the following measures:</p>
+          <ul>
+            <li>All passwords are hashed using bcrypt before storage</li>
+            <li>Authentication uses industry-standard JWT tokens</li>
+            <li>All data transmissions are encrypted via HTTPS/TLS</li>
+            <li>Product images are stored securely via Cloudinary</li>
+            <li>Database access is restricted and monitored</li>
+          </ul>
+          <p>However, no method of transmission over the internet is 100% secure. We cannot guarantee absolute security.</p>
+        </section>
+
+        <section id="rights">
+          <h2><span class="icon">⚖️</span>7. Your Rights</h2>
+          <p>You have the following rights regarding your personal data:</p>
+          <ul>
+            <li><strong>Access:</strong> Request a copy of the data we hold about you</li>
+            <li><strong>Correction:</strong> Update inaccurate or incomplete information via your profile</li>
+            <li><strong>Deletion:</strong> Request deletion of your account and associated data</li>
+            <li><strong>Portability:</strong> Request your data in a portable format</li>
+            <li><strong>Objection:</strong> Opt out of marketing communications at any time</li>
+          </ul>
+        </section>
+
+        <section id="contact">
+          <h2><span class="icon">📬</span>8. Contact Us</h2>
+          <p>If you have any questions, concerns, or requests regarding this Privacy Policy, please contact us:</p>
+        </section>
+
+        <div class="contact-card">
+          <h3>Have a privacy question?</h3>
+          <p>We're here to help. Reach out to our team and we'll respond within 48 hours.</p>
+          <a href="mailto:itssumitgandhi@gmail.com">Contact Privacy Team</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2025 BrowseMart. All rights reserved. &nbsp;|&nbsp; <a href="/terms.html">Terms of Service</a> &nbsp;|&nbsp; <a href="/">Back to BrowseMart</a></p>
+  </footer>
+
+</body>
+</html>
