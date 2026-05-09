@@ -4,12 +4,13 @@ import { useTheme } from "../../Context/themeContext";
 import { Button, Input, OTPInput } from "../../LIBS";
 import { customToast } from "../../utility/constant";
 import axios from "axios";
-import { useNavigate, useLocation, Link } from "react-router-dom";
+import { useNavigate, useLocation, Link, useSearchParams } from "react-router-dom";
 import { FaMoon, FaSun } from "react-icons/fa6";
 import { guestUser, sellerUser } from "../../utility/constant";
 import { BiLoaderAlt } from "react-icons/bi";
 import { useAuth } from "../../Context/authContext";
 import { checkValidation } from "../../utility/constant";
+import GoogleLoginButton from "./GoogleLoginButton";
 const Login = () => {
   const SERVER_URL = import.meta.env.VITE_SERVER_URL;
   const navigate = useNavigate();
@@ -35,6 +36,8 @@ const Login = () => {
     otpVerification: false,
   });
   const redirect = new URLSearchParams(location?.search)?.get("redirect");
+  const [searchParams] = useSearchParams();
+  const googleError = searchParams.get("error");
   // const checkValidation = () => {
   //   const newErrors = {};
   //   if (!loginData?.email) newErrors.email = "Email is required!";
@@ -340,6 +343,24 @@ const Login = () => {
                       }
                       disabled={isProcessing.form}
                     />
+
+                    {/* ── Google OAuth ── */}
+                    <div className="flex items-center gap-3 pt-1">
+                      <div className={`h-px flex-1 ${theme === "dark" ? "bg-slate-700" : "bg-slate-200"}`} />
+                      <span className={`text-xs font-medium ${theme === "dark" ? "text-slate-500" : "text-slate-400"}`}>or</span>
+                      <div className={`h-px flex-1 ${theme === "dark" ? "bg-slate-700" : "bg-slate-200"}`} />
+                    </div>
+
+                    <GoogleLoginButton
+                      label="Continue with Google"
+                      className={theme === "dark" ? "border-slate-700 bg-slate-800 text-white hover:bg-slate-700" : "border-slate-200 bg-white text-slate-800 hover:bg-slate-50"}
+                    />
+
+                    {googleError && (
+                      <p className="text-center text-sm font-medium text-red-500">
+                        {decodeURIComponent(googleError)}
+                      </p>
+                    )}
 
                     <div className="pt-3">
                       <p

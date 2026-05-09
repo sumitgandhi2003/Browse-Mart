@@ -6,7 +6,9 @@ const userSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
+    password: { type: String, required: false, default: null },
+    googleId: { type: String, default: null },
+    hasPassword: { type: Boolean, default: true }, // false for Google-only accounts
     TandC: { type: Boolean },
     userType: {
       type: String,
@@ -59,8 +61,9 @@ const userSchema = new mongoose.Schema(
 
 userSchema.pre("save", async function (next) {
   const user = this;
-  if (!user.isModified("password")) {
-    return next(); // ✅ CRITICAL FIX: Return to prevent further execution
+  // Skip hashing if password wasn't changed OR if no password is set (Google user)
+  if (!user.isModified("password") || !user.password) {
+    return next();
   }
   try {
     const salt = await bcrypt.genSalt(10);

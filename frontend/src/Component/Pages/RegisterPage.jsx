@@ -7,6 +7,7 @@ import { FaEyeSlash, FaEye } from "react-icons/fa";
 import axios from "axios";
 import { BiLoaderAlt } from "react-icons/bi";
 import { useAuth } from "../../Context/authContext";
+import GoogleLoginButton from "./GoogleLoginButton";
 const RegisterPage = ({ userDetail }) => {
   const SERVER_URL = import.meta.env.VITE_SERVER_URL;
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -447,6 +448,18 @@ const RegisterPage = ({ userDetail }) => {
                         )
                       }
                       disabled={isProcessing}
+                    />
+
+                    {/* ── Google OAuth ── */}
+                    <div className="flex items-center gap-3 pt-1">
+                      <div className={`h-px flex-1 ${theme === "dark" ? "bg-slate-700" : "bg-slate-200"}`} />
+                      <span className={`text-xs font-medium ${theme === "dark" ? "text-slate-500" : "text-slate-400"}`}>or</span>
+                      <div className={`h-px flex-1 ${theme === "dark" ? "bg-slate-700" : "bg-slate-200"}`} />
+                    </div>
+
+                    <GoogleLoginButton
+                      label="Sign up with Google"
+                      className={theme === "dark" ? "border-slate-700 bg-slate-800 text-white hover:bg-slate-700" : "border-slate-200 bg-white text-slate-800 hover:bg-slate-50"}
                     />
                   </div>
                 )}

@@ -9,6 +9,8 @@ import resetPassword from "../controllers/authController/resetPassword.js";
 import verifyOTPForRegistration from "../controllers/authController/verifyOTPForRegistration.js";
 import resendOtp from "../controllers/authController/resendOtp.js";
 import otpVerification from "../middleware/otpVerification.js";
+import googleAuth from "../controllers/authController/googleAuth.js";
+import googleCallback from "../controllers/authController/googleCallback.js";
 
 router.route("/register").post(register);
 router
@@ -19,4 +21,6 @@ router.route("/resend-otp").post(resendOtp);
 router.route("/forget-password").post(forgetPassword);
 router.route("/verify-otp").post(otpVerification, verifyOtp);
 router.route("/set-password").post(resetPassword);
+router.route("/google").get(googleAuth);
+router.route("/google/callback").post(googleCallback);
 export default router;

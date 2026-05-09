@@ -14,6 +14,8 @@ const userProfile = async (req, res, next) => {
       address: foundedUser?.address,
       shippingAddress: foundedUser?.shippingAddress,
       cartCount: foundedUser?.cart?.length || 0,
+      hasPassword: foundedUser?.hasPassword ?? true,
+      googleId: foundedUser?.googleId || null,
     };
     return res.status(200).json({ mesaage: "data Found", userDetail });
   } catch (error) {

@@ -12,9 +12,10 @@ import updateCart from "../controllers/userController/updateCart.js";
 import addRemoveItemToWishList from "../controllers/userController/addRemoveItemtoWishList.js";
 import getAllWishList from "../controllers/userController/getAllWishList.js";
 import updateShippingAddress from "../controllers/userController/updateShippingAddress.js";
+import setPassword from "../controllers/userController/setPassword.js";
 // User routes
 router.route("/profile").post(userAuthentication, userProfile);
-router.route("/change-password").post(changePassword);
+router.route("/change-password").post(userAuthentication, changePassword);
 router.route("/update-profile").post(userAuthentication, updateProfile);
 router
   .route("/update-shipping-address")
@@ -26,4 +27,5 @@ router
   .route("/add-to-wishlist")
   .post(userAuthentication, addRemoveItemToWishList);
 router.route("/get-wishlist").post(userAuthentication, getAllWishList);
+router.route("/set-password").post(userAuthentication, setPassword);
 export default router;

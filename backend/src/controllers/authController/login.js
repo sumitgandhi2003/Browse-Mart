@@ -28,6 +28,17 @@ const login = async (req, res, next) => {
     // --------------------------------------------------------
 
 
+    // --- GOOGLE-ONLY ACCOUNT GUARD ---
+    // If the user signed up via Google and has never set a password
+    if (!existingUser.password || existingUser.hasPassword === false) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "This account uses Google Sign-In. Please log in with Google, or set a password from your Profile settings.",
+      });
+    }
+    // --------------------------------
+
     const validPassword = await existingUser.passwordCompare(password);
     if (!validPassword) {
       return res

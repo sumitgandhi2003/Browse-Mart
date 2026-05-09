@@ -14,6 +14,7 @@ const AppLayout = lazy(() => import("../AppLayout/AppLayout"));
 const Login = lazy(() => import("../Pages/Login"));
 const RegisterPage = lazy(() => import("../Pages/RegisterPage"));
 const ForgetPasswordPage = lazy(() => import("../Pages/ForgetPasswordPage"));
+const GoogleCallback = lazy(() => import("../Pages/GoogleCallback"));
 const Profile1 = lazy(() => import("../Profile/profile1"));
 const ProfileIndexRedirect = lazy(() =>
   import("../Profile/profile1").then((module) => ({
@@ -65,6 +66,10 @@ const router = createBrowserRouter([
   {
     path: "/forget-password",
     element: <ForgetPasswordPage />,
+  },
+  {
+    path: "/oauth/callback",
+    element: <GoogleCallback />,
   },
   {
     path: "/",
