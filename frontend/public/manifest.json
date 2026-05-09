@@ -1,27 +1,27 @@
 {
-  "name": "Browse Mart E-commerce",
-  "short_name": "Browse Mart",
-  "description": "Shop products, manage your cart, and track orders in Browse Mart.",
-  "theme_color": "#2563eb",
+  "name": "BrowseMart — Shop Smarter",
+  "short_name": "BrowseMart",
+  "description": "Browse products, manage your cart, and track orders on BrowseMart marketplace.",
+  "theme_color": "#7C3AED",
   "background_color": "#ffffff",
   "display": "standalone",
   "start_url": "/",
   "scope": "/",
   "icons": [
     {
-      "src": "/icons/icon-192x192.png",
+      "src": "/browsemart-icon.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icons/icon-512x512.png",
+      "src": "/browsemart-icon.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icons/maskable-icon-512x512.png",
+      "src": "/browsemart-icon.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
