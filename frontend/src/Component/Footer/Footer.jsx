@@ -109,10 +109,15 @@ const Footer = ({ userDetail }) => {
         </div>
       </div>
 
-      {/* Copyright Section */}
-      <div className="text-center text-sm text-gray-500 mt-10 border-t border-gray-700 pt-5">
-        &copy; <span>{new Date().getFullYear()}</span> Browse Mart. All rights
-        reserved.
+      <div className="text-center text-sm text-gray-500 mt-10 border-t border-gray-700 pt-5 space-y-2">
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            <a href="/privacy.html" className="hover:text-white underline transition-colors">Privacy Policy</a>
+            <span>·</span>
+            <a href="/terms.html" className="hover:text-white underline transition-colors">Terms of Service</a>
+            <span>·</span>
+            <a href="mailto:itssumitgandhi@gmail.com" className="hover:text-white underline transition-colors">Contact Us</a>
+          </div>
+          <div>&copy; <span>{new Date().getFullYear()}</span> BrowseMart. All rights reserved.</div>
       </div>
     </footer>
   );
