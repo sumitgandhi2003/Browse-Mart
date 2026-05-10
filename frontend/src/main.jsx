@@ -26,7 +26,7 @@ createRoot(document.getElementById("root")).render(
           <CartProvider>
             <CategoryProvider>
               <App />
-              <PwaManager />
+              {/* <PwaManager /> */}
             </CategoryProvider>
           </CartProvider>
         </UserProvider>

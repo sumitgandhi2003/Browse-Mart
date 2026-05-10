@@ -38,6 +38,12 @@ const Login = () => {
   const redirect = new URLSearchParams(location?.search)?.get("redirect");
   const [searchParams] = useSearchParams();
   const googleError = searchParams.get("error");
+  const googleErrorMessage =
+    googleError === "google_cancelled"
+      ? "Google sign-in was cancelled. Please try again."
+      : googleError
+      ? decodeURIComponent(googleError)
+      : null;
   // const checkValidation = () => {
   //   const newErrors = {};
   //   if (!loginData?.email) newErrors.email = "Email is required!";
@@ -262,6 +268,18 @@ const Login = () => {
                   : "Enter the verification code sent to your email."}
               </p>
 
+              {/* ── Google OAuth Error Banner ── */}
+              {googleErrorMessage && (
+                <div className={`mt-4 flex items-start gap-3 rounded-xl border px-4 py-3 text-sm font-medium ${
+                  theme === "dark"
+                    ? "border-red-800 bg-red-950 text-red-300"
+                    : "border-red-200 bg-red-50 text-red-600"
+                }`}>
+                  <span className="mt-0.5 text-base">⚠️</span>
+                  <span>{googleErrorMessage}</span>
+                </div>
+              )}
+
               <form onSubmit={handleSubmit} className="mt-7">
                 {step === 1 && (
                   <div className="space-y-3">
@@ -356,11 +374,6 @@ const Login = () => {
                       className={theme === "dark" ? "border-slate-700 bg-slate-800 text-white hover:bg-slate-700" : "border-slate-200 bg-white text-slate-800 hover:bg-slate-50"}
                     />
 
-                    {googleError && (
-                      <p className="text-center text-sm font-medium text-red-500">
-                        {decodeURIComponent(googleError)}
-                      </p>
-                    )}
 
                     <div className="pt-3">
                       <p
