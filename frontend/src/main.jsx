@@ -7,14 +7,15 @@ import { ThemeProvider } from "./Context/themeContext.jsx";
 import { AuthProvider } from "./Context/authContext.jsx";
 import { UserProvider } from "./Context/userContext.jsx";
 import { CategoryProvider } from "./Context/categoryContext.jsx";
-import PwaManager from "./Component/PWA/PwaManager.jsx";
+// import PwaManager from "./Component/PWA/PwaManager.jsx";
 
 // Suppress Chrome extension errors silently
 try {
-  if (typeof chrome !== "undefined" && chrome?.runtime?.onMessage) {
-    chrome.runtime.onMessage.addListener(() => true);
+  const chromeApi = globalThis.chrome;
+  if (chromeApi?.runtime?.onMessage) {
+    chromeApi.runtime.onMessage.addListener(() => true);
   }
-} catch (e) {
+} catch {
   // Silently ignore chrome API errors
 }
 

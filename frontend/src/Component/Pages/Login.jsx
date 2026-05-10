@@ -42,7 +42,7 @@ const Login = () => {
     googleError === "google_cancelled"
       ? "Google sign-in was cancelled. Please try again."
       : googleError
-      ? decodeURIComponent(googleError)
+      ? googleError
       : null;
   // const checkValidation = () => {
   //   const newErrors = {};
@@ -79,7 +79,6 @@ const Login = () => {
         const status = error?.response?.status || null;
         const {
           message = "",
-          sucess = undefined,
           requiresVerification = undefined,
           error: errorMessage = null,
         } = error?.response?.data || error;
@@ -160,7 +159,6 @@ const Login = () => {
       })
       .catch((error) => {
         console.log(error);
-        const status = error?.response?.status;
         const { message = "Failed to resend OTP" } =
           error?.response?.data || {};
         setErrorMessage(message);
@@ -200,7 +198,7 @@ const Login = () => {
   };
   useEffect(() => {
     if (authToken) navigate(redirect ? `${redirect}` : "/");
-  }, [authToken]);
+  }, [authToken, navigate, redirect]);
   return (
     !authToken && (
       <div

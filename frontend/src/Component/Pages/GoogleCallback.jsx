@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { useNavigate, useSearchParams, useLocation } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../../Context/authContext";
 import { useTheme } from "../../Context/themeContext";
@@ -14,7 +14,6 @@ const GoogleCallback = () => {
   const SERVER_URL = import.meta.env.VITE_SERVER_URL;
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const location = useLocation();
   const { setAuthToken } = useAuth();
   const { theme } = useTheme();
   const hasCalled = useRef(false); // Prevent double-call in StrictMode
@@ -28,6 +27,8 @@ const GoogleCallback = () => {
 
     // User denied access on Google's screen
     if (error || !code) {
+      localStorage.removeItem("AuthToken");
+      setAuthToken(null);
       navigate("/login?error=google_cancelled");
       return;
     }
@@ -46,9 +47,11 @@ const GoogleCallback = () => {
         console.error("Google callback error:", err);
         const msg =
           err?.response?.data?.message || "Google login failed. Try again.";
+        localStorage.removeItem("AuthToken");
+        setAuthToken(null);
         navigate(`/login?error=${encodeURIComponent(msg)}`);
       });
-  }, []);
+  }, [SERVER_URL, navigate, searchParams, setAuthToken]);
 
   return (
     <div

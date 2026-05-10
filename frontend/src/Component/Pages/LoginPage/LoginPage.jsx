@@ -29,6 +29,7 @@ const LoginPage = () => {
     password: "guestuser",
   };
   const redirect = new URLSearchParams(location?.search)?.get("redirect");
+  const loginError = new URLSearchParams(location?.search)?.get("error");
 
   const handleGuestLogin = () => {
     setIsQuickLogining((prev) => ({ ...prev, guest: true }));
@@ -109,6 +110,17 @@ const LoginPage = () => {
   useEffect(() => {
     if (authToken) navigate("/");
   }, [authToken, navigate]);
+
+  useEffect(() => {
+    if (!loginError) return;
+
+    const message =
+      loginError === "google_cancelled"
+        ? "Google sign-in was cancelled. Please try again."
+        : loginError;
+
+    swalWithCustomConfiguration?.fire("Oops!", message, "error");
+  }, [loginError]);
 
   return (
     <div className="w-screen flex h-screen laptop:w-screen laptop:h-screen bg-blue-300  ">

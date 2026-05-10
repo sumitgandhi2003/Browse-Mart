@@ -44,10 +44,11 @@ axios.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response && error.response.status === 403) {
-      if (error.response.data?.message?.includes("suspended")) {
+      const message = error.response.data?.message || "";
+      if (message.includes("suspended")) {
         // Enforce block mechanism globally
         localStorage.removeItem("AuthToken");
-        window.location.href = "/login";
+        window.location.href = `/login?error=${encodeURIComponent(message)}`;
       }
     }
     return Promise.reject(error);
