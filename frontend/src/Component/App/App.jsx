@@ -31,6 +31,11 @@ const ProfileOverviewPage = lazy(() =>
     default: module.ProfileOverviewPage,
   })),
 );
+const ProfileSecurityPage = lazy(() =>
+  import("../Profile/profile1").then((module) => ({
+    default: module.ProfileSecurityPage,
+  })),
+);
 const ProfileWishlistPage = lazy(() =>
   import("../Profile/profile1").then((module) => ({
     default: module.ProfileWishlistPage,
@@ -90,6 +95,10 @@ const router = createBrowserRouter([
           {
             path: "overview",
             element: <ProfileOverviewPage />,
+          },
+          {
+            path: "security",
+            element: <ProfileSecurityPage />,
           },
           {
             path: "orders",

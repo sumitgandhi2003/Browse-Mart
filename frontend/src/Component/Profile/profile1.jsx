@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { FaBox, FaHeart, FaUser } from "react-icons/fa";
+import { FaBox, FaEye, FaEyeSlash, FaHeart, FaLock, FaUser } from "react-icons/fa";
 import { NavLink, Navigate, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useTheme } from "../../Context/themeContext";
 import { useAuth } from "../../Context/authContext";
@@ -16,6 +16,7 @@ const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 
 const tabs = [
   { icon: FaUser, tab: "overview", label: "Profile Overview" },
+  { icon: FaLock, tab: "security", label: "Password & Security" },
   { icon: FaBox, tab: "orders", label: "Orders" },
   { icon: FaHeart, tab: "wishlist", label: "Wishlist" },
 ];
@@ -78,24 +79,27 @@ const Profile1 = () => {
         </div>
 
         <nav className="mt-6 space-y-3">
-          {tabs.map(({ icon: Icon, tab, label }) => (
-            <NavLink
-              key={tab}
-              to={`/profile/${tab}`}
-              className={({ isActive }) =>
-                `flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm font-semibold transition-all duration-300 ${
-                  isActive
-                    ? "bg-indigo-600 text-white"
-                    : theme === "dark"
-                    ? "text-gray-300 hover:bg-gray-800"
-                    : "text-gray-700 hover:bg-gray-100"
-                }`
-              }
-            >
-              <Icon className="h-4 w-4" />
-              <span>{label}</span>
-            </NavLink>
-          ))}
+          {tabs.map((item) => {
+            const TabIcon = item.icon;
+            return (
+              <NavLink
+                key={item.tab}
+                to={`/profile/${item.tab}`}
+                className={({ isActive }) =>
+                  `flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm font-semibold transition-all duration-300 ${
+                    isActive
+                      ? "bg-indigo-600 text-white"
+                      : theme === "dark"
+                      ? "text-gray-300 hover:bg-gray-800"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`
+                }
+              >
+                <TabIcon className="h-4 w-4" />
+                <span>{item.label}</span>
+              </NavLink>
+            );
+          })}
         </nav>
       </aside>
 
@@ -105,24 +109,27 @@ const Profile1 = () => {
             theme === "dark" ? "bg-gray-950" : "bg-white"
           }`}
         >
-          {tabs.map(({ icon: Icon, tab, label }) => (
-            <NavLink
-              key={tab}
-              to={`/profile/${tab}`}
-              className={({ isActive }) =>
-                `flex shrink-0 items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold ${
-                  isActive
-                    ? "bg-indigo-600 text-white"
-                    : theme === "dark"
-                    ? "bg-gray-800 text-gray-300"
-                    : "bg-gray-200 text-gray-700"
-                }`
-              }
-            >
-              <Icon className="h-4 w-4" />
-              <span>{label}</span>
-            </NavLink>
-          ))}
+          {tabs.map((item) => {
+            const TabIcon = item.icon;
+            return (
+              <NavLink
+                key={item.tab}
+                to={`/profile/${item.tab}`}
+                className={({ isActive }) =>
+                  `flex shrink-0 items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold ${
+                    isActive
+                      ? "bg-indigo-600 text-white"
+                      : theme === "dark"
+                      ? "bg-gray-800 text-gray-300"
+                      : "bg-gray-200 text-gray-700"
+                  }`
+                }
+              >
+                <TabIcon className="h-4 w-4" />
+                <span>{item.label}</span>
+              </NavLink>
+            );
+          })}
         </div>
 
         <Outlet />
@@ -153,12 +160,6 @@ export const ProfileOverviewPage = () => {
   const [isUpdating, setIsUpdating] = useState(false);
   const [isShippingEditing, setIsShippingEditing] = useState(false);
   const [isShippingUpdating, setIsShippingUpdating] = useState(false);
-  const [setPasswordForm, setSetPasswordForm] = useState({ newPassword: "", confirmPassword: "" });
-  const [isSettingPassword, setIsSettingPassword] = useState(false);
-  const [setPasswordMsg, setSetPasswordMsg] = useState({ type: "", text: "" });
-  const [changePasswordForm, setChangePasswordForm] = useState({ currentPassword: "", newPassword: "", confirmPassword: "" });
-  const [isChangingPassword, setIsChangingPassword] = useState(false);
-  const [changePasswordMsg, setChangePasswordMsg] = useState({ type: "", text: "" });
 
   useEffect(() => {
     setProfileForm({
@@ -294,70 +295,6 @@ export const ProfileOverviewPage = () => {
       country: userDetail?.shippingAddress?.country || "",
     });
     setIsShippingEditing(false);
-  };
-
-  const handleSetPassword = async (e) => {
-    e.preventDefault();
-    setSetPasswordMsg({ type: "", text: "" });
-    const { newPassword, confirmPassword } = setPasswordForm;
-    if (!newPassword || !confirmPassword) {
-      return setSetPasswordMsg({ type: "error", text: "Both password fields are required." });
-    }
-    if (newPassword.length < 6) {
-      return setSetPasswordMsg({ type: "error", text: "Password must be at least 6 characters." });
-    }
-    if (newPassword !== confirmPassword) {
-      return setSetPasswordMsg({ type: "error", text: "Passwords do not match." });
-    }
-    setIsSettingPassword(true);
-    try {
-      await axios({
-        method: "post",
-        url: `${SERVER_URL}/api/user/set-password`,
-        headers: { Authorization: `Bearer ${authToken}` },
-        data: { newPassword, confirmPassword },
-      });
-      setSetPasswordMsg({ type: "success", text: "Password set! You can now log in with email & password." });
-      setSetPasswordForm({ newPassword: "", confirmPassword: "" });
-      // Reflect change in userDetail context
-      setUserDetail((prev) => ({ ...prev, hasPassword: true }));
-    } catch (err) {
-      const msg = err?.response?.data?.message || "Failed to set password. Try again.";
-      setSetPasswordMsg({ type: "error", text: msg });
-    } finally {
-      setIsSettingPassword(false);
-    }
-  };
-
-  const handleChangePassword = async (e) => {
-    e.preventDefault();
-    setChangePasswordMsg({ type: "", text: "" });
-    const { currentPassword, newPassword, confirmPassword } = changePasswordForm;
-    if (!currentPassword || !newPassword || !confirmPassword) {
-      return setChangePasswordMsg({ type: "error", text: "All fields are required." });
-    }
-    if (newPassword.length < 6) {
-      return setChangePasswordMsg({ type: "error", text: "New password must be at least 6 characters." });
-    }
-    if (newPassword !== confirmPassword) {
-      return setChangePasswordMsg({ type: "error", text: "Passwords do not match." });
-    }
-    setIsChangingPassword(true);
-    try {
-      await axios({
-        method: "post",
-        url: `${SERVER_URL}/api/user/change-password`,
-        headers: { Authorization: `Bearer ${authToken}` },
-        data: { currentPassword, newPassword, confirmPassword },
-      });
-      setChangePasswordMsg({ type: "success", text: "Password changed successfully!" });
-      setChangePasswordForm({ currentPassword: "", newPassword: "", confirmPassword: "" });
-    } catch (err) {
-      const msg = err?.response?.data?.message || "Failed to change password. Try again.";
-      setChangePasswordMsg({ type: "error", text: msg });
-    } finally {
-      setIsChangingPassword(false);
-    }
   };
 
   return (
@@ -576,145 +513,296 @@ export const ProfileOverviewPage = () => {
         </div>
       </div>
 
-      {/* ── Change Password (users with a password) ── */}
-      {userDetail?.hasPassword !== false && (
-        <>
-          <SectionTitle title="Change Password" />
-          <div
-            className={`rounded-lg p-4 shadow-md ${
-              theme === "dark" ? "bg-gray-800" : "bg-white"
-            }`}
-          >
-            <p className={`mb-4 text-sm ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}>
-              Update your current password. You will need to enter your existing password to confirm.
-            </p>
-            <form onSubmit={handleChangePassword} className="grid grid-cols-1 gap-4 small-device:grid-cols-2">
-              <div className="small-device:col-span-2">
-                <label className={`block text-sm font-medium ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
-                  Current Password
-                </label>
-                <Input
-                  type="password"
-                  name="currentPassword"
-                  value={changePasswordForm.currentPassword}
-                  onChange={(e) => setChangePasswordForm((p) => ({ ...p, currentPassword: e.target.value }))}
-                  placeholder="Enter current password"
-                  className="mt-1 w-full"
-                />
-              </div>
-              <div>
-                <label className={`block text-sm font-medium ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
-                  New Password
-                </label>
-                <Input
-                  type="password"
-                  name="newPassword"
-                  value={changePasswordForm.newPassword}
-                  onChange={(e) => setChangePasswordForm((p) => ({ ...p, newPassword: e.target.value }))}
-                  placeholder="Min. 6 characters"
-                  className="mt-1 w-full"
-                />
-              </div>
-              <div>
-                <label className={`block text-sm font-medium ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
-                  Confirm New Password
-                </label>
-                <Input
-                  type="password"
-                  name="confirmPassword"
-                  value={changePasswordForm.confirmPassword}
-                  onChange={(e) => setChangePasswordForm((p) => ({ ...p, confirmPassword: e.target.value }))}
-                  placeholder="Repeat new password"
-                  className="mt-1 w-full"
-                />
-              </div>
-              {changePasswordMsg.text && (
-                <p className={`small-device:col-span-2 text-sm font-medium ${
-                  changePasswordMsg.type === "success" ? "text-emerald-500" : "text-red-500"
-                }`}>
-                  {changePasswordMsg.text}
-                </p>
-              )}
-              <div className="small-device:col-span-2">
-                <Button
-                  type="submit"
-                  btntext={isChangingPassword ? "Saving…" : "Change Password"}
-                  loading={isChangingPassword}
-                  disabled={isChangingPassword}
-                  className="rounded-lg bg-indigo-600 px-6 py-2 text-sm font-semibold text-white hover:bg-indigo-700"
-                  onClick={handleChangePassword}
-                />
-              </div>
-            </form>
-          </div>
-        </>
-      )}
-
-      {/* ── Set Password (Google users only) ── */}
-      {userDetail?.hasPassword === false && (
-        <>
-          <SectionTitle title="Set a Password" />
-          <div
-            className={`rounded-lg p-4 shadow-md ${
-              theme === "dark" ? "bg-gray-800" : "bg-white"
-            }`}
-          >
-            <p className={`mb-4 text-sm ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}>
-              You signed up with Google. Set a password to also enable email & password login.
-            </p>
-            <form onSubmit={handleSetPassword} className="grid grid-cols-1 gap-4 small-device:grid-cols-2">
-              <div>
-                <label className={`block text-sm font-medium ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
-                  New Password
-                </label>
-                <Input
-                  type="password"
-                  name="newPassword"
-                  value={setPasswordForm.newPassword}
-                  onChange={(e) => setSetPasswordForm((p) => ({ ...p, newPassword: e.target.value }))}
-                  placeholder="Min. 6 characters"
-                  className="mt-1 w-full"
-                />
-              </div>
-              <div>
-                <label className={`block text-sm font-medium ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
-                  Confirm Password
-                </label>
-                <Input
-                  type="password"
-                  name="confirmPassword"
-                  value={setPasswordForm.confirmPassword}
-                  onChange={(e) => setSetPasswordForm((p) => ({ ...p, confirmPassword: e.target.value }))}
-                  placeholder="Repeat password"
-                  className="mt-1 w-full"
-                />
-              </div>
-              {setPasswordMsg.text && (
-                <p className={`small-device:col-span-2 text-sm font-medium ${
-                  setPasswordMsg.type === "success" ? "text-emerald-500" : "text-red-500"
-                }`}>
-                  {setPasswordMsg.text}
-                </p>
-              )}
-              <div className="small-device:col-span-2">
-                <Button
-                  type="submit"
-                  btntext={isSettingPassword ? "Saving…" : "Set Password"}
-                  loading={isSettingPassword}
-                  disabled={isSettingPassword}
-                  className="rounded-lg bg-indigo-600 px-6 py-2 text-sm font-semibold text-white hover:bg-indigo-700"
-                  onClick={handleSetPassword}
-                />
-              </div>
-            </form>
-          </div>
-        </>
-      )}
     </main>
   );
 };
 
 export const ProfileOrdersPage = () => <OrdersContainer />;
+
+export const ProfileSecurityPage = () => {
+  const { theme } = useTheme();
+  const { authToken } = useAuth();
+  const { userDetail, setUserDetail } = useUser();
+  const [setPasswordForm, setSetPasswordForm] = useState({
+    newPassword: "",
+    confirmPassword: "",
+  });
+  const [changePasswordForm, setChangePasswordForm] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+  const [showPassword, setShowPassword] = useState({
+    currentPassword: false,
+    newPassword: false,
+    confirmPassword: false,
+  });
+  const [isSettingPassword, setIsSettingPassword] = useState(false);
+  const [isChangingPassword, setIsChangingPassword] = useState(false);
+  const [setPasswordMsg, setSetPasswordMsg] = useState({ type: "", text: "" });
+  const [changePasswordMsg, setChangePasswordMsg] = useState({
+    type: "",
+    text: "",
+  });
+
+  const togglePassword = (field) => {
+    setShowPassword((prev) => ({ ...prev, [field]: !prev[field] }));
+  };
+
+  const handleSetPassword = async (e) => {
+    e.preventDefault();
+    setSetPasswordMsg({ type: "", text: "" });
+    const { newPassword, confirmPassword } = setPasswordForm;
+
+    if (!newPassword || !confirmPassword) {
+      return setSetPasswordMsg({
+        type: "error",
+        text: "Both password fields are required.",
+      });
+    }
+    if (newPassword.length < 6) {
+      return setSetPasswordMsg({
+        type: "error",
+        text: "Password must be at least 6 characters.",
+      });
+    }
+    if (newPassword !== confirmPassword) {
+      return setSetPasswordMsg({
+        type: "error",
+        text: "Passwords do not match.",
+      });
+    }
+
+    setIsSettingPassword(true);
+    try {
+      await axios({
+        method: "post",
+        url: `${SERVER_URL}/api/user/set-password`,
+        headers: { Authorization: `Bearer ${authToken}` },
+        data: { newPassword, confirmPassword },
+      });
+      setSetPasswordMsg({
+        type: "success",
+        text: "Password set! You can now log in with email & password.",
+      });
+      setSetPasswordForm({ newPassword: "", confirmPassword: "" });
+      setShowPassword((prev) => ({
+        ...prev,
+        newPassword: false,
+        confirmPassword: false,
+      }));
+      setUserDetail((prev) => ({ ...prev, hasPassword: true }));
+    } catch (err) {
+      const msg =
+        err?.response?.data?.message || "Failed to set password. Try again.";
+      setSetPasswordMsg({ type: "error", text: msg });
+    } finally {
+      setIsSettingPassword(false);
+    }
+  };
+
+  const handleChangePassword = async (e) => {
+    e.preventDefault();
+    setChangePasswordMsg({ type: "", text: "" });
+    const { currentPassword, newPassword, confirmPassword } =
+      changePasswordForm;
+
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      return setChangePasswordMsg({
+        type: "error",
+        text: "All fields are required.",
+      });
+    }
+    if (newPassword.length < 6) {
+      return setChangePasswordMsg({
+        type: "error",
+        text: "New password must be at least 6 characters.",
+      });
+    }
+    if (newPassword !== confirmPassword) {
+      return setChangePasswordMsg({
+        type: "error",
+        text: "Passwords do not match.",
+      });
+    }
+
+    setIsChangingPassword(true);
+    try {
+      await axios({
+        method: "post",
+        url: `${SERVER_URL}/api/user/change-password`,
+        headers: { Authorization: `Bearer ${authToken}` },
+        data: { currentPassword, newPassword, confirmPassword },
+      });
+      setChangePasswordMsg({
+        type: "success",
+        text: "Password changed successfully!",
+      });
+      setChangePasswordForm({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      });
+      setShowPassword({
+        currentPassword: false,
+        newPassword: false,
+        confirmPassword: false,
+      });
+    } catch (err) {
+      const msg =
+        err?.response?.data?.message || "Failed to change password. Try again.";
+      setChangePasswordMsg({ type: "error", text: msg });
+    } finally {
+      setIsChangingPassword(false);
+    }
+  };
+
+  return (
+    <main className="flex-1 p-6">
+      <h1 className="text-2xl font-semibold">Password & Security</h1>
+      <SectionTitle
+        title={userDetail?.hasPassword === false ? "Create Password" : "Change Password"}
+      />
+
+      <div
+        className={`rounded-lg p-4 shadow-md ${
+          theme === "dark" ? "bg-gray-800" : "bg-white"
+        }`}
+      >
+        <p
+          className={`mb-4 text-sm ${
+            theme === "dark" ? "text-gray-300" : "text-gray-600"
+          }`}
+        >
+          {userDetail?.hasPassword === false
+            ? "You signed up with Google. Create a password to enable email and password login."
+            : "Update your current password. You will need your existing password to confirm this change."}
+        </p>
+
+        {userDetail?.hasPassword === false ? (
+          <form
+            onSubmit={handleSetPassword}
+            className="grid grid-cols-1 gap-4 small-device:grid-cols-2"
+          >
+            <PasswordInput
+              label="New Password"
+              name="newPassword"
+              value={setPasswordForm.newPassword}
+              isVisible={showPassword.newPassword}
+              onToggle={() => togglePassword("newPassword")}
+              onChange={(e) =>
+                setSetPasswordForm((prev) => ({
+                  ...prev,
+                  newPassword: e.target.value,
+                }))
+              }
+              placeholder="Min. 6 characters"
+              theme={theme}
+            />
+            <PasswordInput
+              label="Confirm Password"
+              name="confirmPassword"
+              value={setPasswordForm.confirmPassword}
+              isVisible={showPassword.confirmPassword}
+              onToggle={() => togglePassword("confirmPassword")}
+              onChange={(e) =>
+                setSetPasswordForm((prev) => ({
+                  ...prev,
+                  confirmPassword: e.target.value,
+                }))
+              }
+              placeholder="Repeat password"
+              theme={theme}
+            />
+
+            {setPasswordMsg.text && (
+              <FormMessage message={setPasswordMsg} />
+            )}
+
+            <div className="small-device:col-span-2">
+              <Button
+                type="submit"
+                btntext={isSettingPassword ? "Saving..." : "Create Password"}
+                loading={isSettingPassword}
+                disabled={isSettingPassword}
+                className="rounded-lg bg-indigo-600 px-6 py-2 text-sm font-semibold text-white hover:bg-indigo-700"
+                onClick={handleSetPassword}
+              />
+            </div>
+          </form>
+        ) : (
+          <form
+            onSubmit={handleChangePassword}
+            className="grid grid-cols-1 gap-4 small-device:grid-cols-2"
+          >
+            <div className="small-device:col-span-2">
+              <PasswordInput
+                label="Current Password"
+                name="currentPassword"
+                value={changePasswordForm.currentPassword}
+                isVisible={showPassword.currentPassword}
+                onToggle={() => togglePassword("currentPassword")}
+                onChange={(e) =>
+                  setChangePasswordForm((prev) => ({
+                    ...prev,
+                    currentPassword: e.target.value,
+                  }))
+                }
+                placeholder="Enter current password"
+                theme={theme}
+              />
+            </div>
+            <PasswordInput
+              label="New Password"
+              name="newPassword"
+              value={changePasswordForm.newPassword}
+              isVisible={showPassword.newPassword}
+              onToggle={() => togglePassword("newPassword")}
+              onChange={(e) =>
+                setChangePasswordForm((prev) => ({
+                  ...prev,
+                  newPassword: e.target.value,
+                }))
+              }
+              placeholder="Min. 6 characters"
+              theme={theme}
+            />
+            <PasswordInput
+              label="Confirm New Password"
+              name="confirmPassword"
+              value={changePasswordForm.confirmPassword}
+              isVisible={showPassword.confirmPassword}
+              onToggle={() => togglePassword("confirmPassword")}
+              onChange={(e) =>
+                setChangePasswordForm((prev) => ({
+                  ...prev,
+                  confirmPassword: e.target.value,
+                }))
+              }
+              placeholder="Repeat new password"
+              theme={theme}
+            />
+
+            {changePasswordMsg.text && (
+              <FormMessage message={changePasswordMsg} />
+            )}
+
+            <div className="small-device:col-span-2">
+              <Button
+                type="submit"
+                btntext={isChangingPassword ? "Saving..." : "Change Password"}
+                loading={isChangingPassword}
+                disabled={isChangingPassword}
+                className="rounded-lg bg-indigo-600 px-6 py-2 text-sm font-semibold text-white hover:bg-indigo-700"
+                onClick={handleChangePassword}
+              />
+            </div>
+          </form>
+        )}
+      </div>
+    </main>
+  );
+};
 
 export const ProfileWishlistPage = () => {
   const { authToken } = useAuth();
@@ -725,6 +813,61 @@ export const ProfileIndexRedirect = () => <Navigate to="overview" replace />;
 
 const SectionTitle = ({ title }) => (
   <h2 className="mb-2 mt-6 text-lg font-semibold">{title}</h2>
+);
+
+const FormMessage = ({ message }) => (
+  <p
+    className={`small-device:col-span-2 text-sm font-medium ${
+      message.type === "success" ? "text-emerald-500" : "text-red-500"
+    }`}
+  >
+    {message.text}
+  </p>
+);
+
+const PasswordInput = ({
+  label,
+  name,
+  value,
+  isVisible,
+  onToggle,
+  onChange,
+  placeholder,
+  theme,
+}) => (
+  <div>
+    <label
+      className={`block text-sm font-medium ${
+        theme === "dark" ? "text-gray-300" : "text-gray-700"
+      }`}
+    >
+      {label}
+    </label>
+    <div className="relative mt-1">
+      <Input
+        type={isVisible ? "text" : "password"}
+        name={name}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        className={`w-full rounded-md border p-2 pr-10 ${
+          theme === "dark"
+            ? "border-gray-700 bg-gray-900 text-white"
+            : "border-gray-300 bg-white text-gray-900"
+        }`}
+      />
+      {value && (
+        <button
+          type="button"
+          onClick={onToggle}
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400"
+          aria-label={isVisible ? `Hide ${label}` : `Show ${label}`}
+        >
+          {isVisible ? <FaEyeSlash /> : <FaEye />}
+        </button>
+      )}
+    </div>
+  </div>
 );
 
 const InputField = ({ label, value, theme, editable = false, name, onChange }) => (
