@@ -1,17 +1,23 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
+import crypto from "crypto";
 
 const newsletterSchema = new mongoose.Schema(
   {
     email: {
       type: String,
       required: true,
-      unique: true, // Ensures the same email isn't subscribed multiple times
+      unique: true,
       lowercase: true,
       trim: true,
     },
     isSubscribed: {
       type: Boolean,
-      default: true, // Initially, users are subscribed
+      default: true,
+    },
+    // Secure token used to unsubscribe without needing to be logged in
+    unsubscribeToken: {
+      type: String,
+      default: () => crypto.randomBytes(32).toString("hex"),
     },
   },
   { timestamps: true }

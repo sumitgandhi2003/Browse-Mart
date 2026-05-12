@@ -9,6 +9,7 @@ import sellerRoutes from "./routes/sellerRoutes.js";
 import authRoutes from "./routes/authRoute.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
+import newsletterRoutes from "./routes/newsletterRoutes.js";
 
 const app = express();
 const CORS_ORIGIN_URL = process.env.CORS_ORIGIN_URL || "*";
@@ -30,6 +31,7 @@ app.use("/api/seller", sellerRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/category", categoryRoutes);
+app.use("/api/newsletter", newsletterRoutes);
 
 app.get("/", function (req, res) {
   res.send("Hello, bro");

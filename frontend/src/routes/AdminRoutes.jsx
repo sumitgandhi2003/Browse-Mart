@@ -16,6 +16,9 @@ const AdminProductList = lazy(() =>
 const CategoryManagement = lazy(() =>
   import("../Component/Admin/CategoryManagement/CategoryManagement"),
 );
+const NewsletterManagement = lazy(() =>
+  import("../Component/Admin/NewsletterManagement/NewsletterManagement"),
+);
 
 const AdminOnly = ({ children }) => {
   const { userDetail } = useUser();
@@ -53,6 +56,10 @@ const AdminRoutes = {
     {
         path: "categories",
         element: <CategoryManagement />,
+    },
+    {
+      path: "newsletter",
+      element: <NewsletterManagement />,
     },
   ],
 };

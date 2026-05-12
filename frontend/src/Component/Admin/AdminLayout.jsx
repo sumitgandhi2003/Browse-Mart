@@ -35,6 +35,12 @@ const AdminLayout = () => {
       icon: "",
       navigate: "categories",
     },
+    {
+      id: 5,
+      name: "Newsletter",
+      icon: "",
+      navigate: "newsletter",
+    },
   ];
 
   useEffect(() => {
