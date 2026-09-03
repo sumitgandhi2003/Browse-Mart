@@ -33,6 +33,14 @@ const webauthnChallengeSchema = new mongoose.Schema({
     type: String,
     default: null,
   },
+  rpID: {
+    type: String,
+    default: null,
+  },
+  origin: {
+    type: String,
+    default: null,
+  },
   createdAt: {
     type: Date,
     default: Date.now,

@@ -19,6 +19,8 @@ import {
   EXPECTED_ORIGIN,
   RECOVERY_COOLING_OFF_HOURS,
   checkHttpsRequirement,
+  getRpID,
+  getExpectedOrigin,
 } from "../../config/webauthnConfig.js";
 import {
   sendPasskeyAddedEmail,
@@ -84,9 +86,12 @@ export const generateRegistrationOptionsHandler = async (req, res) => {
       }
     }
 
+    const rpID = getRpID(req);
+    const origin = getExpectedOrigin(req);
+
     const options = await generateRegistrationOptions({
       rpName: RP_NAME,
-      rpID: RP_ID,
+      rpID,
       userID: new Uint8Array(Buffer.from(userIdString)),
       userName: email,
       userDisplayName: name || email,
@@ -110,6 +115,8 @@ export const generateRegistrationOptionsHandler = async (req, res) => {
       name,
       userHandle: userIdString,
       type: "registration",
+      rpID,
+      origin,
     });
 
     return res.status(200).json({
@@ -150,11 +157,14 @@ export const verifyRegistrationResponseHandler = async (req, res) => {
       });
     }
 
+    const expectedRPID = storedChallenge.rpID || getRpID(req);
+    const expectedOrigin = storedChallenge.origin || getExpectedOrigin(req);
+
     const verification = await verifyRegistrationResponse({
       response: attResp,
       expectedChallenge: storedChallenge.challenge,
-      expectedOrigin: EXPECTED_ORIGIN,
-      expectedRPID: RP_ID,
+      expectedOrigin,
+      expectedRPID,
     });
 
     if (!verification.verified || !verification.registrationInfo) {
@@ -276,8 +286,11 @@ export const generateAuthenticationOptionsHandler = async (req, res) => {
       });
     }
 
+    const rpID = getRpID(req);
+    const origin = getExpectedOrigin(req);
+
     const options = await generateAuthenticationOptions({
-      rpID: RP_ID,
+      rpID,
       allowCredentials: [], // Discoverable credential / usernameless
       userVerification: "required",
     });
@@ -287,6 +300,8 @@ export const generateAuthenticationOptionsHandler = async (req, res) => {
       challenge: options.challenge,
       challengeKey,
       type: "authentication",
+      rpID,
+      origin,
     });
 
     return res.status(200).json({
@@ -378,11 +393,14 @@ export const verifyAuthenticationResponseHandler = async (req, res) => {
       });
     }
 
+    const expectedRPID = storedChallenge.rpID || getRpID(req);
+    const expectedOrigin = storedChallenge.origin || getExpectedOrigin(req);
+
     const verification = await verifyAuthenticationResponse({
       response: authResp,
       expectedChallenge: storedChallenge.challenge,
-      expectedOrigin: EXPECTED_ORIGIN,
-      expectedRPID: RP_ID,
+      expectedOrigin,
+      expectedRPID,
       credential: {
         id: cred.credential_id,
         publicKey: cred.public_key,
@@ -532,8 +550,11 @@ export const generateReauthOptionsHandler = async (req, res) => {
       });
     }
 
+    const rpID = getRpID(req);
+    const origin = getExpectedOrigin(req);
+
     const options = await generateAuthenticationOptions({
-      rpID: RP_ID,
+      rpID,
       allowCredentials: credentials.map((cred) => ({
         id: cred.credential_id,
         transports: cred.transports || [],
@@ -547,6 +568,8 @@ export const generateReauthOptionsHandler = async (req, res) => {
       challengeKey,
       user_id: req.user._id,
       type: "reauth",
+      rpID,
+      origin,
     });
 
     return res.status(200).json({
@@ -599,11 +622,14 @@ export const verifyReauthResponseHandler = async (req, res) => {
       });
     }
 
+    const expectedRPID = storedChallenge.rpID || getRpID(req);
+    const expectedOrigin = storedChallenge.origin || getExpectedOrigin(req);
+
     const verification = await verifyAuthenticationResponse({
       response: authResp,
       expectedChallenge: storedChallenge.challenge,
-      expectedOrigin: EXPECTED_ORIGIN,
-      expectedRPID: RP_ID,
+      expectedOrigin,
+      expectedRPID,
       credential: {
         id: cred.credential_id,
         publicKey: cred.public_key,
@@ -766,8 +792,9 @@ export const requestRecoveryHandler = async (req, res) => {
       status: "cooling_off",
     });
 
-    const statusUrl = `${EXPECTED_ORIGIN}/recover-passkey?token=${recoveryToken}`;
-    const cancelUrl = `${EXPECTED_ORIGIN}/recover-passkey/cancel/${cancelToken}`;
+    const clientOrigin = getExpectedOrigin(req);
+    const statusUrl = `${clientOrigin}/recover-passkey?token=${recoveryToken}`;
+    const cancelUrl = `${clientOrigin}/recover-passkey/cancel/${cancelToken}`;
 
     await sendPasskeyRecoveryInitiatedEmail({
       to: user.email,
@@ -912,9 +939,12 @@ export const recoveryRegistrationOptionsHandler = async (req, res) => {
       });
     }
 
+    const rpID = getRpID(req);
+    const origin = getExpectedOrigin(req);
+
     const options = await generateRegistrationOptions({
       rpName: RP_NAME,
-      rpID: RP_ID,
+      rpID,
       userID: new Uint8Array(Buffer.from(user._id.toString())),
       userName: user.email,
       userDisplayName: user.name || user.email,
@@ -932,6 +962,8 @@ export const recoveryRegistrationOptionsHandler = async (req, res) => {
       user_id: user._id,
       email: user.email,
       type: "recovery",
+      rpID,
+      origin,
     });
 
     return res.status(200).json({
@@ -984,11 +1016,14 @@ export const completeRecoveryHandler = async (req, res) => {
       });
     }
 
+    const expectedRPID = storedChallenge.rpID || getRpID(req);
+    const expectedOrigin = storedChallenge.origin || getExpectedOrigin(req);
+
     const verification = await verifyRegistrationResponse({
       response: attResp,
       expectedChallenge: storedChallenge.challenge,
-      expectedOrigin: EXPECTED_ORIGIN,
-      expectedRPID: RP_ID,
+      expectedOrigin,
+      expectedRPID,
     });
 
     if (!verification.verified || !verification.registrationInfo) {

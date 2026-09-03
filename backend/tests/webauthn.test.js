@@ -8,6 +8,9 @@ import {
   EXPECTED_ORIGIN,
   RECOVERY_COOLING_OFF_HOURS,
   checkHttpsRequirement,
+  getRpID,
+  getExpectedOrigin,
+  cleanRpID,
 } from "../src/config/webauthnConfig.js";
 
 import WebauthnCredential from "../src/model/webauthnCredentialSchema.js";
@@ -66,6 +69,22 @@ async function runTests() {
   test("HTTPS requirement check allows localhost in non-production", () => {
     const localReq = { hostname: "localhost", secure: false, headers: {} };
     assert.strictEqual(checkHttpsRequirement(localReq), true);
+  });
+
+  test("getRpID dynamically resolves production domains from client Origin header", () => {
+    const prodReq = { headers: { origin: "https://browsemart.vercel.app" } };
+    assert.strictEqual(getRpID(prodReq), "browsemart.vercel.app");
+
+    const devTunnelReq = { headers: { origin: "https://4w0qtm7s-5173.inc1.devtunnels.ms" } };
+    assert.strictEqual(getRpID(devTunnelReq), "4w0qtm7s-5173.inc1.devtunnels.ms");
+
+    const localPortReq = { headers: { origin: "http://localhost:5173" } };
+    assert.strictEqual(getRpID(localPortReq), "localhost");
+  });
+
+  test("getExpectedOrigin dynamically resolves origin from client headers", () => {
+    const prodReq = { headers: { origin: "https://browsemart.vercel.app" } };
+    assert.strictEqual(getExpectedOrigin(prodReq), "https://browsemart.vercel.app");
   });
 
   // 2. SimpleWebAuthn Registration Options Generation
