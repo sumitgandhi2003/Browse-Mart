@@ -10,6 +10,7 @@ import authRoutes from "./routes/authRoute.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import newsletterRoutes from "./routes/newsletterRoutes.js";
+import webauthnRoutes from "./routes/webauthnRoutes.js";
 
 const app = express();
 const CORS_ORIGIN_URL = process.env.CORS_ORIGIN_URL || "*";
@@ -29,6 +30,7 @@ app.use("/api/user", userRoutes);
 app.use("/api/order", orderRoutes);
 app.use("/api/seller", sellerRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/webauthn", webauthnRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/category", categoryRoutes);
 app.use("/api/newsletter", newsletterRoutes);

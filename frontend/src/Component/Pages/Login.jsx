@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { FaEyeSlash, FaEye } from "react-icons/fa";
 import { useTheme } from "../../Context/themeContext";
-import { Button, Input, OTPInput } from "../../LIBS";
+import { Button, Input, OTPInput, PasskeyButton } from "../../LIBS";
 import { customToast } from "../../utility/constant";
 import axios from "axios";
 import { useNavigate, useLocation, Link, useSearchParams } from "react-router-dom";
@@ -9,14 +9,18 @@ import { FaMoon, FaSun } from "react-icons/fa6";
 import { guestUser, sellerUser } from "../../utility/constant";
 import { BiLoaderAlt } from "react-icons/bi";
 import { useAuth } from "../../Context/authContext";
-import { checkValidation } from "../../utility/constant";
 import GoogleLoginButton from "./GoogleLoginButton";
+import { startAuthentication } from "@simplewebauthn/browser";
+import { usePasskeySupport } from "../../hooks/usePasskeySupport";
+
 const Login = () => {
   const SERVER_URL = import.meta.env.VITE_SERVER_URL;
   const navigate = useNavigate();
   const location = useLocation();
   const { theme, toggleTheme } = useTheme();
   const { authToken, setAuthToken } = useAuth();
+  const { supportsWebAuthn, supportsAutofill, platformCopy } = usePasskeySupport();
+
   const [loginData, setLoginData] = useState({
     email: "",
     password: "",
@@ -35,6 +39,7 @@ const Login = () => {
     sellerLogin: false,
     otpVerification: false,
   });
+  const [isPasskeyLoggingIn, setIsPasskeyLoggingIn] = useState(false);
   const redirect = new URLSearchParams(location?.search)?.get("redirect");
   const [searchParams] = useSearchParams();
   const googleError = searchParams.get("error");
@@ -44,15 +49,6 @@ const Login = () => {
       : googleError
       ? googleError
       : null;
-  // const checkValidation = () => {
-  //   const newErrors = {};
-  //   if (!loginData?.email) newErrors.email = "Email is required!";
-  //   if (!loginData?.password) newErrors.password = "Password is required!";
-  //   if (loginData.email && !emailRegex?.test(loginData?.email))
-  //     newErrors.email = "Email is Not Valid!";
-  //   setError(newErrors);
-  //   return Object.keys(newErrors).length === 0;
-  // };
 
   const handleLogin = (formData, caller) => {
     setError({});
@@ -80,7 +76,7 @@ const Login = () => {
         const {
           message = "",
           requiresVerification = undefined,
-          error: errorMessage = null,
+          error: apiErrorMessage = null,
         } = error?.response?.data || error;
         if (status === 403 && requiresVerification) {
           setMessage(message);
@@ -89,18 +85,129 @@ const Login = () => {
           customToast(theme).fire({
             icon: "error",
             title: message || "Something went wrong",
-            text: errorMessage,
+            text: apiErrorMessage,
           });
-          // setErrorMessage(message || "Something went wrong");
-          // swalCustomConfiguration(theme)?.fire(
-          //   "Oops!",
-          //   "Something went wrong",
-          //   "error"
-          // );
         }
       })
       .finally(() => setIsProcessing((prev) => ({ ...prev, [caller]: false })));
   };
+
+  const handlePasskeyLogin = async () => {
+    setErrorMessage("");
+    setIsPasskeyLoggingIn(true);
+    try {
+      const { data } = await axios.post(
+        `${SERVER_URL}/api/webauthn/authenticate/options`
+      );
+      if (!data?.success) {
+        throw new Error(data?.message || "Failed to fetch passkey options.");
+      }
+
+      const authResp = await startAuthentication({
+        optionsJSON: data.options,
+        useBrowserAutofill: false,
+      });
+
+      const verifyRes = await axios.post(
+        `${SERVER_URL}/api/webauthn/authenticate/verify`,
+        {
+          authResp,
+          challengeKey: data.challengeKey,
+        }
+      );
+
+      if (verifyRes.data?.success) {
+        localStorage.setItem("AuthToken", verifyRes.data.AuthToken);
+        setAuthToken(verifyRes.data.AuthToken);
+        customToast(theme).fire({
+          icon: "success",
+          title: "Logged in with Passkey!",
+        });
+        navigate(redirect ? `${redirect}` : "/");
+      }
+    } catch (err) {
+      console.error("Passkey login error:", err);
+      if (err.name === "NotAllowedError") {
+        customToast(theme).fire({
+          icon: "info",
+          title: "Passkey login cancelled",
+        });
+      } else {
+        const msg =
+          err?.response?.data?.message ||
+          err?.message ||
+          "Passkey sign-in failed. Please try again.";
+        setErrorMessage(msg);
+      }
+    } finally {
+      setIsPasskeyLoggingIn(false);
+    }
+  };
+
+  // Conditional UI: Passkey autofill on input
+  useEffect(() => {
+    let isCancelled = false;
+
+    const runAutofill = async () => {
+      if (!supportsAutofill || !supportsWebAuthn || authToken) return;
+      try {
+        const { data } = await axios.post(
+          `${SERVER_URL}/api/webauthn/authenticate/options`
+        );
+        if (!data?.success || isCancelled) return;
+
+        const authResp = await startAuthentication({
+          optionsJSON: data.options,
+          useBrowserAutofill: true,
+        });
+
+        if (isCancelled) return;
+
+        setIsPasskeyLoggingIn(true);
+        const verifyRes = await axios.post(
+          `${SERVER_URL}/api/webauthn/authenticate/verify`,
+          {
+            authResp,
+            challengeKey: data.challengeKey,
+          }
+        );
+
+        if (verifyRes.data?.success && !isCancelled) {
+          localStorage.setItem("AuthToken", verifyRes.data.AuthToken);
+          setAuthToken(verifyRes.data.AuthToken);
+          customToast(theme).fire({
+            icon: "success",
+            title: "Logged in with Passkey!",
+          });
+          navigate(redirect ? `${redirect}` : "/");
+        }
+      } catch (err) {
+        if (err.name !== "AbortError" && err.name !== "NotAllowedError") {
+          console.debug("Autofill passkey dismissed or not available:", err);
+        }
+      } finally {
+        if (!isCancelled) {
+          setIsPasskeyLoggingIn(false);
+        }
+      }
+    };
+
+    runAutofill();
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [
+    supportsAutofill,
+    supportsWebAuthn,
+    authToken,
+    SERVER_URL,
+    navigate,
+    redirect,
+    setAuthToken,
+    theme,
+  ]);
+
   const handleOtpSubmit = (otp) => {
     if (otp.length < 6) {
       setErrorMessage("OTP must be Six Digit");
@@ -108,6 +215,7 @@ const Login = () => {
     }
     handleOtpVerification(otp, "otpVerification");
   };
+
   const handleOtpVerification = (otp, caller) => {
     setIsProcessing((prev) => ({ ...prev, [caller]: true }));
 
@@ -140,7 +248,6 @@ const Login = () => {
   };
 
   const onResendOTP = () => {
-    // setIsProcessing((prev) => ({ ...prev, otpVerification: true }));
     setErrorMessage("");
     setMessage("");
 
@@ -158,47 +265,50 @@ const Login = () => {
         }
       })
       .catch((error) => {
-        console.log(error);
-        const { message = "Failed to resend OTP" } =
-          error?.response?.data || {};
-        setErrorMessage(message);
-        setMessage("");
+        const data = error?.response?.data;
+        setErrorMessage(data?.message);
       });
   };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    setErrorMessage("");
-    const err = checkValidation(loginData);
-    if (err) {
-      setError({ ...err });
+    if (!loginData.email || !loginData.password) {
+      setError({
+        email: !loginData.email ? "Email is required!" : "",
+        password: !loginData.password ? "Password is required!" : "",
+      });
       return;
     }
     setError({});
     handleLogin(loginData, "form");
   };
+
   const handleGuestLogin = (e) => {
     e.preventDefault();
     handleLogin(guestUser, "guestLogin");
   };
+
   const handleSellerLogin = (e) => {
     e.preventDefault();
     handleLogin(sellerUser, "sellerLogin");
   };
+
   const handleInput = (e) => {
     const { name, value } = e.target;
-    setLoginData((prev) => {
-      return {
-        ...prev,
-        [name]: value,
-      };
-    });
+    setLoginData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
+
   const passwordToggle = () => {
     setIsPasswordShow((prev) => !prev);
   };
+
   useEffect(() => {
     if (authToken) navigate(redirect ? `${redirect}` : "/");
   }, [authToken, navigate, redirect]);
+
   return (
     !authToken && (
       <div
@@ -248,8 +358,8 @@ const Login = () => {
                 recommendations from your dashboard.
               </p>
               <div className="mt-10 space-y-3 text-sm text-white/90">
-                <p>1. Secure login and OTP verification</p>
-                <p>2. Fast checkout with saved profile</p>
+                <p>1. Fast passwordless passkey login</p>
+                <p>2. Secure biometric &amp; FIDO2 verification</p>
                 <p>3. Access buyer, seller, or admin flow</p>
               </div>
             </div>
@@ -262,17 +372,19 @@ const Login = () => {
                 className={`mt-2 text-sm ${theme === "dark" ? "text-slate-400" : "text-slate-500"}`}
               >
                 {step === 1
-                  ? "Login with your credentials to access your account."
+                  ? "Login with your passkey or credentials."
                   : "Enter the verification code sent to your email."}
               </p>
 
               {/* ── Google OAuth Error Banner ── */}
               {googleErrorMessage && (
-                <div className={`mt-4 flex items-start gap-3 rounded-xl border px-4 py-3 text-sm font-medium ${
-                  theme === "dark"
-                    ? "border-red-800 bg-red-950 text-red-300"
-                    : "border-red-200 bg-red-50 text-red-600"
-                }`}>
+                <div
+                  className={`mt-4 flex items-start gap-3 rounded-xl border px-4 py-3 text-sm font-medium ${
+                    theme === "dark"
+                      ? "border-red-800 bg-red-950 text-red-300"
+                      : "border-red-200 bg-red-50 text-red-600"
+                  }`}
+                >
                   <span className="mt-0.5 text-base">⚠️</span>
                   <span>{googleErrorMessage}</span>
                 </div>
@@ -280,11 +392,50 @@ const Login = () => {
 
               <form onSubmit={handleSubmit} className="mt-7">
                 {step === 1 && (
-                  <div className="space-y-3">
+                  <div className="space-y-4">
+                    {/* ── Passkey / Biometric Passwordless Login ── */}
+                    {supportsWebAuthn ? (
+                      <div className="space-y-2">
+                        <PasskeyButton
+                          onClick={handlePasskeyLogin}
+                          loading={isPasskeyLoggingIn}
+                          text="Sign in with Passkey"
+                          subtext={platformCopy}
+                          className="w-full"
+                        />
+                        <div className="flex items-center justify-between px-1 text-xs">
+                          <span className={theme === "dark" ? "text-slate-400" : "text-slate-500"}>
+                            Passwordless &amp; Instant
+                          </span>
+                          <Link
+                            to="/recover-passkey"
+                            className="font-medium text-indigo-500 hover:text-indigo-600 hover:underline"
+                          >
+                            Trouble signing in?
+                          </Link>
+                        </div>
+
+                        <div className="flex items-center gap-3 py-1">
+                          <div className={`h-px flex-1 ${theme === "dark" ? "bg-slate-700" : "bg-slate-200"}`} />
+                          <span className={`text-xs font-medium uppercase tracking-wider ${theme === "dark" ? "text-slate-500" : "text-slate-400"}`}>
+                            or password
+                          </span>
+                          <div className={`h-px flex-1 ${theme === "dark" ? "bg-slate-700" : "bg-slate-200"}`} />
+                        </div>
+                      </div>
+                    ) : (
+                      <div className={`rounded-xl border p-3 text-xs ${
+                        theme === "dark" ? "border-slate-700 bg-slate-800/60 text-slate-400" : "border-slate-200 bg-slate-50 text-slate-600"
+                      }`}>
+                        ⚠️ Your browser does not support passkeys. Please sign in using password or Google.
+                      </div>
+                    )}
+
                     <div>
                       <Input
                         type="text"
                         placeholder="Email"
+                        autoComplete="username webauthn"
                         className={`w-full rounded-xl border-2 p-3 ${
                           theme === "dark"
                             ? "border-slate-700 bg-slate-800 text-white"
@@ -305,6 +456,7 @@ const Login = () => {
                       <Input
                         type={isPasswordShow ? "text" : "password"}
                         placeholder="Password"
+                        autoComplete="current-password"
                         className={`w-full rounded-xl border-2 p-3 pr-10 ${
                           theme === "dark"
                             ? "border-slate-700 bg-slate-800 text-white"
@@ -347,7 +499,7 @@ const Login = () => {
 
                     <Button
                       type="submit"
-                      btntext="Login"
+                      btntext="Login with Password"
                       className="w-full rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 py-3 text-white"
                       onClick={handleSubmit}
                       icon={
@@ -371,7 +523,6 @@ const Login = () => {
                       label="Continue with Google"
                       className={theme === "dark" ? "border-slate-700 bg-slate-800 text-white hover:bg-slate-700" : "border-slate-200 bg-white text-slate-800 hover:bg-slate-50"}
                     />
-
 
                     <div className="pt-3">
                       <p

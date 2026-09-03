@@ -1,8 +1,7 @@
 import "./App.css";
 import { lazy, Suspense, useEffect } from "react";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Navigate } from "react-router-dom";
 import axios from "axios";
-import { Navigate } from "react-router-dom";
 import { useCart } from "../../Context/cartContext";
 import { useAuth } from "../../Context/authContext";
 import { useUser } from "../../Context/userContext";
@@ -15,31 +14,35 @@ const Login = lazy(() => import("../Pages/Login"));
 const RegisterPage = lazy(() => import("../Pages/RegisterPage"));
 const ForgetPasswordPage = lazy(() => import("../Pages/ForgetPasswordPage"));
 const GoogleCallback = lazy(() => import("../Pages/GoogleCallback"));
+const PasskeyRecoveryPage = lazy(() => import("../Pages/PasskeyRecoveryPage"));
+const PasskeyCancelRecoveryPage = lazy(() =>
+  import("../Pages/PasskeyCancelRecoveryPage")
+);
 const Profile1 = lazy(() => import("../Profile/profile1"));
 const ProfileIndexRedirect = lazy(() =>
   import("../Profile/profile1").then((module) => ({
     default: module.ProfileIndexRedirect,
-  })),
+  }))
 );
 const ProfileOrdersPage = lazy(() =>
   import("../Profile/profile1").then((module) => ({
     default: module.ProfileOrdersPage,
-  })),
+  }))
 );
 const ProfileOverviewPage = lazy(() =>
   import("../Profile/profile1").then((module) => ({
     default: module.ProfileOverviewPage,
-  })),
+  }))
 );
 const ProfileSecurityPage = lazy(() =>
   import("../Profile/profile1").then((module) => ({
     default: module.ProfileSecurityPage,
-  })),
+  }))
 );
 const ProfileWishlistPage = lazy(() =>
   import("../Profile/profile1").then((module) => ({
     default: module.ProfileWishlistPage,
-  })),
+  }))
 );
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL;
@@ -51,13 +54,12 @@ axios.interceptors.response.use(
     if (error.response && error.response.status === 403) {
       const message = error.response.data?.message || "";
       if (message.includes("suspended")) {
-        // Enforce block mechanism globally
         localStorage.removeItem("AuthToken");
         window.location.href = `/login?error=${encodeURIComponent(message)}`;
       }
     }
     return Promise.reject(error);
-  },
+  }
 );
 
 const router = createBrowserRouter([
@@ -72,6 +74,14 @@ const router = createBrowserRouter([
   {
     path: "/forget-password",
     element: <ForgetPasswordPage />,
+  },
+  {
+    path: "/recover-passkey",
+    element: <PasskeyRecoveryPage />,
+  },
+  {
+    path: "/recover-passkey/cancel/:cancelToken",
+    element: <PasskeyCancelRecoveryPage />,
   },
   {
     path: "/oauth/callback",
@@ -127,6 +137,7 @@ const App = () => {
   const { setCartCount } = useCart();
   const { authToken, setAuthToken } = useAuth();
   const { theme } = useTheme();
+
   const getUserDetail = async () => {
     try {
       const response = await axios({
@@ -160,6 +171,7 @@ const App = () => {
     }
     return words.join(" ");
   };
+
   useEffect(() => {
     if (authToken) {
       getUserDetail();

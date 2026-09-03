@@ -138,3 +138,41 @@ Once the frontend and backend are up and running, the application should be acce
 - **DELETE `/api/cart/:id`**: Remove an item from the cart.
 - **POST `/api/wishlist`**: Add a product to the wishlist.
 - **GET `/api/wishlist`**: Get all items in the wishlist.
+
+---
+
+## Passkey (WebAuthn / FIDO2) Authentication
+
+BrowseMart supports **passwordless passkey login** as a primary authentication method using `@simplewebauthn/server` and `@simplewebauthn/browser`.
+
+### 1. Environment Variables Configuration
+
+WebAuthn requires strict origin and Relying Party (RP) ID matching. If the `rpID` or expected origin does not match the frontend domain exactly, the browser will reject credentials with a `SecurityError`.
+
+| Environment | `RP_ID` | `EXPECTED_ORIGIN` | `CORS_ORIGIN_URL` | Notes |
+|-------------|---------|-------------------|-------------------|-------|
+| **Local Development** | `localhost` | `http://localhost:5173` | `http://localhost:5173` | Allowed over plain HTTP |
+| **Staging** | `staging.browsemart.com` | `https://staging.browsemart.com` | `https://staging.browsemart.com` | HTTPS strictly enforced |
+| **Production** | `browsemart.com` | `https://browsemart.com` | `https://browsemart.com` | HTTPS strictly enforced |
+
+> **Note:** `RP_ID` must contain the domain only (e.g. `browsemart.com` or `localhost`), with **no** protocol (`https://`) and **no** port number.
+
+### 2. Discoverable Credentials & Conditional UI
+
+- Passkeys are created as **discoverable credentials** (resident keys) with `residentKey: 'required'` and `userVerification: 'required'`.
+- On login, `allowCredentials` is empty, allowing the browser to display matching passkeys automatically.
+- Inputs with `autoComplete="username webauthn"` support browser native autofill dropdowns without requiring button clicks.
+
+### 3. Account Recovery & Security Cooling-off
+
+Because passwordless accounts have no master password, account recovery is handled via a verified recovery email:
+- If a user loses all their devices, they request a recovery link via their verified recovery email.
+- To prevent instant account takeovers from compromised mailboxes, a mandatory **security cooling-off period** (default: 24 hours, configurable via `RECOVERY_COOLING_OFF_HOURS`) is enforced before a replacement passkey can be registered.
+- An immediate security notification email is dispatched with a single-click cancellation link to abort unauthorized attempts.
+
+### 4. Browser Fallback Policy
+
+For browsers or environments that do not support the Web Authentication API (such as older webviews):
+- The frontend gracefully feature-detects support using `browserSupportsWebAuthn()`.
+- If unsupported, an informative notice is shown, and users can seamlessly authenticate using traditional email/password or Google OAuth.
+- For passwordless users on unsupported devices, they can request an email magic-link/OTP recovery flow.

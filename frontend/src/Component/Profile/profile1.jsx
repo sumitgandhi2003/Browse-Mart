@@ -11,6 +11,7 @@ import Input from "../../LIBS/Input";
 import { Loader } from "../../LIBS";
 import { swalWithCustomConfiguration } from "../../utility/constant";
 import defaultProileImage from "../../assets/images/maleprofileicon.jpg";
+import PasskeyManagement from "./PasskeyManagement";
 
 const SERVER_URL = import.meta.env.VITE_SERVER_URL;
 
@@ -800,6 +801,8 @@ export const ProfileSecurityPage = () => {
           </form>
         )}
       </div>
+
+      <PasskeyManagement />
     </main>
   );
 };
