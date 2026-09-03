@@ -151,13 +151,13 @@ async function runTests() {
     assert.ok(credSchema.backed_up, "backed_up is required");
   });
 
-  test("WebauthnChallenge schema has 60-second TTL index", () => {
+  test("WebauthnChallenge schema has 300-second TTL index", () => {
     const challengeSchema = WebauthnChallenge.schema.paths;
     assert.ok(challengeSchema.createdAt, "createdAt is required");
     assert.strictEqual(
       challengeSchema.createdAt.options.expires,
-      60,
-      "Challenge must expire after 60 seconds"
+      300,
+      "Challenge must expire after 300 seconds"
     );
   });
 

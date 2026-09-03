@@ -96,6 +96,7 @@ export const generateRegistrationOptionsHandler = async (req, res) => {
       userName: email,
       userDisplayName: name || email,
       attestationType: "none",
+      timeout: 300000, // 5 minutes
       excludeCredentials: existingCredentials.map((cred) => ({
         id: cred.credential_id,
         transports: cred.transports || [],
@@ -160,12 +161,21 @@ export const verifyRegistrationResponseHandler = async (req, res) => {
     const expectedRPID = storedChallenge.rpID || getRpID(req);
     const expectedOrigin = storedChallenge.origin || getExpectedOrigin(req);
 
-    const verification = await verifyRegistrationResponse({
-      response: attResp,
-      expectedChallenge: storedChallenge.challenge,
-      expectedOrigin,
-      expectedRPID,
-    });
+    let verification;
+    try {
+      verification = await verifyRegistrationResponse({
+        response: attResp,
+        expectedChallenge: storedChallenge.challenge,
+        expectedOrigin,
+        expectedRPID,
+      });
+    } catch (verifyErr) {
+      console.error("[WebAuthn] verifyRegistrationResponse error:", verifyErr);
+      return res.status(400).json({
+        success: false,
+        message: verifyErr?.message || "Passkey registration verification failed.",
+      });
+    }
 
     if (!verification.verified || !verification.registrationInfo) {
       return res.status(400).json({
@@ -291,6 +301,7 @@ export const generateAuthenticationOptionsHandler = async (req, res) => {
 
     const options = await generateAuthenticationOptions({
       rpID,
+      timeout: 300000, // 5 minutes
       allowCredentials: [], // Discoverable credential / usernameless
       userVerification: "required",
     });
@@ -396,18 +407,27 @@ export const verifyAuthenticationResponseHandler = async (req, res) => {
     const expectedRPID = storedChallenge.rpID || getRpID(req);
     const expectedOrigin = storedChallenge.origin || getExpectedOrigin(req);
 
-    const verification = await verifyAuthenticationResponse({
-      response: authResp,
-      expectedChallenge: storedChallenge.challenge,
-      expectedOrigin,
-      expectedRPID,
-      credential: {
-        id: cred.credential_id,
-        publicKey: cred.public_key,
-        counter: cred.sign_count,
-        transports: cred.transports || [],
-      },
-    });
+    let verification;
+    try {
+      verification = await verifyAuthenticationResponse({
+        response: authResp,
+        expectedChallenge: storedChallenge.challenge,
+        expectedOrigin,
+        expectedRPID,
+        credential: {
+          id: cred.credential_id,
+          publicKey: cred.public_key,
+          counter: cred.sign_count,
+          transports: cred.transports || [],
+        },
+      });
+    } catch (verifyErr) {
+      console.error("[WebAuthn] verifyAuthenticationResponse error:", verifyErr);
+      return res.status(401).json({
+        success: false,
+        message: verifyErr?.message || "Passkey authentication verification failed.",
+      });
+    }
 
     if (!verification.verified || !verification.authenticationInfo) {
       return res.status(401).json({
@@ -555,6 +575,7 @@ export const generateReauthOptionsHandler = async (req, res) => {
 
     const options = await generateAuthenticationOptions({
       rpID,
+      timeout: 300000, // 5 minutes
       allowCredentials: credentials.map((cred) => ({
         id: cred.credential_id,
         transports: cred.transports || [],
@@ -949,6 +970,7 @@ export const recoveryRegistrationOptionsHandler = async (req, res) => {
       userName: user.email,
       userDisplayName: user.name || user.email,
       attestationType: "none",
+      timeout: 300000, // 5 minutes
       authenticatorSelection: {
         residentKey: "required",
         userVerification: "required",

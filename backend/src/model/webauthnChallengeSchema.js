@@ -41,12 +41,26 @@ const webauthnChallengeSchema = new mongoose.Schema({
     type: String,
     default: null,
   },
+  expiresAt: {
+    type: Date,
+    default: () => new Date(Date.now() + 5 * 60 * 1000), // 5 minutes validity
+  },
   createdAt: {
     type: Date,
     default: Date.now,
-    expires: 60, // Automatically expired and removed after 60 seconds
+    expires: 300, // Automatically expired and removed after 300 seconds (5 minutes)
   },
 });
+
+// Drop legacy 60s index if present
+try {
+  mongoose.connection.on("open", () => {
+    mongoose.connection.db
+      .collection("webauthnchallenges")
+      .dropIndex("createdAt_1")
+      .catch(() => {});
+  });
+} catch (e) {}
 
 const WebauthnChallenge = mongoose.model(
   "WebauthnChallenge",
