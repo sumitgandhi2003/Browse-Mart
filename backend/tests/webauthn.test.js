@@ -72,14 +72,20 @@ async function runTests() {
   });
 
   test("getRpID dynamically resolves production domains from client Origin header", () => {
-    const prodReq = { headers: { origin: "https://browsemart.vercel.app" } };
-    assert.strictEqual(getRpID(prodReq), "browsemart.vercel.app");
+    const origEnv = process.env.RP_ID;
+    delete process.env.RP_ID;
+    try {
+      const prodReq = { headers: { origin: "https://browsemart.vercel.app" } };
+      assert.strictEqual(getRpID(prodReq), "browsemart.vercel.app");
 
-    const devTunnelReq = { headers: { origin: "https://4w0qtm7s-5173.inc1.devtunnels.ms" } };
-    assert.strictEqual(getRpID(devTunnelReq), "4w0qtm7s-5173.inc1.devtunnels.ms");
+      const devTunnelReq = { headers: { origin: "https://4w0qtm7s-5173.inc1.devtunnels.ms" } };
+      assert.strictEqual(getRpID(devTunnelReq), "4w0qtm7s-5173.inc1.devtunnels.ms");
 
-    const localPortReq = { headers: { origin: "http://localhost:5173" } };
-    assert.strictEqual(getRpID(localPortReq), "localhost");
+      const localPortReq = { headers: { origin: "http://localhost:5173" } };
+      assert.strictEqual(getRpID(localPortReq), "localhost");
+    } finally {
+      process.env.RP_ID = origEnv;
+    }
   });
 
   test("getExpectedOrigin dynamically resolves origin from client headers", () => {

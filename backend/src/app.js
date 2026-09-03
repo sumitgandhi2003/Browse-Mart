@@ -13,10 +13,24 @@ import newsletterRoutes from "./routes/newsletterRoutes.js";
 import webauthnRoutes from "./routes/webauthnRoutes.js";
 
 const app = express();
-const CORS_ORIGIN_URL = process.env.CORS_ORIGIN_URL || "*";
+const rawOrigins = process.env.CORS_ORIGIN_URL || "*";
+const allowedOrigins = rawOrigins.split(",").map((s) => s.trim().replace(/\/$/, ""));
 app.use(
   cors({
-    origin: CORS_ORIGIN_URL,
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+      const cleanOrigin = origin.replace(/\/$/, "");
+      if (
+        rawOrigins === "*" ||
+        allowedOrigins.includes("*") ||
+        allowedOrigins.includes(cleanOrigin) ||
+        cleanOrigin === "https://browsemart.vercel.app" ||
+        cleanOrigin === "http://localhost:5173"
+      ) {
+        return callback(null, true);
+      }
+      return callback(null, cleanOrigin);
+    },
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     credentials: true,
   })
